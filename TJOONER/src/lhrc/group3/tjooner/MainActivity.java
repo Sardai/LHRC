@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 /**
  * 
- * @author >>>Chris<<< Luuk, Hugo
+ * @author >>>Chris<<< Luuk, Hugo, Rene
  *
  */
 public class MainActivity extends Activity {
