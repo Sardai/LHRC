@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 /**
  * 
- * @author luuk
+ * @author luuk yooyllog
  *
  */
 public class MainActivity extends Activity {
@@ -16,6 +16,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);       
+        String test;
     }
 
 
