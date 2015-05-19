@@ -6,8 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 /**
+ * @author Chris Rotter, Luuk Wellink
+ * @author Hugo van der Geest, Rene Bisperink
  * 
- * @author >>>Chris<<< Luuk, Hugo, Rene
  *
  */
 public class MainActivity extends Activity {
@@ -45,4 +46,5 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+    
 }
