@@ -13,7 +13,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-//TODO javadoc toevoegen->chris
+/**
+ * Class to insert, update ,remove and get object from the database.
+ * @author Chris
+ *
+ */
 public class Datasource {
 	
       private static final String WHERE = String.format("%s = ?", Storage.ID);
@@ -21,6 +25,10 @@ public class Datasource {
 	  private SQLiteDatabase database;
 	  private Storage storage;
 	  
+	  /**
+	   * Initialize a datasource.
+	   * @param context
+	   */
 	  public Datasource(Context context){
 		  storage = new Storage(context);
 	  }
@@ -39,6 +47,10 @@ public class Datasource {
 		  storage.close();
 	  }
 	  
+	  /**
+	   * Insert a media object in the database.
+	   * @param media the media object to insert
+	   */
 	  public void insert(Media media){
 		  ContentValues values = getMediaValues(media);
 		  values.put(Storage.ID,media.getId().toString());
@@ -51,6 +63,10 @@ public class Datasource {
 		  database.insert(Storage.MEDIA_TABLE_NAME, null, values);
 	  }
 	  
+	  /**
+	   * Insert a group in the database.
+	   * @param group the group to insert
+	   */
 	  public void insert(Group group){
 		  ContentValues values = new ContentValues();		  
 		  values.put(Storage.DESCRIPTION,group.getDescription());
@@ -58,6 +74,10 @@ public class Datasource {
 		  database.insert(Storage.GROUP_TABLE_NAME, null, values);
 	  }
 	  
+	  /**
+	   * Insert a tag in the database.
+	   * @param tag the tag to insert
+	   */
 	  public void insert(String tag){
 		  String where = String.format("%s = %s",Storage.WORD,tag);
 		  Cursor cursor = database.query(Storage.TAG_TABLE_NAME,new String[]{Storage.WORD},where,null,null,null,null);
@@ -68,16 +88,28 @@ public class Datasource {
 		}
 	  }
 	  
+	  /**
+	   * update an existing media object in the database. 
+	   * @param media the media object to update
+	   */
 	  public void update(Media media){
 		  String[] args = {media.getId().toString()};
 		  database.update(Storage.MEDIA_TABLE_NAME, getMediaValues(media), WHERE,args );
 	  }
 	  
+	  /**
+	   * Remove a media object from the database.
+	   * @param media the media object to remove
+	   */
 	  public void remove(Media media){
 		  	String[] args = {media.getId().toString()};
 	        database.delete(Storage.MEDIA_TABLE_NAME, WHERE, args);
 	  }
 	  
+	  /**
+	   * get all groups with media object and tags from the database 
+	   * @return an map with all groups and media object and tags
+	   */
 	  public HashMap<UUID,Group> getAll(){
 		  Cursor cursor = database.query(Storage.GROUP_TABLE_NAME,Storage.GROUP_COLUMNS,null,null,null,null,null);
 		  
@@ -131,6 +163,10 @@ public class Datasource {
 		  return groups;
 	  }
 	  
+	  /**
+	   * get all tags from the database.
+	   * @return all tags
+	   */
 	  public TreeSet<String> getTags(){
 		  String[] columns = {Storage.WORD};
 		  Cursor cursor = database.query(Storage.TAG_TABLE_NAME,columns,null,null,null,null,null);
@@ -148,7 +184,6 @@ public class Datasource {
 	  }
 	  
 	  
-	  	 	 
 	  private ContentValues getMediaValues(Media media){
 		  ContentValues values = new ContentValues();
 		  values.put(Storage.FILENAME, media.getFilename());
