@@ -23,7 +23,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		//test
 		ButtonCamera = (Button) findViewById(R.id.buttonCamera);
 
 		ButtonCamera.setOnClickListener(new View.OnClickListener() {
