@@ -25,10 +25,16 @@ public class Datasource {
 		  storage = new Storage(context);
 	  }
 	  
+	  /**
+	   * Opens database
+	   */
 	  public void open(){
 		  database = storage.getWritableDatabase();
 	  }
 	  
+	  /**
+	   * closes database
+	   */
 	  public void close(){
 		  storage.close();
 	  }
