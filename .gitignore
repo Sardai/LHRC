@@ -23,9 +23,6 @@ local.properties
 
 .DS_Store
 Thumbs.db
-<<<<<<< HEAD
 
 .gitignore
-=======
-.gitignore
->>>>>>> ec94c77ef26bece4b6f59998dad0bfec71b72316
+
