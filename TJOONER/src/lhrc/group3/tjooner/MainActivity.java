@@ -40,20 +40,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-				
-		DataSource dataSource = new DataSource(this);
-		dataSource.open();
-		WebRequest webRequest = new WebRequest(dataSource);
-		webRequest.setOnGroupRequestListener(new OnGroupRequestListener() {
-			
-			@Override
-			public void Completed(Map<UUID, Group> groups) {
-			  Log.i("WebRequest", "success");
-				
-			}
-		});
-		webRequest.getGroups();
+		setContentView(R.layout.activity_main);				
  
 		application = (TjoonerApplication) getApplication();
 		
@@ -100,10 +87,7 @@ public class MainActivity extends Activity {
 //			 application.dataSource.insert(media);
 			
 			 
-			 Toast.makeText(MainActivity.this, "Afbeelding opgeslagen", Toast.LENGTH_SHORT).show();;
-			 
-
-			 
+			 Toast.makeText(MainActivity.this, "Afbeelding opgeslagen", Toast.LENGTH_SHORT).show();; 
 		 }
 		
 	}
