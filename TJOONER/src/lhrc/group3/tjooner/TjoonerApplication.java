@@ -18,12 +18,12 @@ public class TjoonerApplication extends Application {
 	
 	private WebRequest webRequest;	
 	private HashSet<Group> groups;
-	private final DataSource dataSource;
+	public DataSource dataSource;
 	
 	public TjoonerApplication(){
-		dataSource = new DataSource(getApplicationContext());
+		dataSource = new DataSource(this);
 		webRequest = new WebRequest(dataSource);
-		webRequest.getGroups();
+	//s	webRequest.getGroups();
 	}
 	
 }
