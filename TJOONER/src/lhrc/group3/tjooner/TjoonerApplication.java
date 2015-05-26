@@ -4,10 +4,13 @@
 package lhrc.group3.tjooner;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
 
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.web.WebRequest;
+import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
 import android.app.Application;
 
 /**
@@ -16,14 +19,17 @@ import android.app.Application;
  */
 public class TjoonerApplication extends Application {
 	
-	private WebRequest webRequest;	
-	private HashSet<Group> groups;
-	private final DataSource dataSource;
+//	private WebRequest webRequest;	
+//	private HashSet<Group> groups;
+//	private DataSource dataSource;
 	
-	public TjoonerApplication(){
-		dataSource = new DataSource(getApplicationContext());
-		webRequest = new WebRequest(dataSource);
-		webRequest.getGroups();
+	@Override
+	public void onCreate() {
+	
 	}
+
+
+
+ 
 	
 }

@@ -2,6 +2,8 @@ package lhrc.group3.tjooner.storage;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 
@@ -53,14 +55,14 @@ public class DataSource {
 	   * @param media the media object to insert
 	   */
 	  public void insert(Media media){
-		  ContentValues values = getMediaValues(media);
+		  ContentValues values = getContentValues(media);
 		  values.put(Storage.ID,media.getId().toString());
 		  int datatype = 1;
 		  if(media instanceof Video){
 			  datatype = 2;
 		  }
 		  values.put(Storage.DATA_TYPE, datatype);
-		  values.put(Storage.DATA,media.getData());
+		  values.put(Storage.DATA,media.getData());		  
 		  database.insert(Storage.MEDIA_TABLE_NAME, null, values);
 	  }
 	  
@@ -70,16 +72,34 @@ public class DataSource {
 	   */
 	  public void insert(Group group){
 		  ContentValues values = new ContentValues();		  
-		  values.put(Storage.DESCRIPTION,group.getDescription());
-		  values.put(Storage.COLOR, group.getColor());
+		  values.put(Storage.ID, group.getId().toString());
 		  database.insert(Storage.GROUP_TABLE_NAME, null, values);
 	  }
 	  
 	  /**
-	   * insert a set of groups in the database.
+	   * updates or insert a set of groups in the database. when a group is not removed than it is marked inactive.
 	   * @param groups the set of groups to insert.
 	   */
-	  public void insert(HashSet<Group> groups){
+	  public void upsert(Map<UUID,Group> groups){
+		  
+		  ContentValues values = new ContentValues();
+		  values.put(Storage.INACTIVE, 1);
+		  database.update(Storage.GROUP_TABLE_NAME, values, null,null);
+		  			 
+		  String where = String.format("%s = ?",Storage.ID);
+		 
+		  for(Map.Entry<UUID, Group> entry : groups.entrySet()){
+			  
+			  String id = entry.getKey().toString();			  
+			  Cursor cursor = database.query(Storage.GROUP_TABLE_NAME,new String[]{Storage.ID},where,new String[]{id},null,null,null);
+			  if(cursor.getCount() == 0){
+				  insert(entry.getValue());
+			  }else{
+				  update(entry.getValue());
+			  }
+			  
+		  }
+		  
 		  
 	  }
 	  
@@ -103,7 +123,16 @@ public class DataSource {
 	   */
 	  public void update(Media media){
 		  String[] args = {media.getId().toString()};
-		  database.update(Storage.MEDIA_TABLE_NAME, getMediaValues(media), WHERE,args );
+		  database.update(Storage.MEDIA_TABLE_NAME, getContentValues(media), WHERE,args );
+	  }
+	  
+	  /**
+	   * update an existing group object in the database.
+	   * @param group the group object to update
+	   */
+	  public void update(Group group){
+		  String[] args = {group.getId().toString()};
+		  database.update(Storage.GROUP_TABLE_NAME, getContentValues(group), WHERE,args );
 	  }
 	  
 	  /**
@@ -193,7 +222,7 @@ public class DataSource {
 	  }
 	  
 	  
-	  private ContentValues getMediaValues(Media media){
+	  private ContentValues getContentValues(Media media){
 		  ContentValues values = new ContentValues();
 		  values.put(Storage.FILENAME, media.getFilename());
 		  values.put(Storage.TITLE, media.getTitle());
@@ -202,6 +231,14 @@ public class DataSource {
 		  values.put(Storage.HAS_COPYRIGHT, media.hasCopyright());
 		  values.put(Storage.COPYRIGHT_HOLDER, media.getCopyrightHolder());
 		  return values;
-	  }	  
+	  }	 
+	  
+	  private ContentValues getContentValues(Group group){
+		  ContentValues values = new ContentValues();
+		  values.put(Storage.DESCRIPTION,group.getDescription());
+		  values.put(Storage.COLOR, group.getColor());
+		  values.put(Storage.INACTIVE, 0);
+		  return values;
+	  }
 }
 

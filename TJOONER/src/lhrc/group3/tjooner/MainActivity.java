@@ -1,9 +1,17 @@
 package lhrc.group3.tjooner;
 
+import java.util.Map;
+import java.util.UUID;
+
+import lhrc.group3.tjooner.models.Group;
+import lhrc.group3.tjooner.storage.DataSource;
+import lhrc.group3.tjooner.web.WebRequest;
+import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +31,20 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		DataSource dataSource = new DataSource(this);
+		dataSource.open();
+		WebRequest webRequest = new WebRequest(dataSource);
+		webRequest.setOnGroupRequestListener(new OnGroupRequestListener() {
+			
+			@Override
+			public void Completed(Map<UUID, Group> groups) {
+			  Log.i("WebRequest", "success");
+				
+			}
+		});
+		webRequest.getGroups();
+		
 		
 		ButtonCamera = (Button) findViewById(R.id.buttonCamera);
 

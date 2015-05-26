@@ -5,7 +5,13 @@ package lhrc.group3.tjooner.web;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.storage.DataSource;
@@ -47,6 +53,16 @@ public class WebRequest {
 		GROUP
 	}
 	
+	public interface OnGroupRequestListener extends EventListener {
+	        public void Completed(Map<UUID,Group> groups);
+    }
+
+	OnGroupRequestListener onGroupRequestListener;
+
+    public void setOnGroupRequestListener(OnGroupRequestListener onGroupRequestListener){
+        this.onGroupRequestListener = onGroupRequestListener;
+    }
+	
 	private class WebTask extends AsyncTask<String,Void,String>{
 
 		@Override
@@ -61,10 +77,10 @@ public class WebRequest {
 			try {
 				result = client.execute(httpGet, handler);
 			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
+				Log.e("WebRequest", e.getMessage());
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				Log.e("WebRequest", e.getMessage());
 				e.printStackTrace();
 			}
 			return result;
@@ -75,19 +91,24 @@ public class WebRequest {
 			switch (type) {
 			case GROUP:
 				
-				List<Group> groups = new ArrayList<Group>();
+				HashMap<UUID,Group> groups = new HashMap<UUID,Group>();
 				
 				try {
 					JSONArray jsonGroups = new JSONArray(result);
 					
 					for (int i = 0; i < jsonGroups.length(); i++) {
 						Group group = new Group(jsonGroups.getJSONObject(i));
-						groups.add(group);
-						dataSource.insert(group);
+						groups.put(group.getId(), group);
+					}
+					
+					dataSource.upsert(groups);
+					
+					if(onGroupRequestListener != null){
+						onGroupRequestListener.Completed(groups);
 					}
 					
 				} catch (JSONException e) {
-					 
+					 Log.e("WebRequest", e.getMessage());
 				}
 				
 				break;

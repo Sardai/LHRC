@@ -35,7 +35,7 @@ public class Group extends DataObject{
 	 */
 	public Group(Cursor cursor){
 		super(cursor);
-		
+		id = UUID.fromString(getString(Storage.ID));
 		description = getString(Storage.DESCRIPTION);
 		color = getString(Storage.COLOR);		
 	}
