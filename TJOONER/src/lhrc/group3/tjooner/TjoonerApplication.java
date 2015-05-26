@@ -18,18 +18,14 @@ import android.app.Application;
  *
  */
 public class TjoonerApplication extends Application {
-	
-//	private WebRequest webRequest;	
-//	private HashSet<Group> groups;
-//	private DataSource dataSource;
-	
+
+	// private WebRequest webRequest;
+	// private HashSet<Group> groups;
+	// private DataSource dataSource;
+
 	@Override
 	public void onCreate() {
-	
+
 	}
 
-
-
- 
-	
 }
