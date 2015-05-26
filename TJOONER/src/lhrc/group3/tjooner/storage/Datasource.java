@@ -1,6 +1,7 @@
 package lhrc.group3.tjooner.storage;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ import android.database.sqlite.SQLiteDatabase;
  * @author Chris
  *
  */
-public class Datasource {
+public class DataSource {
 	
       private static final String WHERE = String.format("%s = ?", Storage.ID);
 	
@@ -29,7 +30,7 @@ public class Datasource {
 	   * Initialize a datasource.
 	   * @param context
 	   */
-	  public Datasource(Context context){
+	  public DataSource(Context context){
 		  storage = new Storage(context);
 	  }
 	  
@@ -72,6 +73,14 @@ public class Datasource {
 		  values.put(Storage.DESCRIPTION,group.getDescription());
 		  values.put(Storage.COLOR, group.getColor());
 		  database.insert(Storage.GROUP_TABLE_NAME, null, values);
+	  }
+	  
+	  /**
+	   * insert a set of groups in the database.
+	   * @param groups the set of groups to insert.
+	   */
+	  public void insert(HashSet<Group> groups){
+		  
 	  }
 	  
 	  /**

@@ -27,9 +27,10 @@ public class Storage extends SQLiteOpenHelper {
 	
 	public static final String GROUP_TABLE_NAME = "groups";
 	public static final String COLOR = "color";
+	public static final String INACTIVE = "inactive";
 	
 	public static final String[] GROUP_COLUMNS = {
-		DESCRIPTION,COLOR
+		DESCRIPTION,COLOR,INACTIVE
 	};
 	
 	public static final String TAG_TABLE_NAME = "tags";

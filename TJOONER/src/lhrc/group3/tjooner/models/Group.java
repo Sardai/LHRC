@@ -6,6 +6,9 @@ package lhrc.group3.tjooner.models;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import lhrc.group3.tjooner.storage.Storage;
 import android.database.Cursor;
 
@@ -16,6 +19,10 @@ import android.database.Cursor;
  */
 public class Group extends DataObject{
 
+	private static String ID = "Id";
+	private static String BACKGROUND_COLOR = "BackgroundColor"; 
+	private static String DESCRIPTION = "Description";
+	
 	private UUID id;
 	private String description;
 	private String color;
@@ -31,6 +38,17 @@ public class Group extends DataObject{
 		
 		description = getString(Storage.DESCRIPTION);
 		color = getString(Storage.COLOR);		
+	}
+	
+	/**
+	 * Create a group object with data from a json string.
+	 * @param json the json object with the values
+	 * @throws JSONException if the json is malformed throws an jsonexception
+	 */
+	public Group(JSONObject json) throws JSONException{
+		id = UUID.fromString(json.getString(ID));
+		description = json.getString(DESCRIPTION);
+		color = json.getString(BACKGROUND_COLOR);
 	}
 	
 	/**
