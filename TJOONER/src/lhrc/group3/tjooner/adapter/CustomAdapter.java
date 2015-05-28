@@ -17,11 +17,11 @@ public class CustomAdapter extends BaseAdapter{
     Context context;
  int [] imageId;
       private static LayoutInflater inflater=null;
-    public CustomAdapter(MainActivity mainActivity, String[] photoNames, int[] photoPreview) {
+    public CustomAdapter(MainActivity mainActivity, String[] groupNames, int[] groupPreview) {
         // TODO Auto-generated constructor stub
-        result=photoNames;
+        result=groupNames;
         context=mainActivity;
-        imageId=photoPreview;
+        imageId=groupPreview;
          inflater = ( LayoutInflater )context.
                  getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -58,10 +58,10 @@ public class CustomAdapter extends BaseAdapter{
 
              rowView = inflater.inflate(R.layout.groupdisplay_layout, null);
              holder.tv=(TextView) rowView.findViewById(R.id.textView1);
-             holder.img=(ImageView) rowView.findViewById(R.id.imageView1);
+            
 
          holder.tv.setText(result[position]);
-         holder.img.setImageResource(imageId[position]);
+      
 
          rowView.setOnClickListener(new OnClickListener() {
 
