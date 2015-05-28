@@ -40,12 +40,12 @@
         android:text="Nieuwe foto toevoegen" />
 
     <VideoView
-        android:id="@+id/videoView1"
+        android:id="@+id/videoViewNewVideo"
         android:layout_width="100dp"
         android:layout_height="100dp" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/imageViewNewPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/videoView1"
@@ -53,5 +53,14 @@
         android:layout_alignTop="@+id/videoView1"
         android:layout_marginRight="50dp"
         android:src="@drawable/ic_launcher" />
+
+    <MediaController
+        android:id="@+id/mediaController1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageViewNewPhoto"
+        android:layout_marginTop="22dp"
+        android:layout_toRightOf="@+id/imageViewNewPhoto" >
+    </MediaController>
 
 </RelativeLayout>
