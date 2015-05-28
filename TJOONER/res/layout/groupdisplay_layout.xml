@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#a3a3a3" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" >
 
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textViewGroup"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity=""
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:text="TextView"
-        android:textSize="15dp" />
-
+        android:textColor="#fff"
+        android:textSize="15dp"
+        android:padding="5dp"
+         />
 </RelativeLayout>

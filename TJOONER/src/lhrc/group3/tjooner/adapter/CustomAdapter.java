@@ -57,7 +57,7 @@ public class CustomAdapter extends BaseAdapter{
         View rowView;
 
              rowView = inflater.inflate(R.layout.groupdisplay_layout, null);
-             holder.tv=(TextView) rowView.findViewById(R.id.textView1);
+             holder.tv=(TextView) rowView.findViewById(R.id.textViewGroup);
 
              holder.img=(ImageView) rowView.findViewById(R.id.expandMenuImageView);
 
