@@ -7,15 +7,25 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="lhrc.group3.tjooner.MainActivity" >
-
-    <ImageView
-        android:id="@+id/imageViewPhoto"
+   
+   
+   <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:numColumns="3" >
+     
+	</GridView>
+	
+       <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="127dp"
-        android:src="@drawable/ic_launcher" />
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:text="Groups..." />
 
     <Button
         android:id="@+id/buttonCameraVideo"
@@ -37,3 +47,4 @@
         android:text="Nieuwe foto toevoegen" />
 
 </RelativeLayout>
+

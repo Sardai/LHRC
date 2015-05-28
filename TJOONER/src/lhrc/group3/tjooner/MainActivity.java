@@ -3,6 +3,7 @@ package lhrc.group3.tjooner;
 import java.util.Map;
 import java.util.UUID;
 
+import lhrc.group3.tjooner.adapter.CustomAdapter;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.web.WebRequest;
@@ -12,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,16 +40,24 @@ public class MainActivity extends Activity {
 	private ImageView image;
 	public static int TAKE_PICTURE = 1;
 
+	GridView gv;
+	Context context;
+	public String [] groupNames={"group1", "group2", "group3","group4","group5","group6"};
+	public int [] groupPreview ={R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher};
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);				
  
+		gv = (GridView) findViewById(R.id.gridView1); 
+		gv.setAdapter(new CustomAdapter(this, groupNames, groupPreview));
 		application = (TjoonerApplication) getApplication();
 		
 		ButtonCameraPhoto = (Button) findViewById(R.id.buttonCameraPhoto);
 		ButtonCameraVideo = (Button) findViewById(R.id.buttonCameraVideo);
-		image = (ImageView) findViewById(R.id.imageViewPhoto);
+	
  
 
 		ButtonCameraPhoto.setOnClickListener(new View.OnClickListener() {
