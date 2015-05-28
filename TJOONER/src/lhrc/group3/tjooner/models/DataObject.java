@@ -3,8 +3,6 @@
  */
 package lhrc.group3.tjooner.models;
 
-import java.sql.Blob;
-
 import lhrc.group3.tjooner.helpers.Date;
 import android.database.Cursor;
 
