@@ -4,21 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <ImageView
+        android:id="@+id/newVideoImageView"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:src="@drawable/video_circle" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/newPictureImageView"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/camera_circle" />
+
+        <ImageView
+            android:id="@+id/ImageFromGalleryImageView"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:src="@drawable/floatingactionbutton" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/selectVideoFromGalleryImageView"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:src="@drawable/floatingactionbutton" />
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/expandMenuImageView"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:src="@drawable/floatingactionbutton" />

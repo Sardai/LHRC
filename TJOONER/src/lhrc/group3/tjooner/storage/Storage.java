@@ -27,9 +27,10 @@ public class Storage extends SQLiteOpenHelper {
 	
 	public static final String GROUP_TABLE_NAME = "groups";
 	public static final String COLOR = "color";
+	public static final String INACTIVE = "inactive";
 	
 	public static final String[] GROUP_COLUMNS = {
-		DESCRIPTION,COLOR
+		DESCRIPTION,COLOR,INACTIVE
 	};
 	
 	public static final String TAG_TABLE_NAME = "tags";
@@ -37,18 +38,15 @@ public class Storage extends SQLiteOpenHelper {
 	
 	public static final String MEDIA_TAG_TABLE_NAME = "media_tag";
 	public static final String MEDIA_ID = "mediaId";
-	
-    private static final String MEDIA_DATABASE_NAME = "tjooner.db";
-    private static final int DATABASE_VERSION = 1;
-	
+		
 	//TODO add not null to columns wich are required -> chris. 
 	private static final String MEDIA_TABLE_CREATE = String.format(
 			"create table %s (%s string primary key, %s text, %s text, %s text, %s text, %s text,%s integer,%s text, %s blob, %s integer)",
 			MEDIA_TABLE_NAME,ID,FILENAME,TITLE, DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,COPYRIGHT_HOLDER,DATA,DATA_TYPE );
 	
 	private static final String GROUP_TABLE_CREATE = String.format(
-			"create table %s (%s text primary key, %s text,%s text)",
-				GROUP_TABLE_NAME,ID,DESCRIPTION,COLOR
+			"create table %s (%s text primary key, %s text,%s text, %s integer)",
+				GROUP_TABLE_NAME,ID,DESCRIPTION,COLOR,INACTIVE
 			);
 	
 	private static final String TAG_TABLE_CREATE = String.format(
@@ -57,12 +55,15 @@ public class Storage extends SQLiteOpenHelper {
 			);
 	
 	private static final String MEDIA_TAG_TABLE_CREATE = String.format(
-			"create table %s (%s string, %s string PRIMARY KEY (column1, column2))",
-				MEDIA_TAG_TABLE_NAME, MEDIA_ID, Storage.WORD
+			"create table %s (%s string, %s string, PRIMARY KEY (%s, %s))",
+				MEDIA_TAG_TABLE_NAME, MEDIA_ID, WORD,MEDIA_ID,WORD
 			);
 	
+	private static final String DATABASE_NAME = "tjooner.db";
+    private static final int DATABASE_VERSION = 1;
+	
 	public Storage(Context context) {
-		super(context, MEDIA_DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	
@@ -82,8 +83,8 @@ public class Storage extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + MEDIA_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + GROUP_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TAG_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TAG_TABLE_NAME);
-		
+        db.execSQL("DROP TABLE IF EXISTS " + MEDIA_TAG_TABLE_NAME);
+		onCreate(db);
 	}
 	
 	
