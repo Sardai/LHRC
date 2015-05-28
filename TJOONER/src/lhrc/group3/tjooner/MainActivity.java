@@ -54,8 +54,7 @@ public class MainActivity extends Activity {
 	private ImageView newImage;
 	private VideoView newVideo;
 	private MediaController mediaControls;
-	public static int TAKE_PICTURE = 1;
-	public static int TAKE_VIDEO = 2;
+
 
 	private GridView gridView;
 
@@ -97,37 +96,13 @@ public class MainActivity extends Activity {
 		});
 		webRequest.getGroups();
 
-		newVideo = (VideoView) findViewById(R.id.videoViewNewVideo);
-		newImage = (ImageView) findViewById(R.id.imageViewNewPhoto);
 
-		newVideo.setMediaController(mediaControls);
 
-		ButtonCameraPhoto = (Button) findViewById(R.id.buttonCameraPhoto);
-		ButtonCameraVideo = (Button) findViewById(R.id.buttonCameraVideo);
+		
 
-		ButtonCameraVideo.setOnClickListener(new View.OnClickListener() {
+			
 
-			@Override
-			public void onClick(View v) {
-				Intent intentVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-				startActivityForResult(intentVideo, TAKE_VIDEO);
-			}
-		});
-
-		ButtonCameraPhoto.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intentPicture = new Intent(
-						MediaStore.ACTION_IMAGE_CAPTURE);
-
-				// start camera activity
-				startActivityForResult(intentPicture, TAKE_PICTURE);
-
-			}
-
-		});
+		
 	}
 
 	/**
@@ -136,59 +111,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		if (requestCode == TAKE_PICTURE && resultCode == RESULT_OK
-				&& data != null) {
-			Bitmap bitmap;
-			OutputStream output;
-
-			Bundle extras = data.getExtras();
-
-			bitmap = (Bitmap) extras.get("data");
-			newImage.setImageBitmap(bitmap);
-
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-			byte[] byteArray = stream.toByteArray();
-
-			Picture picture = new Picture();
-			picture.setData(byteArray);
-
-			// Media media = new Media();
-			// media.setData(byteArray);
-			application.DataSource.insert(picture);
-
-			Toast.makeText(MainActivity.this, "Afbeelding opgeslagen",
-					Toast.LENGTH_SHORT).show();
-			;
-		}
-
-		if (requestCode == TAKE_VIDEO && resultCode == RESULT_OK
-				&& data != null) {
-			Uri videoUri = data.getData();
-			newVideo.setVideoURI(videoUri);
-			newVideo.start();
-			
-			Video video = new Video();
-			
-			InputStream iStream;
-			try {
-				
-				iStream = getContentResolver().openInputStream(videoUri);
-				byte[] inputData = FileUtils.getBytes(iStream);
-				
-				video.setData(inputData);
-				application.DataSource.insert(video);
-				
-			} catch (FileNotFoundException e) {
-				Log.e("MainActivity",e.getMessage());
-				e.printStackTrace();
-			} catch (IOException e) {
-				Log.e("MainActivity",e.getMessage());
-				e.printStackTrace();
-			}
-			
-
-		}
+		
 
 	}
 

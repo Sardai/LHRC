@@ -8,13 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="lhrc.group3.tjooner.HugoTestActivity" >
 
-    <fragment
-        android:id="@+id/floatingActionButton"
-        android:name="lhrc.group3.tjooner.fragments.FloatingActionButtonFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        tools:layout="@layout/floating_action_button_fragment" />
+ 
 
 </RelativeLayout>

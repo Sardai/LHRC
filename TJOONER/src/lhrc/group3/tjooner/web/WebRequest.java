@@ -89,10 +89,17 @@ public class WebRequest {
 
 		@Override
 		protected void onPostExecute(String result) {
+			
 			switch (type) {
 			case GROUP:
 				
 				ArrayList<Group> groups = new ArrayList<Group>();
+				if(result == null){
+					if(onGroupRequestListener != null){
+						onGroupRequestListener.Completed(groups);
+					}
+					return;
+				}
 				
 				try {
 					JSONArray jsonGroups = new JSONArray(result);

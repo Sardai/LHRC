@@ -11,56 +11,22 @@
     <GridView
         android:id="@+id/gridView1"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_above="@+id/buttonCameraPhoto"
-        android:layout_alignParentLeft="true"
+        android:layout_height="match_parent"
         android:horizontalSpacing="1dp"
         android:numColumns="3"
         android:stretchMode="columnWidth"
         android:verticalSpacing="1dp" >
     </GridView>
 
-    <Button
-        android:id="@+id/buttonCameraVideo"
+    
+    
+       <fragment
+        android:id="@+id/floatingActionButton"
+        android:name="lhrc.group3.tjooner.fragments.FloatingActionButtonFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="27dp"
-        android:text="Nieuwe video toevoegen" />
-
-    <Button
-        android:id="@+id/buttonCameraPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonCameraVideo"
-        android:layout_alignLeft="@+id/buttonCameraVideo"
-        android:layout_alignRight="@+id/buttonCameraVideo"
-        android:layout_marginBottom="16dp"
-        android:text="Nieuwe foto toevoegen" />
-
-    <VideoView
-        android:id="@+id/videoViewNewVideo"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
-
-    <ImageView
-        android:id="@+id/imageViewNewPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/videoView1"
-        android:layout_alignRight="@+id/buttonCameraPhoto"
-        android:layout_alignTop="@+id/videoView1"
-        android:layout_marginRight="50dp"
-        android:src="@drawable/ic_launcher" />
-
-    <MediaController
-        android:id="@+id/mediaController"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageViewNewPhoto"
-        android:layout_marginTop="22dp"
-        android:layout_toRightOf="@+id/imageViewNewPhoto" >
-    </MediaController>
+        android:layout_alignParentRight="true"
+        tools:layout="@layout/floating_action_button_fragment" />
 
 </RelativeLayout>
