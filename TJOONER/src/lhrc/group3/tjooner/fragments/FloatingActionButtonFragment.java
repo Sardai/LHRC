@@ -20,8 +20,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.webkit.WebView.FindListener;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 public class FloatingActionButtonFragment extends Fragment {
 	public static final int REQUEST_CODE_PICK_IMAGE_FROM_GALLERY = 120;
@@ -107,7 +109,7 @@ public class FloatingActionButtonFragment extends Fragment {
 			public void onClick(View v) {
 				//Use MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 				Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-				
+				startActivityForResult(intent, REQUEST_CODE_PICK_VIDEO_FROM_GALLERY);
 			}
 		});
 		
@@ -115,10 +117,12 @@ public class FloatingActionButtonFragment extends Fragment {
 	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		//pick picture from gallery
+		
 		try {
-		     
 	        if (requestCode == REQUEST_CODE_PICK_IMAGE_FROM_GALLERY && resultCode == getActivity().RESULT_OK
 	                && null != data) {
+	        	
 	           Log.d("in de if met de request code", "tot hier werkt het nog 1");
 
 	            Uri selectedImage = data.getData();
@@ -152,7 +156,7 @@ public class FloatingActionButtonFragment extends Fragment {
 	            source.insert(pic);
 	            Log.d("in de if met de request code", "tot hier werkt het nog 7");
 
-	        } else {
+	        } else if(requestCode == REQUEST_CODE_PICK_IMAGE_FROM_GALLERY) {
 	            Toast.makeText(getActivity(), "You haven't picked an Image",
 	                    Toast.LENGTH_LONG).show();
 	        }
@@ -160,6 +164,26 @@ public class FloatingActionButtonFragment extends Fragment {
 	        Toast.makeText(getActivity(), "Something went wrong, sorry!", Toast.LENGTH_LONG)
 	                .show();
 	    }
+		
+		//pick video from gallery
+		try {
+		     
+	        if (requestCode == REQUEST_CODE_PICK_VIDEO_FROM_GALLERY && resultCode == getActivity().RESULT_OK
+	                && null != data) {
+	        	Uri selectedVideo = data.getData();
+	        	   	
+	        	
+	         
+
+	        } else {
+	            Toast.makeText(getActivity(), "You haven't picked an Video",
+	                    Toast.LENGTH_LONG).show();
+	        }
+	    } catch (Exception e) {
+	        Toast.makeText(getActivity(), "Something went wrong, sorry!", Toast.LENGTH_LONG)
+	                .show();
+	    }
+		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

@@ -8,39 +8,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="lhrc.group3.tjooner.HugoTestActivity" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
+    <fragment
+        android:id="@+id/floatingActionButton"
+        android:name="lhrc.group3.tjooner.fragments.FloatingActionButtonFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:src="@drawable/floatingactionbutton" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:src="@drawable/floatingactionbutton" />
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:src="@drawable/floatingactionbutton" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/floatingactionbutton" />
+        tools:layout="@layout/floating_action_button_fragment" />
 
 </RelativeLayout>
