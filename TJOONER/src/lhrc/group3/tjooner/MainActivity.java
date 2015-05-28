@@ -53,6 +53,10 @@ public class MainActivity extends Activity {
  
 		gv = (GridView) findViewById(R.id.gridView1); 
 		gv.setAdapter(new CustomAdapter(this, groupNames, groupPreview));
+		gv.setVerticalSpacing(15);
+		gv.setHorizontalSpacing(15);
+		
+		
 		application = (TjoonerApplication) getApplication();
 		
 		ButtonCameraPhoto = (Button) findViewById(R.id.buttonCameraPhoto);
