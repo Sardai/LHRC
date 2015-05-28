@@ -16,6 +16,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Class to insert, update ,remove and get object from the database.
@@ -65,6 +66,7 @@ public class DataSource {
 		  values.put(Storage.DATA_TYPE, datatype);
 		  values.put(Storage.DATA,media.getData());		  
 		  database.insert(Storage.MEDIA_TABLE_NAME, null, values);
+		  Log.i("storage","media item saved");
 	  }
 	  
 	  /**
