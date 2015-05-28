@@ -228,7 +228,9 @@ public class DataSource {
 		  values.put(Storage.FILENAME, media.getFilename());
 		  values.put(Storage.TITLE, media.getTitle());
 		  values.put(Storage.DESCRIPTION, media.getDescription());
-		  values.put(Storage.DATE_TIME_FORMAT, media.getDatetime().toString(Storage.DATE_TIME_FORMAT));
+		  if(media.getDatetime() != null){
+			  values.put(Storage.DATE_TIME_FORMAT, media.getDatetime().toString(Storage.DATE_TIME_FORMAT));
+		  }
 		  values.put(Storage.HAS_COPYRIGHT, media.hasCopyright());
 		  values.put(Storage.COPYRIGHT_HOLDER, media.getCopyrightHolder());
 		  return values;

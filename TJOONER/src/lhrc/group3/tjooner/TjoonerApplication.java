@@ -26,8 +26,8 @@ public class TjoonerApplication extends Application {
 
 	@Override
 	public void onCreate() {
-		DataSource dataSource = new DataSource(this);
-		dataSource.open();	 
+		DataSource = new DataSource(this);
+		DataSource.open();	 
 	}
 
 }
