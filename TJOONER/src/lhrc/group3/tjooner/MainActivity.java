@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 /**
  * @author Chris Rötter, Luuk Wellink
@@ -37,11 +38,14 @@ public class MainActivity extends Activity {
 	private Button ButtonCameraPhoto;
 	private Button ButtonCameraVideo;
 	private TjoonerApplication application;
-	private ImageView image;
+	private ImageView newImage;
+	private VideoView newVideo;
 	public static int TAKE_PICTURE = 1;
+	public static int TAKE_VIDEO = 2;
 
 	GridView gv;
 	Context context;
+	
 	public String [] groupNames={"group1", "group2", "group3","group4","group5","group6"};
 	public int [] groupPreview ={R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher};
 	
@@ -56,13 +60,23 @@ public class MainActivity extends Activity {
 		gv.setVerticalSpacing(15);
 		gv.setHorizontalSpacing(15);
 		
+		newVideo = (VideoView) findViewById(R.id.videoViewNewVideo);
+		newImage = (ImageView) findViewById(R.id.imageViewNewPhoto);
 		
 		application = (TjoonerApplication) getApplication();
 		
 		ButtonCameraPhoto = (Button) findViewById(R.id.buttonCameraPhoto);
 		ButtonCameraVideo = (Button) findViewById(R.id.buttonCameraVideo);
 	
- 
+		ButtonCameraVideo.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intentVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);	
+				
+				startActivityForResult(intentVideo, TAKE_VIDEO);
+			}
+		});
 		
 		ButtonCameraPhoto.setOnClickListener(new View.OnClickListener() {
 
@@ -80,7 +94,9 @@ public class MainActivity extends Activity {
 
 		});
 	}
-
+	/**
+	 * OnActivityResult used for taking new pictures.
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
@@ -91,7 +107,7 @@ public class MainActivity extends Activity {
 			 Bundle extras = data.getExtras();
 			 
 			 bitmap = (Bitmap) extras.get("data");
-			 image.setImageBitmap(bitmap);
+			 newImage.setImageBitmap(bitmap);
 			 
 			 ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -104,8 +120,23 @@ public class MainActivity extends Activity {
 			 
 			 Toast.makeText(MainActivity.this, "Afbeelding opgeslagen", Toast.LENGTH_SHORT).show();; 
 		 }
+		 
+		 if (requestCode == TAKE_VIDEO && resultCode== RESULT_OK && data != null){
+			 Bitmap bitmap;
+			 OutputStream output;
+			 
+			 Bundle extras = data.getExtras();
+			 
+			 bitmap = (Bitmap) extras.get("data");
+			 newImage.setImageBitmap(bitmap);
+			 
+			 ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			 byte[] byteArray = stream.toByteArray();
+		 }
 		
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
