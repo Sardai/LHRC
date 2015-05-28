@@ -1,10 +1,13 @@
 package lhrc.group3.tjooner;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import lhrc.group3.tjooner.adapter.CustomAdapter;
+import lhrc.group3.tjooner.adapter.GroupAdapter;
 import lhrc.group3.tjooner.models.Group;
+import lhrc.group3.tjooner.models.Picture;
 import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.web.WebRequest;
 import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
@@ -22,6 +25,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -40,30 +45,48 @@ public class MainActivity extends Activity {
 	private ImageView image;
 	public static int TAKE_PICTURE = 1;
 
-	GridView gv;
-	Context context;
-	public String [] groupNames={"group1", "group2", "group3","group4","group5","group6"};
-	public int [] groupPreview ={R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher};
-	
+	private GridView gridView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);				
- 
-		gv = (GridView) findViewById(R.id.gridView1); 
-		gv.setAdapter(new CustomAdapter(this, groupNames, groupPreview));
-		gv.setVerticalSpacing(15);
-		gv.setHorizontalSpacing(15);
-		
-		
 		application = (TjoonerApplication) getApplication();
+ 
+		gridView = (GridView) findViewById(R.id.gridView1); 
+		
+		gridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Group group = (Group) ((GroupAdapter)gridView.getAdapter()).getItem(position);
+				Toast.makeText(MainActivity.this, "You Clicked " + group.getDescription(),
+						Toast.LENGTH_LONG).show();				
+			}
+			
+		});
+		
+		gridView.setVerticalSpacing(15);
+		gridView.setHorizontalSpacing(15);
+		
+		DataSource dataSource = new DataSource(this);
+		dataSource.open();
+		WebRequest webRequest = new WebRequest(dataSource);
+		webRequest.setOnGroupRequestListener(new OnGroupRequestListener() {
+			
+			@Override
+			public void Completed(ArrayList<Group> groups) {
+			  Log.i("WebRequest", "success");
+			  gridView.setAdapter(new GroupAdapter(groups));			
+			}
+		});
+		webRequest.getGroups();
+		
 		
 		ButtonCameraPhoto = (Button) findViewById(R.id.buttonCameraPhoto);
 		ButtonCameraVideo = (Button) findViewById(R.id.buttonCameraVideo);
 	
- 
-
 		ButtonCameraPhoto.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -97,9 +120,14 @@ public class MainActivity extends Activity {
 			 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 			 byte[] byteArray = stream.toByteArray();
 			 
+			 Picture picture = new Picture();
+			 picture.setData(byteArray);
+			 
+			 
+			 
 //			 Media media = new Media();
 //			 media.setData(byteArray);
-//			 application.dataSource.insert(media);
+			 application.DataSource.insert(picture);
 			
 			 
 			 Toast.makeText(MainActivity.this, "Afbeelding opgeslagen", Toast.LENGTH_SHORT).show();; 

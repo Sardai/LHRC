@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class WebRequest {
 	}
 	
 	public interface OnGroupRequestListener extends EventListener {
-	        public void Completed(Map<UUID,Group> groups);
+	        public void Completed(ArrayList<Group> groups);
     }
 
 	OnGroupRequestListener onGroupRequestListener;
@@ -91,14 +92,14 @@ public class WebRequest {
 			switch (type) {
 			case GROUP:
 				
-				HashMap<UUID,Group> groups = new HashMap<UUID,Group>();
+				ArrayList<Group> groups = new ArrayList<Group>();
 				
 				try {
 					JSONArray jsonGroups = new JSONArray(result);
 					
 					for (int i = 0; i < jsonGroups.length(); i++) {
 						Group group = new Group(jsonGroups.getJSONObject(i));
-						groups.put(group.getId(), group);
+						groups.add(group);
 					}
 					
 					dataSource.upsert(groups);

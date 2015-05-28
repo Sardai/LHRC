@@ -22,22 +22,12 @@ public class TjoonerApplication extends Application {
 
 	 private WebRequest webRequest;
 	 private HashSet<Group> groups;
-	 private DataSource dataSource;
+	 public DataSource DataSource;
 
 	@Override
 	public void onCreate() {
 		DataSource dataSource = new DataSource(this);
-		dataSource.open();
-		WebRequest webRequest = new WebRequest(dataSource);
-		webRequest.setOnGroupRequestListener(new OnGroupRequestListener() {
-			
-			@Override
-			public void Completed(Map<UUID, Group> groups) {
-			  Log.i("WebRequest", "success");
-				
-			}
-		});
-		webRequest.getGroups();
+		dataSource.open();	 
 	}
 
 }

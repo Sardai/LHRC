@@ -1,5 +1,6 @@
 package lhrc.group3.tjooner.storage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,7 +81,7 @@ public class DataSource {
 	   * updates or insert a set of groups in the database. when a group is not removed than it is marked inactive.
 	   * @param groups the set of groups to insert.
 	   */
-	  public void upsert(Map<UUID,Group> groups){
+	  public void upsert(ArrayList<Group> groups){
 		  
 		  ContentValues values = new ContentValues();
 		  values.put(Storage.INACTIVE, 1);
@@ -88,14 +89,14 @@ public class DataSource {
 		  			 
 		  String where = String.format("%s = ?",Storage.ID);
 		 
-		  for(Map.Entry<UUID, Group> entry : groups.entrySet()){
+		  for(Group group : groups){
 			  
-			  String id = entry.getKey().toString();			  
+			  String id =group.getId().toString();			  
 			  Cursor cursor = database.query(Storage.GROUP_TABLE_NAME,new String[]{Storage.ID},where,new String[]{id},null,null,null);
 			  if(cursor.getCount() == 0){
-				  insert(entry.getValue());
+				  insert(group);
 			  }else{
-				  update(entry.getValue());
+				  update(group);
 			  }
 			  
 		  }
