@@ -30,6 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -45,6 +46,7 @@ public class MainActivity extends Activity {
 	private TjoonerApplication application;
 	private ImageView newImage;
 	private VideoView newVideo;
+	private MediaController mediaControls;
 	public static int TAKE_PICTURE = 1;
 	public static int TAKE_VIDEO = 2;
 
@@ -88,6 +90,8 @@ public class MainActivity extends Activity {
 
 		newVideo = (VideoView) findViewById(R.id.videoViewNewVideo);
 		newImage = (ImageView) findViewById(R.id.imageViewNewPhoto);		
+		
+		newVideo.setMediaController(mediaControls);
 		
 		ButtonCameraPhoto = (Button) findViewById(R.id.buttonCameraPhoto);
 		ButtonCameraVideo = (Button) findViewById(R.id.buttonCameraVideo);
@@ -151,17 +155,7 @@ public class MainActivity extends Activity {
 		 }
 		 
 		 if (requestCode == TAKE_VIDEO && resultCode== RESULT_OK && data != null){
-			 Bitmap bitmap;
-			 OutputStream output;
-			 
-			 Bundle extras = data.getExtras();
-			 
-			 bitmap = (Bitmap) extras.get("data");
-			 newImage.setImageBitmap(bitmap);
-			 
-			 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-			 byte[] byteArray = stream.toByteArray();
+			 newVideo.setVideoURI(data.getData());
 		 }
 		
 	}
