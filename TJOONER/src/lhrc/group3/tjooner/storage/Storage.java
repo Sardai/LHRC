@@ -18,6 +18,8 @@ public class Storage extends SQLiteOpenHelper {
 	public static final String COPYRIGHT_HOLDER = "copyrightHolder" ;
 	public static final String DATA = "data";
 	public static final String DATA_TYPE = "dataType";
+	public static final int DATA_TYPE_PICTURE = 1;
+	public static final int DATA_TYPE_VIDEO = 2;
 	
 	public static final String[] MEDIA_COLUMNS = {
 		ID,FILENAME,TITLE,DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,COPYRIGHT_HOLDER,DATA,DATA_TYPE

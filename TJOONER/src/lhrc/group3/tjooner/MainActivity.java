@@ -1,33 +1,15 @@
 package lhrc.group3.tjooner;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import lhrc.group3.tjooner.adapter.GroupAdapter;
-import lhrc.group3.tjooner.helpers.FileUtils;
 import lhrc.group3.tjooner.models.Group;
-import lhrc.group3.tjooner.models.Picture;
-import lhrc.group3.tjooner.models.Video;
 import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.web.WebRequest;
 import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,8 +92,6 @@ public class MainActivity extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		
 
 	}
 

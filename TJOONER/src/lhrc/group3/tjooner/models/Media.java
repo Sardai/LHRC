@@ -16,7 +16,7 @@ import android.database.Cursor;
  * @author Chris
  * Class which stores the values of a media object.
  */
-public class Media extends DataObject {
+public abstract class Media extends DataObject {
 	private UUID id;
 	private String filename;
 	private String title;
@@ -47,7 +47,10 @@ public class Media extends DataObject {
 	 	copyrightHolder = getString(Storage.COPYRIGHT_HOLDER);
 	 	data = getData(Storage.DATA);
 	 	
-	 	groupId = UUID.fromString(getString(Storage.GROUP_ID));
+	 	String stringId = getString(Storage.GROUP_ID);
+	 	if(stringId != null){
+	 		groupId = UUID.fromString(stringId);
+	 	}
 	}
 	
 	/**
