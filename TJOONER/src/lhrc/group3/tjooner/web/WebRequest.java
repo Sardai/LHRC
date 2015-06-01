@@ -41,29 +41,55 @@ public class WebRequest {
 	
 	private DataSource dataSource;
 	
+	/**
+	 * Initialize a web request.
+	 * @param dataSource the datasource to store data from the webrequest.
+	 */
 	public WebRequest(DataSource dataSource){
 		this.dataSource = dataSource;
 	}
 	
+	/**
+	 * get groups from the online TJOONER enviroment.
+	 */
 	public void getGroups(){
 		type = RequestType.GROUP;
 		new WebTask().execute(GROUPS_URL);
 	}
 	
+	/**
+	 * enum for all request types.
+	 * @author Chris
+	 *
+	 */
 	private enum RequestType{
 		GROUP
 	}
 	
+	/**
+	 * EventListener for group requests. 
+	 * @author Chris
+	 *
+	 */
 	public interface OnGroupRequestListener extends EventListener {
 	        public void Completed(ArrayList<Group> groups);
     }
 
-	OnGroupRequestListener onGroupRequestListener;
+	private OnGroupRequestListener onGroupRequestListener;
 
+	/**
+	 * Set the ongrouprequest listener.
+	 * @param onGroupRequestListener
+	 */
     public void setOnGroupRequestListener(OnGroupRequestListener onGroupRequestListener){
         this.onGroupRequestListener = onGroupRequestListener;
     }
 	
+    /**
+     * The webtask to get data from the online TJOONER enviroment
+     * @author Chris
+     *
+     */
 	private class WebTask extends AsyncTask<String,Void,String>{
 
 		@Override

@@ -16,16 +16,21 @@ import lhrc.group3.tjooner.storage.Storage;
  */
 public class Date extends java.util.Date {
 
+	public static final String DATE_TIME_FORMAT = "YYYY-MM-DD HH:MM:SS.SSS";
+	
+	/**
+	 * Creates a new date object.
+	 */
 	public Date(){
 		
 	}
 	
 	/**
-	 * Creates a dateobject from a database string.
+	 * Creates a dateobject from a string with the format YYYY-MM-DD HH:MM:SS.SSS.
 	 * @param date the date string
 	 */
 	public Date(String date){
-		DateFormat format = new SimpleDateFormat(Storage.DATE_TIME_FORMAT, Locale.ENGLISH);
+		DateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT, Locale.ENGLISH);
 		try {
 			setTime(format.parse(date).getTime());
 		} catch (ParseException e) {

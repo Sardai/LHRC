@@ -70,9 +70,9 @@ public class FloatingActionButtonFragment extends Fragment implements
 		display.getSize(size);
 		int width = size.x;
 		int height = size.y;
-		double widthPercentage = 0.22;
+		double widthPercentage = 0.18;
 
-		// set all the images arcordingly to the screen size
+		// set all the images arcordingly to the screen size		
 		expandImageView.getLayoutParams().width = (int) (widthPercentage * width);
 		expandImageView.getLayoutParams().height = (int) (widthPercentage * width);
 
@@ -184,26 +184,26 @@ public class FloatingActionButtonFragment extends Fragment implements
 	private UUID insertVideo(Uri videoUri){
 		Video video = new Video();
 		InputStream iStream;
-		try {
+//		try {
 
-			iStream = getActivity().getContentResolver()
-					.openInputStream(videoUri);
-			byte[] inputData = FileUtils.getBytes(iStream);
+//			iStream = getActivity().getContentResolver()
+//					.openInputStream(videoUri);
+//			byte[] inputData = FileUtils.getBytes(iStream);
 
-			video.setData(inputData);
+			video.setPath(videoUri.toString());
 			source.insert(video);
 			return video.getId();
 
-		} catch (FileNotFoundException e) {
-			Log.e("MainActivity", e.getMessage());
-			e.printStackTrace();
-			//TODO foutafhandeling verbeteren
-		} catch (IOException e) {
-			Log.e("MainActivity", e.getMessage());
-			e.printStackTrace();
-			//TODO foutafhandeling verbeteren
-		}
-		return null;
+//		} catch (FileNotFoundException e) {
+//			Log.e("MainActivity", e.getMessage());
+//			e.printStackTrace();
+//			//TODO foutafhandeling verbeteren
+//		} catch (IOException e) {
+//			Log.e("MainActivity", e.getMessage());
+//			e.printStackTrace();
+//			//TODO foutafhandeling verbeteren
+//		}
+//		return null;
 	}
 
 	@Override

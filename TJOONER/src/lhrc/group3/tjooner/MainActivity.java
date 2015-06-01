@@ -77,14 +77,6 @@ public class MainActivity extends Activity {
 			}
 		});
 		webRequest.getGroups();
-
-
-
-		
-
-			
-
-		
 	}
 
 	/**

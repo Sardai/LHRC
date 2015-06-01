@@ -33,7 +33,7 @@ public class MediaItemActivity extends Activity {
 		}
 		
 		if(media instanceof Picture){
-			videoViewMediaItem.setVisibility(View.INVISIBLE);
+			videoViewMediaItem.setVisibility(View.GONE);
 			if(media.getTitle() == null){
 				setTitle(R.string.title_picture_add);
 			}
@@ -42,12 +42,14 @@ public class MediaItemActivity extends Activity {
 			imageViewMediaItem.setImageBitmap(picture.getBitmap());
 		}
 		else if(media instanceof Video){
-			imageViewMediaItem.setVisibility(View.INVISIBLE);
+			imageViewMediaItem.setVisibility(View.GONE);
 			if(media.getTitle() == null){
 				setTitle(R.string.title_video_add);
 			}
 			
 			Video video = (Video)media;
+			videoViewMediaItem.setVideoPath(video.getPath());
+			videoViewMediaItem.start();
 		}
 		
 	}

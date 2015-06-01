@@ -2,12 +2,11 @@ package lhrc.group3.tjooner.storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 
+import lhrc.group3.tjooner.helpers.Date;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
 import lhrc.group3.tjooner.models.Picture;
@@ -65,7 +64,9 @@ public class DataSource {
 		values.put(Storage.ID, media.getId().toString());
 		int datatype = Storage.DATA_TYPE_PICTURE;
 		if (media instanceof Video) {
+			Video video = (Video)media;
 			datatype = Storage.DATA_TYPE_VIDEO;
+			values.put(Storage.PATH, video.getPath());
 		}
 		values.put(Storage.DATA_TYPE, datatype);
 		values.put(Storage.DATA, media.getData());
@@ -82,6 +83,8 @@ public class DataSource {
 	public void insert(Group group) {
 		ContentValues values = new ContentValues();
 		values.put(Storage.ID, group.getId().toString());
+		values.put(Storage.DESCRIPTION, group.getDescription());
+		values.put(Storage.COLOR, group.getColor());
 		database.insert(Storage.GROUP_TABLE_NAME, null, values);
 	}
 
@@ -123,13 +126,23 @@ public class DataSource {
 	 *            the tag to insert
 	 */
 	public void insert(String tag) {
-		String where = String.format("%s = %s", Storage.WORD, tag);
+		String where = String.format("%s = '%s'", Storage.WORD, tag);
 		Cursor cursor = database.query(Storage.TAG_TABLE_NAME,
 				new String[] { Storage.WORD }, where, null, null, null, null);
 		if (cursor.getCount() == 0) {
 			ContentValues values = new ContentValues();
 			values.put(Storage.WORD, tag);
 			database.insert(Storage.TAG_TABLE_NAME, null, values);
+		}
+	}
+	
+	/**
+	 * Insert an array of tags in the database.
+	 * @param tags the tags to insert
+	 */
+	public void insert(String[] tags){
+		for (String tag : tags) {
+			insert(tag);
 		}
 	}
 
@@ -188,6 +201,7 @@ public class DataSource {
 
 		return getMedia(cursor);
 	}
+	
 
 	/**
 	 * Get an media object from it's id.
@@ -198,6 +212,25 @@ public class DataSource {
 	 */
 	public Media getMedia(UUID id) {
 		return getMedia(id.toString());
+	}
+	
+	public List<Group> getGroups(){
+		Cursor cursor = database.query(Storage.GROUP_TABLE_NAME,
+				Storage.GROUP_COLUMNS, null, null, null, null, null);
+
+		List<Group> groups = new ArrayList<Group>();
+
+		if (cursor.getCount() == 0) {
+			return groups;
+		}
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Group group = new Group(cursor);
+			groups.add(group);
+			cursor.moveToNext();
+		}
+		return groups;
 	}
 
 	/**
@@ -258,11 +291,11 @@ public class DataSource {
 	 * 
 	 * @return all tags
 	 */
-	public TreeSet<String> getTags() {
+	public List<String> getTags() {
 		String[] columns = { Storage.WORD };
 		Cursor cursor = database.query(Storage.TAG_TABLE_NAME, columns, null,
 				null, null, null, null);
-		TreeSet<String> tags = new TreeSet<String>();
+		List<String> tags = new ArrayList<String>();
 
 		if (cursor.getCount() == 0) {
 			return tags;
@@ -271,24 +304,35 @@ public class DataSource {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			tags.add(cursor.getString(0));
+			cursor.moveToNext();
 		}
 		return tags;
 	}
 
+	/**
+	 * Get the content values from a media object
+	 * @param media the media object with values
+	 * @return the content values from the media object
+	 */
 	private ContentValues getContentValues(Media media) {
 		ContentValues values = new ContentValues();
 		values.put(Storage.FILENAME, media.getFilename());
 		values.put(Storage.TITLE, media.getTitle());
 		values.put(Storage.DESCRIPTION, media.getDescription());
 		if (media.getDatetime() != null) {
-			values.put(Storage.DATE_TIME_FORMAT,
-					media.getDatetime().toString(Storage.DATE_TIME_FORMAT));
+			values.put(Storage.DATETIME,
+					media.getDatetime().toString(Date.DATE_TIME_FORMAT));
 		}
 		values.put(Storage.HAS_COPYRIGHT, media.hasCopyright());
 		values.put(Storage.COPYRIGHT_HOLDER, media.getCopyrightHolder());
 		return values;
 	}
 
+	/**
+	 * Get the content values from a group object
+	 * @param group the group object with values
+	 * @return the content values from the group object
+	 */
 	private ContentValues getContentValues(Group group) {
 		ContentValues values = new ContentValues();
 		values.put(Storage.DESCRIPTION, group.getDescription());
@@ -297,6 +341,11 @@ public class DataSource {
 		return values;
 	}
 
+	/**
+	 * Get a media object from a cursor.
+	 * @param cursor the cursor from the database
+	 * @return the media object
+	 */
 	private Media getMedia(Cursor cursor) {
 		int dataType = cursor.getInt(cursor.getColumnIndex(Storage.DATA_TYPE));
 		Media media = null;
