@@ -1,29 +1,35 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     tools:context="lhrc.group3.tjooner.MediaItemActivity" >
-
-    <ImageView
-        android:id="@+id/imageViewMediaItem"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:src="@drawable/ic_launcher" />
-
-    <VideoView
-        android:id="@+id/videoViewMediaItem"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-         />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7" >
-    </LinearLayout>
-    <!-- hier komen de fragments voor het toevoegen van de details e.d. -->
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/imageViewMediaItem"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:src="@drawable/ic_launcher" />
+
+        <VideoView
+            android:id="@+id/videoViewMediaItem"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3" />
+        <!-- hier komen de fragments voor het toevoegen van de details e.d. -->
+
+        <FrameLayout
+            android:id="@+id/fragmentPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3" >
+        </FrameLayout>
+    </LinearLayout>
+
+</ScrollView>

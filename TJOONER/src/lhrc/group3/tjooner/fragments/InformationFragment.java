@@ -28,9 +28,10 @@ public class InformationFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.information_fragment, container, false);
+		setRetainInstance(true);
 		
-		source = app.DataSource;
-		app = (TjoonerApplication) getActivity().getApplication();
+		//app = (TjoonerApplication) getActivity().getApplication();
+		//source = app.DataSource;
 		
 		title = (TextView) view.findViewById(R.id.textViewTitle);
 		description = (TextView) view.findViewById(R.id.textViewDescription);
@@ -38,26 +39,31 @@ public class InformationFragment extends Fragment{
 		filename = (TextView) view.findViewById(R.id.textViewFilename);
 		
 		title.setText(media.getTitle());
-		
+		if(media.getTitle() != null) {
+			title.setText(media.getTitle());
+			title.setVisibility(View.VISIBLE);
+			} else {
+				title.setVisibility(view.GONE);
+			}
 		if(media.getDescription() != null) {
 		description.setText(media.getDescription());
 		description.setVisibility(view.VISIBLE);
 		} else {
-			description.setVisibility(view.INVISIBLE);
+			description.setVisibility(view.GONE);
 		}
 		if(media.getDatetime() != null) {
 		dateTime.setText( media.getDatetime().toString());
 		dateTime.setVisibility(view.VISIBLE);
 		} else {
-			dateTime.setVisibility(view.INVISIBLE);
+			dateTime.setVisibility(view.GONE);
 		}
 		if(media.getFilename() != null) {
 		filename.setText(media.getFilename());
 		filename.setVisibility(view.VISIBLE);
 		} else {
-			filename.setVisibility(view.INVISIBLE);
+			filename.setVisibility(view.GONE);
 		}
-		return super.onCreateView(inflater, container, savedInstanceState);
+		return view;
 	}
 	
 	
