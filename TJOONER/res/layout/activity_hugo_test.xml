@@ -15,9 +15,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:ems="10"
-        android:text="MultiAutoCompleteTextView" >
-
-        <requestFocus />
+        android:text="MultiAutoCompleteTextView" >       
     </MultiAutoCompleteTextView>
 
     <Button

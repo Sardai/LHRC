@@ -32,7 +32,7 @@ public class HugoTestActivity extends Activity {
 		
 		 
 		
-		  ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		  	 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 	                 android.R.layout.simple_dropdown_item_1line, source.getTags());
 	         textView.setAdapter(adapter);
 	         textView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
