@@ -69,6 +69,7 @@ public class ChangeInformationFragment extends Fragment implements
 		authorEditText = (EditText) view.findViewById(R.id.authorNameEditText);
 		authorInformationLayout = (LinearLayout) view
 				.findViewById(R.id.authordetails);
+		titleEditText = (EditText) view.findViewById(R.id.titleEditText);
 		// datePicker = (DatePicker) view.findViewById(R.id.mediaDatePicker);
 		// mediaTimePicker = (TimePicker)
 		// view.findViewById(R.id.mediaTimePicker);
@@ -189,6 +190,7 @@ public class ChangeInformationFragment extends Fragment implements
 			hasCopyRight.setChecked(media.hasCopyright());
 			if (media.hasCopyright()) {
 				authorInformationLayout.setVisibility(LinearLayout.VISIBLE);
+				authorEditText.setText(media.getCopyrightHolder()+"");
 			}
 		}
 
