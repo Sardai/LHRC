@@ -1,12 +1,13 @@
 package lhrc.group3.tjooner;
 
 import java.util.ArrayList;
+
 import lhrc.group3.tjooner.adapter.GroupAdapter;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.storage.DataSource;
+import lhrc.group3.tjooner.storage.Storage;
 import lhrc.group3.tjooner.web.WebRequest;
 import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,7 +47,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		application = (TjoonerApplication) getApplication();
 
-		gridView = (GridView) findViewById(R.id.gridView1);
+		gridView = (GridView) findViewById(R.id.gridViewGroups);
 
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -55,9 +56,9 @@ public class MainActivity extends Activity {
 					int position, long id) {
 				Group group = (Group) ((GroupAdapter) gridView.getAdapter())
 						.getItem(position);
-				Toast.makeText(MainActivity.this,
-						"You Clicked " + group.getDescription(),
-						Toast.LENGTH_LONG).show();
+				Intent intent = new Intent(MainActivity.this,MediaGridActivity.class);
+				intent.putExtra(Storage.GROUP_ID, group.getId().toString());
+				startActivity(intent);
 			}
 
 		});
@@ -65,14 +66,13 @@ public class MainActivity extends Activity {
 		gridView.setVerticalSpacing(15);
 		gridView.setHorizontalSpacing(15);
 
-		DataSource dataSource = new DataSource(this);
-		dataSource.open();
-		WebRequest webRequest = new WebRequest(dataSource);
+		WebRequest webRequest = new WebRequest(application.DataSource);
 		webRequest.setOnGroupRequestListener(new OnGroupRequestListener() {
 
 			@Override
 			public void Completed(ArrayList<Group> groups) {
 				Log.i("WebRequest", "success");
+				application.setGroups(groups);
 				gridView.setAdapter(new GroupAdapter(groups));
 			}
 		});

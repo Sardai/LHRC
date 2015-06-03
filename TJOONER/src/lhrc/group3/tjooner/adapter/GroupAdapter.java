@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,7 +56,9 @@ public class GroupAdapter extends BaseAdapter {
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			}
 		
-			convertView = inflater.inflate(R.layout.groupdisplay_layout, null);			
+			convertView = inflater.inflate(R.layout.grid_item_group, null);
+			//set height of view to the width of the view
+			//convertView.setLayoutParams(new LayoutParams(convertView.getWidth(),convertView.getWidth()));
 		}
 		
 		Group group = groups.get(position);
@@ -63,7 +66,7 @@ public class GroupAdapter extends BaseAdapter {
 		TextView textViewGroup = (TextView) convertView.findViewById(R.id.textViewGroup);		
 
 		textViewGroup.setText(group.getDescription());
-		textViewGroup.setBackground(new ColorDrawable(Color.parseColor(group.getColor())));
+		textViewGroup.setBackground(new ColorDrawable(group.getColor()));
 		
 		return convertView;
 	}

@@ -3,9 +3,15 @@
     tools:context="lhrc.group3.tjooner.MediaItemActivity" >
 
     <item
-        android:id="@+id/change_save_media_button"
+        android:id="@+id/action_edit"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/change_save_button"/>
+        android:title="@string/action_edit"/>
+    
+      <item
+        android:id="@+id/action_save"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/action_save"/>
 
 </menu>

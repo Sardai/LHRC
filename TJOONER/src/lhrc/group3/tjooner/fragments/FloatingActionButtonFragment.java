@@ -55,7 +55,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.floating_action_button_fragment,
 				container, false);
-
+		
 		app = (TjoonerApplication) getActivity().getApplication();
 		source = app.DataSource;
 			
@@ -142,6 +142,12 @@ public class FloatingActionButtonFragment extends Fragment implements
 				Intent newIntent = new Intent(getActivity(),MediaItemActivity.class);
 				newIntent.putExtra(Storage.ID, id.toString());
 				newIntent.putExtra(NIEUWE_MEDIA_STRING, true);
+		 
+				if(getActivity().getIntent().hasExtra(Storage.GROUP_ID)){
+					String groupId =  getActivity().getIntent().getExtras().getString(Storage.GROUP_ID);;
+					newIntent.putExtra(Storage.GROUP_ID,groupId);
+				}
+				changeVisibility();
 				startActivity(newIntent);
 			}
 			

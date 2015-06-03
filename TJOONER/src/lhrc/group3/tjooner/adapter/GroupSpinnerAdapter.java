@@ -58,7 +58,7 @@ public class GroupSpinnerAdapter extends BaseAdapter {
 		TextView textViewGroupName = (TextView)convertView.findViewById(R.id.textViewGroupName);
 		
 		textViewGroupName.setText(group.getDescription());
-		textViewGroupName.setBackground(new ColorDrawable(Color.parseColor(group.getColor())));
+		textViewGroupName.setBackground(new ColorDrawable(group.getColor()));
 		
 		return convertView;
 	}

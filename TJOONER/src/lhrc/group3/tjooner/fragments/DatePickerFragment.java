@@ -2,6 +2,7 @@ package lhrc.group3.tjooner.fragments;
 
 import java.util.Calendar;
 
+import lhrc.group3.tjooner.models.Media;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
@@ -18,11 +19,21 @@ public class DatePickerFragment extends DialogFragment implements
 		OnDateSetListener {
 
 	private OnDateSetListener dateSetListener;
+	private Media media;
+	
+	public DatePickerFragment(Media media) {
+		this.media = media;
+	}
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the current date as the default date in the picker
 		final Calendar c = Calendar.getInstance();
+		
+		if(media != null && media.getDatetime() != null){
+			c.setTime(media.getDatetime());
+		}
+		
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH);
 		int day = c.get(Calendar.DAY_OF_MONTH);

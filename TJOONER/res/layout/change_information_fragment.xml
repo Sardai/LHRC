@@ -27,45 +27,36 @@
         android:layout_weight="1"
         android:hint="Description" />
 
-    <EditText 
+    <EditText
         android:id="@+id/editTextDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Date"
-        />
-    
-    <EditText 
+        android:hint="Date" />
+
+    <EditText
         android:id="@+id/editTextTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Time"
-        />
-    
+        android:hint="Time" />
+
     <CheckBox
         android:id="@+id/isAuterCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Has Copy Right" />
+        android:text="Is copyrighted?" />
 
-    <LinearLayout
-        android:id="@+id/authordetails"
+    <EditText
+        android:id="@+id/authorNameEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <EditText
-            android:id="@+id/authorNameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Author name" >
-        </EditText>
-    </LinearLayout>
-
-    <TextView 
-        android:layout_width="match_parent" 
         android:layout_height="wrap_content"
-        android:text="Tags:"
-        />
+        android:layout_weight="1"
+        android:hint="Author name" >
+    </EditText>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tags:" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/multiAutoCompleteTextViewTags"
@@ -74,12 +65,11 @@
         android:ems="10" >
     </MultiAutoCompleteTextView>
 
-     <TextView 
-        android:layout_width="match_parent" 
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tjooner category:"
-        />
-    
+        android:text="Tjooner category:" />
+
     <Spinner
         android:id="@+id/spinnerTjoonerGroup"
         android:layout_width="wrap_content"

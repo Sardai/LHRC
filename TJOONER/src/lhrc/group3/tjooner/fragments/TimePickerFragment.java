@@ -5,6 +5,7 @@ package lhrc.group3.tjooner.fragments;
 
 import java.util.Calendar;
 
+import lhrc.group3.tjooner.models.Media;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
@@ -22,11 +23,21 @@ public class TimePickerFragment extends DialogFragment implements
 		OnTimeSetListener {
 
 	private OnTimeSetListener timeSetListener;
+	private Media media;
+	
+	public TimePickerFragment(Media media) {
+	  this.media = media;
+	}
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the current time as the default values for the picker
 		final Calendar c = Calendar.getInstance();
+		
+		if(media != null && media.getDatetime() != null){
+			c.setTime(media.getDatetime());
+		}
+		
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 

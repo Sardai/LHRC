@@ -2,22 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="lhrc.group3.tjooner.MainActivity" >
+    tools:context="lhrc.group3.tjooner.MediaGridActivity" >
 
     <GridView
-        android:id="@+id/gridViewGroups"
+        android:id="@+id/gridViewMedia"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:horizontalSpacing="1dp"
+        android:layout_height="wrap_content"
+        android:horizontalSpacing="2dp"
         android:numColumns="3"
-        android:verticalSpacing="1dp"
-        android:layout_margin="1dp"
-         >
+        android:verticalSpacing="2dp" >
     </GridView>
 
-    
-    
-       <fragment
+    <fragment
         android:id="@+id/floatingActionButton"
         android:name="lhrc.group3.tjooner.fragments.FloatingActionButtonFragment"
         android:layout_width="wrap_content"

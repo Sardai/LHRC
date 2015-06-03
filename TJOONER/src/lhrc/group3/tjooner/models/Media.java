@@ -5,10 +5,10 @@ package lhrc.group3.tjooner.models;
 
 
 
+import java.util.Date;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import lhrc.group3.tjooner.helpers.Date;
 import lhrc.group3.tjooner.storage.Storage;
 import android.database.Cursor;
 
@@ -23,7 +23,7 @@ public abstract class Media extends DataObject {
 	private String description;
 	private Date datetime;
 	private boolean hasCopyright;
-	private String copyrightHolder;
+	private String author;
 	private byte[] data;
 	
 	private UUID groupId;
@@ -44,7 +44,7 @@ public abstract class Media extends DataObject {
 	 	description = getString(Storage.DESCRIPTION);
 	 	datetime = getDate(Storage.DATETIME);
 	 	hasCopyright = getBool(Storage.HAS_COPYRIGHT);
-	 	copyrightHolder = getString(Storage.COPYRIGHT_HOLDER);
+	 	author = getString(Storage.AUTHOR);
 	 	data = getData(Storage.DATA);
 	 	
 	 	String stringId = getString(Storage.GROUP_ID);
@@ -129,16 +129,16 @@ public abstract class Media extends DataObject {
 		this.hasCopyright = hasCopyright;
 	}
 	/**
-	 * @return the copyrightHolder
+	 * @return the author
 	 */
-	public String getCopyrightHolder() {
-		return copyrightHolder;
+	public String getAuthor() {
+		return author;
 	}
 	/**
-	 * @param copyrightHolder the copyrightHolder to set
+	 * @param author the author to set
 	 */
-	public void setCopyrightHolder(String copyrightHolder) {
-		this.copyrightHolder = copyrightHolder;
+	public void setAuthor(String author) {
+		this.author = author;
 	}	
 	
 	/**
@@ -182,6 +182,16 @@ public abstract class Media extends DataObject {
 	 */
 	public void setGroupId(UUID groupId) {
 		this.groupId = groupId;
+	}
+	
+	/**
+	 * Add tags to this media object
+	 * @param tags the tags to add
+	 */
+	public void addTags(String[] tags){
+		for (String tag : tags) {
+			addTag(tag);
+		}
 	}
 	
 	
