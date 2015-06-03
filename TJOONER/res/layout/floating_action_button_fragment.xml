@@ -20,13 +20,13 @@
             android:id="@+id/selectImageView"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:src="@drawable/floatingactionbutton" />
+            android:src="@drawable/folder_photo" />
 
         <ImageView
             android:id="@+id/selectVideoImageView"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:src="@drawable/floatingactionbutton" />
+            android:src="@drawable/folder_video" />
 
         <ImageView
             android:id="@+id/expandMenuImageView"
