@@ -3,18 +3,17 @@
  */
 package lhrc.group3.tjooner.models;
 
-
-
 import java.util.Date;
 import java.util.TreeSet;
 import java.util.UUID;
 
 import lhrc.group3.tjooner.storage.Storage;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 /**
- * @author Chris
- * Class which stores the values of a media object.
+ * @author Chris Class which stores the values of a media object.
  */
 public abstract class Media extends DataObject {
 	private UUID id;
@@ -25,42 +24,43 @@ public abstract class Media extends DataObject {
 	private boolean hasCopyright;
 	private String author;
 	private byte[] data;
-	
+
 	private UUID groupId;
-	
-	//Treeset because i want the tags to order alphabetically.	
+
+	// Treeset because i want the tags to order alphabetically.
 	private TreeSet<String> tags = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-	
+
 	/**
 	 * Create a media object with data from the database.
-	 * @param cursor the cursor of the media from the database.
+	 * 
+	 * @param cursor
+	 *            the cursor of the media from the database.
 	 */
-	public Media(Cursor cursor){
+	public Media(Cursor cursor) {
 		super(cursor);
-		
+
 		id = UUID.fromString(getString(Storage.ID));
-	 	filename = getString(Storage.FILENAME); 
-	 	title = getString(Storage.TITLE);
-	 	description = getString(Storage.DESCRIPTION);
-	 	datetime = getDate(Storage.DATETIME);
-	 	hasCopyright = getBool(Storage.HAS_COPYRIGHT);
-	 	author = getString(Storage.AUTHOR);
-	 	data = getData(Storage.DATA);
-	 	
-	 	String stringId = getString(Storage.GROUP_ID);
-	 	if(stringId != null){
-	 		groupId = UUID.fromString(stringId);
-	 	}
+		filename = getString(Storage.FILENAME);
+		title = getString(Storage.TITLE);
+		description = getString(Storage.DESCRIPTION);
+		datetime = getDate(Storage.DATETIME);
+		hasCopyright = getBool(Storage.HAS_COPYRIGHT);
+		author = getString(Storage.AUTHOR);
+		data = getData(Storage.DATA);
+
+		String stringId = getString(Storage.GROUP_ID);
+		if (stringId != null) {
+			groupId = UUID.fromString(stringId);
+		}
 	}
-	
+
 	/**
 	 * Create a new media object with a random id (UUID).
 	 */
-	public Media(){
+	public Media() {
 		id = UUID.randomUUID();
 	}
 
-	
 	/**
 	 * @return the id
 	 */
@@ -75,7 +75,8 @@ public abstract class Media extends DataObject {
 		return filename;
 	}
 	/**
-	 * @param filename the filename to set
+	 * @param filename
+	 *            the filename to set
 	 */
 	public void setFilename(String filename) {
 		this.filename = filename;
@@ -87,7 +88,8 @@ public abstract class Media extends DataObject {
 		return title;
 	}
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -99,7 +101,8 @@ public abstract class Media extends DataObject {
 		return description;
 	}
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -111,7 +114,8 @@ public abstract class Media extends DataObject {
 		return datetime;
 	}
 	/**
-	 * @param datetime the datetime to set
+	 * @param datetime
+	 *            the datetime to set
 	 */
 	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
@@ -123,7 +127,8 @@ public abstract class Media extends DataObject {
 		return hasCopyright;
 	}
 	/**
-	 * @param sets if this media object has copyright or not
+	 * @param sets
+	 *            if this media object has copyright or not
 	 */
 	public void setCopyright(boolean hasCopyright) {
 		this.hasCopyright = hasCopyright;
@@ -135,24 +140,27 @@ public abstract class Media extends DataObject {
 		return author;
 	}
 	/**
-	 * @param author the author to set
+	 * @param author
+	 *            the author to set
 	 */
 	public void setAuthor(String author) {
 		this.author = author;
-	}	
-	
+	}
+
 	/**
 	 * @return the tags
 	 */
 	public TreeSet<String> getTags() {
 		return tags;
 	}
-	
+
 	/**
 	 * add a tag to this media object.
-	 * @param tag the tag
+	 * 
+	 * @param tag
+	 *            the tag
 	 */
-	public void addTag(String tag){
+	public void addTag(String tag) {
 		tags.add(tag);
 	}
 
@@ -164,7 +172,8 @@ public abstract class Media extends DataObject {
 	}
 
 	/**
-	 * @param data the data to set
+	 * @param data
+	 *            the data to set
 	 */
 	public void setData(byte[] data) {
 		this.data = data;
@@ -178,21 +187,45 @@ public abstract class Media extends DataObject {
 	}
 
 	/**
-	 * @param groupId the groupId to set
+	 * @param groupId
+	 *            the groupId to set
 	 */
 	public void setGroupId(UUID groupId) {
 		this.groupId = groupId;
 	}
-	
+
 	/**
 	 * Add tags to this media object
-	 * @param tags the tags to add
+	 * 
+	 * @param tags
+	 *            the tags to add
 	 */
-	public void addTags(String[] tags){
+	public void addTags(String[] tags) {
 		for (String tag : tags) {
-			addTag(tag);
+			if (tag != null && !tag.trim().isEmpty()) {
+				addTag(tag.toLowerCase().trim());
+			}
 		}
 	}
+
+	public String getTagsString() {
+		String allTags = "";
+		if (getTags().size() > 0) {
+			for (String tag : getTags()) {
+				allTags += String.format("%s ,", tag);
+			}
+			// removes the comma at the end.
+			allTags = allTags.substring(0, allTags.length() - 2);
+		}
+		return allTags;
+	}
 	
-	
+	/**
+	 * returns the media object as a bitmap picture.
+	 * @return a bitmap of the picture
+	 */
+	public Bitmap getBitmap(){
+		return BitmapFactory.decodeByteArray(data , 0, data.length);
+	}
+
 }

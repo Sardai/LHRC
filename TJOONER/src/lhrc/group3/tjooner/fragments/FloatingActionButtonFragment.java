@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -191,12 +192,27 @@ public class FloatingActionButtonFragment extends Fragment implements
 
 	private UUID insertPicture(Bitmap bitmap) {
 		Picture pic = new Picture();
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-		byte[] byteArray = stream.toByteArray();
-		pic.setData(byteArray);
+		pic.setData(bitmapToBytes(bitmap));
 		source.insert(pic);
 		return pic.getId();
+	}
+	
+	private byte[] bitmapToBytes(Bitmap bitmap){
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		return stream.toByteArray();
+	}
+	
+	private String getVideoPath(Uri uri){
+		String[] filePathColumn = { MediaStore.Video.Media.DATA };
+
+		Cursor cursor = getActivity().getContentResolver().query(
+				uri, filePathColumn, null, null, null);
+
+		cursor.moveToFirst();
+
+		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		return cursor.getString(columnIndex);
 	}
 	
 	private UUID insertVideo(Uri videoUri){
@@ -209,7 +225,11 @@ public class FloatingActionButtonFragment extends Fragment implements
 //			byte[] inputData = FileUtils.getBytes(iStream);
 
 			video.setPath(videoUri.toString());
+			Bitmap thumb = ThumbnailUtils.createVideoThumbnail(getVideoPath(videoUri),   MediaStore.Images.Thumbnails.MINI_KIND);
+			video.setData(bitmapToBytes(thumb));
 			source.insert(video);
+			
+			
 			return video.getId();
 
 //		} catch (FileNotFoundException e) {
