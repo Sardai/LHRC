@@ -18,6 +18,7 @@ import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.storage.Storage;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -71,23 +72,32 @@ public class FloatingActionButtonFragment extends Fragment implements
 		display.getSize(size);
 		int width = size.x;
 		int height = size.y;
-		double widthPercentage = 0.18;
+		double widthPercentagePortrait = 0.18;
+		double widthPercentageLandscape = 0.15;
+		int imagesDimensions = 0;
+		Configuration config = getActivity().getResources().getConfiguration();
+		if(config.orientation == Configuration.ORIENTATION_PORTRAIT){
+			imagesDimensions = (int) (width * widthPercentagePortrait);
+		}
+		else {
+			imagesDimensions = (int) (height * widthPercentageLandscape);
+		}
 
 		// set all the images arcordingly to the screen size		
-		expandImageView.getLayoutParams().width = (int) (widthPercentage * width);
-		expandImageView.getLayoutParams().height = (int) (widthPercentage * width);
+		expandImageView.getLayoutParams().width = imagesDimensions;
+		expandImageView.getLayoutParams().height =  imagesDimensions;
 
-		selectPicture.getLayoutParams().width = (int) (widthPercentage * width);
-		selectPicture.getLayoutParams().height = (int) (widthPercentage * width);
+		selectPicture.getLayoutParams().width = imagesDimensions;
+		selectPicture.getLayoutParams().height =  imagesDimensions;
 
-		makeNewPicture.getLayoutParams().width = (int) (widthPercentage * width);
-		makeNewPicture.getLayoutParams().height = (int) (widthPercentage * width);
+		makeNewPicture.getLayoutParams().width =  imagesDimensions;
+		makeNewPicture.getLayoutParams().height = imagesDimensions;
 
-		selectVideo.getLayoutParams().height = (int) (widthPercentage * width);
-		selectVideo.getLayoutParams().width = (int) (widthPercentage * width);
+		selectVideo.getLayoutParams().height =  imagesDimensions;
+		selectVideo.getLayoutParams().width = imagesDimensions;
 
-		makeNewVideo.getLayoutParams().height = (int) (widthPercentage * width);
-		makeNewVideo.getLayoutParams().width = (int) (widthPercentage * width);
+		makeNewVideo.getLayoutParams().height =  imagesDimensions;
+		makeNewVideo.getLayoutParams().width = imagesDimensions;
 
 		selectPicture.setVisibility(ImageView.GONE);
 		selectVideo.setVisibility(ImageView.GONE);
@@ -234,11 +244,13 @@ public class FloatingActionButtonFragment extends Fragment implements
 	private void changeVisibility() {
 		int visibility = makeNewPicture.getVisibility();
 		if (visibility == ImageView.VISIBLE) {
+			expandImageView.setImageResource(R.drawable.floatingactionbutton);
 			selectPicture.setVisibility(ImageView.GONE);
 			selectVideo.setVisibility(ImageView.GONE);
 			makeNewPicture.setVisibility(ImageView.GONE);
 			makeNewVideo.setVisibility(ImageView.GONE);
 		} else {
+			expandImageView.setImageResource(R.drawable.floatingactionbuttonrotate);
 			selectPicture.setVisibility(ImageView.VISIBLE);
 			selectVideo.setVisibility(ImageView.VISIBLE);
 			makeNewPicture.setVisibility(ImageView.VISIBLE);
