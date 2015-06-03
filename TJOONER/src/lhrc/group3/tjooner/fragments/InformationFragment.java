@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ public class InformationFragment extends PreferenceFragment {
 	LinearLayout layoutFilename, layoutDescription, layoutDateTime, layoutAuthor, layoutCopyright;
 	private TjoonerApplication app;
 	private Media media;
+	private Button removeButton;
 
 	public InformationFragment(Media media) {
 		this.media = media;
@@ -50,6 +53,7 @@ public class InformationFragment extends PreferenceFragment {
 		layoutDateTime = (LinearLayout) view.findViewById(R.id.layoutDateTime);
 		layoutDescription = (LinearLayout) view.findViewById(R.id.layoutDescription);
 		layoutCopyright = (LinearLayout) view.findViewById(R.id.layoutCopyright);
+		removeButton = (Button) view.findViewById(R.id.removeButton);
 
 		// title is a required field, it always has a value.
 		title.setText(media.getTitle());
@@ -85,6 +89,16 @@ public class InformationFragment extends PreferenceFragment {
 			allTags.substring(0, allTags.length() - 2);
 			tags.setText(allTags);
 		}
+		
+		removeButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				app.DataSource.remove(media);
+				getActivity().onBackPressed();
+				
+			}
+		});
 
 		return view;
 	}

@@ -19,7 +19,7 @@
     </MultiAutoCompleteTextView>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/removeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/multiAutoCompleteTextView1"
@@ -30,8 +30,8 @@
         android:id="@+id/spinner1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_below="@+id/button1"
+        android:layout_alignLeft="@+id/removeButton"
+        android:layout_below="@+id/removeButton"
         android:layout_marginLeft="19dp"
         android:layout_marginTop="31dp" />
 
