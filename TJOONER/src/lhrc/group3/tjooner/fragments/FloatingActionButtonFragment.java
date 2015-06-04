@@ -265,8 +265,9 @@ public class FloatingActionButtonFragment extends Fragment implements
 	}
 
 	private void selectPicture() {
-		Intent intent = new Intent(Intent.ACTION_PICK,
-				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		Intent intent = new Intent();
+		intent.setType("image/*");
+		intent.setAction(Intent.ACTION_GET_CONTENT);
 		startActivityForResult(intent, REQUEST_CODE_SELECT_PICTURE);
 	}
 
