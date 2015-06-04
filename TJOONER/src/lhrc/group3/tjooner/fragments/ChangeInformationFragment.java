@@ -112,7 +112,7 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		boolean geldigeInfo = true;
 		if (titleEditText.getText().toString().equals("")) {
 			geldigeInfo = false;
-			titleEditText.setError("This field is requiered");
+			titleEditText.setError("This field is required");
 		}
 		else{
 			titleEditText.setError(null);
