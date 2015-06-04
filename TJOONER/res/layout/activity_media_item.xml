@@ -10,26 +10,36 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-    <VideoView
-        android:id="@+id/videoViewMediaItem"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="5"
-         />
+        <RelativeLayout
+            android:id="@+id/layoutVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal" >
+
+            <ImageView
+                android:id="@+id/imageViewVideo"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_launcher" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/play_icon" />
+        </RelativeLayout>
+
         <ImageView
             android:id="@+id/imageViewMediaItem"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:src="@drawable/ic_launcher" 
-            android:layout_weight="5"
-            />
+            android:src="@drawable/ic_launcher" />
         <!-- hier komen de fragments voor het toevoegen van de details e.d. -->
 
-        <FrameLayout           
+        <FrameLayout
             android:id="@+id/fragmentPlaceholder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" >
         </FrameLayout>
     </LinearLayout>
 

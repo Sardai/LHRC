@@ -21,7 +21,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 public class MediaItemActivity extends Activity {
@@ -53,8 +57,7 @@ public class MediaItemActivity extends Activity {
 		}
 
 		ImageView imageViewMediaItem = (ImageView) findViewById(R.id.imageViewMediaItem);
-		VideoView videoViewMediaItem = (VideoView) findViewById(R.id.videoViewMediaItem);
-
+		ImageView imageViewVideo = (ImageView) findViewById(R.id.imageViewVideo);
 		Intent intent = getIntent();
 		wijzigMedia = intent.getBooleanExtra(FloatingActionButtonFragment.NIEUWE_MEDIA_STRING, false);
 
@@ -76,8 +79,10 @@ public class MediaItemActivity extends Activity {
 			setTitle(media.getTitle());
 		}
 
+		RelativeLayout layoutVideo = (RelativeLayout) findViewById(R.id.layoutVideo);
 		if (media instanceof Picture) {
-			videoViewMediaItem.setVisibility(View.GONE);
+			layoutVideo.setVisibility(View.GONE);
+			imageViewMediaItem.setVisibility(View.VISIBLE);
 			if (media.getTitle() == null) {
 				setTitle(R.string.title_picture_add);
 			}
@@ -89,16 +94,36 @@ public class MediaItemActivity extends Activity {
 			Log.d("description", picture.getDescription() + "");
 			Log.d("fileName", picture.getFilename() + "");
 			Log.d("groupid", picture.getGroupId() + "");
+			imageViewMediaItem.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					Intent intent = new Intent(MediaItemActivity.this, VideoActivity.class);
+					intent.putExtra(Storage.ID, media.getId().toString());
+					startActivity(intent);
+				}
+			});
 
 		} else if (media instanceof Video) {
 			imageViewMediaItem.setVisibility(View.GONE);
+			layoutVideo.setVisibility(View.VISIBLE);
 			if (media.getTitle() == null) {
 				setTitle(R.string.title_video_add);
 			}
 
-			Video video = (Video) media;
-			videoViewMediaItem.setVideoPath(video.getPath());
-			videoViewMediaItem.start();
+			final Video video = (Video) media;
+			imageViewVideo.setImageBitmap(video.getBitmap());
+
+			layoutVideo.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(MediaItemActivity.this, VideoActivity.class);
+					intent.putExtra(Storage.PATH, video.getPath());
+					startActivity(intent);
+				}
+			});
 		}
 
 	}
@@ -156,9 +181,9 @@ public class MediaItemActivity extends Activity {
 			case R.id.action_save :
 				if (changeInformationfragment.setNewInformation()) {
 					application.DataSource.update(media);
+					getFragmentManager().popBackStack();
+					showEdit();
 				}
-				getFragmentManager().popBackStack();
-				showEdit();
 				return true;
 
 			case android.R.id.home :

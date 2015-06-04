@@ -112,6 +112,10 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		boolean geldigeInfo = true;
 		if (titleEditText.getText().toString().equals("")) {
 			geldigeInfo = false;
+			titleEditText.setError("This field is requiered");
+		}
+		else{
+			titleEditText.setError(null);
 		}
 		// todo group and other requered information
 
@@ -128,8 +132,8 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		Group selectedGroup = (Group) spinnerGroup.getSelectedItem();
 		media.setGroupId(selectedGroup.getId());
 
-		String[] tags = textViewTags.getText().toString().split(", ");
-		
+		String[] tags = textViewTags.getText().toString().split(",");
+		media.addTags(tags);
 		
 		return true;
 	}
@@ -158,6 +162,9 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 
 			}
 		}
+		
+		textViewTags.setText(media.getTagsString());
+		
 		// if(media.getDatetime() != null){
 		// datePicker.updateDate(media.getDatetime().getYear(),
 		// media.getDatetime().getMonth(), media.getDatetime().getDay());

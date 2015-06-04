@@ -28,12 +28,4 @@ public class Picture extends Media {
 		super(cursor);
 	}
 	
-	/**
-	 * returns the media object as a bitmap picture.
-	 * @return a bitmap of the picture
-	 */
-	public Bitmap getBitmap(){
-		return BitmapFactory.decodeByteArray(super.getData() , 0, super.getData().length);
-	}
-	
 }

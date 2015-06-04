@@ -84,7 +84,7 @@ public class DataSource {
 		ContentValues values = new ContentValues();
 		values.put(Storage.ID, group.getId().toString());
 		values.put(Storage.DESCRIPTION, group.getDescription());
-		values.put(Storage.COLOR, group.getColor());
+		values.put(Storage.COLOR, group.getColorString());
 		database.insert(Storage.GROUP_TABLE_NAME, null, values);
 	}
 
@@ -272,18 +272,6 @@ public class DataSource {
 
 			Media media = getMedia(cursor);
 
-			String[] columns = {Storage.WORD};
-			where = String.format("%s = '%s'", Storage.MEDIA_ID, media.getId().toString());
-			Cursor cursorTag = database.query(Storage.MEDIA_TAG_TABLE_NAME, columns, where, null, null, null, null);
-
-			if (cursorTag.getCount() > 0) {
-				cursorTag.moveToFirst();
-				while (!cursorTag.isAfterLast()) {
-					media.addTag(cursor.getString(0));
-					cursorTag.moveToNext();
-				}
-			}
-			cursorTag.close();
 			group.addMedia(media);
 			cursor.moveToNext();
 		}
@@ -417,6 +405,22 @@ public class DataSource {
 				media = new Video(cursor);
 				break;
 		}
+		getTags(media);
 		return media;
+	}
+	
+	private void getTags(Media media){
+		String[] columns = {Storage.WORD};
+		String where = String.format("%s = '%s'", Storage.MEDIA_ID, media.getId().toString());
+		Cursor cursorTag = database.query(Storage.MEDIA_TAG_TABLE_NAME, columns, where, null, null, null, null);
+
+		if (cursorTag.getCount() > 0) {
+			cursorTag.moveToFirst();
+			while (!cursorTag.isAfterLast()) {
+				media.addTag(cursorTag.getString(0));
+				cursorTag.moveToNext();
+			}
+		}
+		cursorTag.close();
 	}
 }

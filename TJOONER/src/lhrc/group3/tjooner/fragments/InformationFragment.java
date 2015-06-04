@@ -80,23 +80,15 @@ public class InformationFragment extends PreferenceFragment {
 			tjoonerCategory.setText(group.getDescription());
 		}
 
-		if (media.getTags().size() > 0) {
-			String allTags = "";
-			for (String tag : media.getTags()) {
-				allTags += String.format("%s ,", tag);
-			}
-			// removes the comma at the end.
-			allTags.substring(0, allTags.length() - 2);
-			tags.setText(allTags);
-		}
-		
+		tags.setText(media.getTagsString());
+
 		removeButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				app.DataSource.remove(media);
 				getActivity().onBackPressed();
-				
+
 			}
 		});
 
