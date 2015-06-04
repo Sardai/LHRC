@@ -23,7 +23,10 @@ import android.widget.GridView;
 public class MediaGridActivity extends Activity {
 
 	private TjoonerApplication application;
-
+	private MediaAdapter adapter;
+	private GridView gridViewMedia;
+	private String groupId;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,7 +35,7 @@ public class MediaGridActivity extends Activity {
 
 		application = (TjoonerApplication) getApplication();
 
-		String groupId = getIntent().getExtras().getString(Storage.GROUP_ID);
+		groupId = getIntent().getExtras().getString(Storage.GROUP_ID);
 
 		Group group = application.DataSource.getGroup(groupId);
 		ActionBar bar = getActionBar();
@@ -42,9 +45,9 @@ public class MediaGridActivity extends Activity {
 		setTitle(group.getDescription());
 
 		Log.i("MediaGridActivity", group.getMediaList().size() + "");
-		final GridView gridViewMedia = (GridView) findViewById(R.id.gridViewMedia);
-
-		gridViewMedia.setAdapter(new MediaAdapter(group.getMediaList()));
+		gridViewMedia = (GridView) findViewById(R.id.gridViewMedia);
+		adapter = new MediaAdapter(group.getMediaList());
+		gridViewMedia.setAdapter(adapter);
 		gridViewMedia.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -82,4 +85,15 @@ public class MediaGridActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d("resume aangeroepen","resume");
+		Group group = application.DataSource.getGroup(groupId);
+		adapter = new MediaAdapter(group.getMediaList());
+		gridViewMedia.setAdapter(adapter);
+		
+	}
+	
 }

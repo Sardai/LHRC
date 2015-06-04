@@ -37,7 +37,7 @@ public class HugoTestActivity extends Activity {
 	         textView.setAdapter(adapter);
 	         textView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 	         
-	         Button button = (Button)findViewById(R.id.button1);
+	         Button button = (Button)findViewById(R.id.removeButton);
 	         button.setOnClickListener(new OnClickListener() {
 				
 				@Override
