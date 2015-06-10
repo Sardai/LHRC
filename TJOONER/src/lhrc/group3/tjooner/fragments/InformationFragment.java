@@ -41,21 +41,21 @@ public class InformationFragment extends Fragment{
 		
 		if(media.getDescription() != null) {
 		description.setText(media.getDescription());
-		description.setVisibility(view.VISIBLE);
+		description.setVisibility(View.VISIBLE);
 		} else {
-			description.setVisibility(view.INVISIBLE);
+			description.setVisibility(View.INVISIBLE);
 		}
 		if(media.getDatetime() != null) {
 		dateTime.setText( media.getDatetime().toString());
-		dateTime.setVisibility(view.VISIBLE);
+		dateTime.setVisibility(View.VISIBLE);
 		} else {
-			dateTime.setVisibility(view.INVISIBLE);
+			dateTime.setVisibility(View.INVISIBLE);
 		}
 		if(media.getFilename() != null) {
 		filename.setText(media.getFilename());
-		filename.setVisibility(view.VISIBLE);
+		filename.setVisibility(View.VISIBLE);
 		} else {
-			filename.setVisibility(view.INVISIBLE);
+			filename.setVisibility(View.INVISIBLE);
 		}
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
