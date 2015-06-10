@@ -18,6 +18,12 @@ import android.net.Uri;
  */
 public class FileUtils {
  
+		/**
+		 * creates a byte array from a inputstream.
+		 * @param inputStream the inputstream
+		 * @return the byte array of the inputstream
+		 * @throws IOException 
+		 */
 	  public static byte[] getBytes(InputStream inputStream) throws IOException {
 	      ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
 	      int bufferSize = 1024;

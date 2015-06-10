@@ -4,7 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
+/**
+ * SqliteOpenHelper for storage of media, groups and tags.
+ * @author Chris
+ *
+ */
 public class Storage extends SQLiteOpenHelper {
 
 	public static final String MEDIA_TABLE_NAME = "media";
@@ -15,24 +19,23 @@ public class Storage extends SQLiteOpenHelper {
 	public static final String GROUP_ID = "groupId";
 	public static final String DATETIME = "datetime";
 	public static final String HAS_COPYRIGHT = "hasCopyright";
-	public static final String COPYRIGHT_HOLDER = "copyrightHolder" ;
+	public static final String AUTHOR = "author" ;
 	public static final String DATA = "data";
 	public static final String DATA_TYPE = "dataType";
+	public static final String PATH = "path";
 	public static final int DATA_TYPE_PICTURE = 1;
 	public static final int DATA_TYPE_VIDEO = 2;
 	
 	public static final String[] MEDIA_COLUMNS = {
-		ID,FILENAME,TITLE,DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,COPYRIGHT_HOLDER,DATA,DATA_TYPE
+		ID,FILENAME,TITLE,DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,AUTHOR,DATA,DATA_TYPE,PATH
 	};
-	
-	public static final String DATE_TIME_FORMAT = "YYYY-MM-DD HH:MM:SS.SSS";
-	
+		
 	public static final String GROUP_TABLE_NAME = "groups";
 	public static final String COLOR = "color";
 	public static final String INACTIVE = "inactive";
 	
 	public static final String[] GROUP_COLUMNS = {
-		DESCRIPTION,COLOR,INACTIVE
+		ID,DESCRIPTION,COLOR,INACTIVE
 	};
 	
 	public static final String TAG_TABLE_NAME = "tags";
@@ -41,10 +44,9 @@ public class Storage extends SQLiteOpenHelper {
 	public static final String MEDIA_TAG_TABLE_NAME = "media_tag";
 	public static final String MEDIA_ID = "mediaId";
 		
-	//TODO add not null to columns wich are required -> chris. 
 	private static final String MEDIA_TABLE_CREATE = String.format(
-			"create table %s (%s string primary key, %s text, %s text, %s text, %s text, %s text,%s integer,%s text, %s blob, %s integer)",
-			MEDIA_TABLE_NAME,ID,FILENAME,TITLE, DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,COPYRIGHT_HOLDER,DATA,DATA_TYPE );
+			"create table %s (%s string primary key, %s text, %s text, %s text, %s text, %s text,%s integer,%s text, %s blob, %s integer, %s text)",
+			MEDIA_TABLE_NAME,ID,FILENAME,TITLE, DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,AUTHOR,DATA,DATA_TYPE,PATH );
 	
 	private static final String GROUP_TABLE_CREATE = String.format(
 			"create table %s (%s text primary key, %s text,%s text, %s integer)",
@@ -62,7 +64,7 @@ public class Storage extends SQLiteOpenHelper {
 			);
 	
 	private static final String DATABASE_NAME = "tjooner.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
 	
 	public Storage(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

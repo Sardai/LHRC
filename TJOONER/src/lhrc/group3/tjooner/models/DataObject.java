@@ -3,7 +3,9 @@
  */
 package lhrc.group3.tjooner.models;
 
-import lhrc.group3.tjooner.helpers.Date;
+import java.util.Date;
+
+import lhrc.group3.tjooner.helpers.DateUtils;
 import android.database.Cursor;
 
 /**
@@ -76,7 +78,7 @@ public abstract class DataObject {
 		if (cursor.isNull(index)) {
 			return null;
 		}
-		return new Date(cursor.getString(index));
+		return DateUtils.parse(cursor.getString(index));
 	}
 
 	/**
