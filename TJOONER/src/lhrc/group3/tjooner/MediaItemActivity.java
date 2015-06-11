@@ -10,8 +10,10 @@ import lhrc.group3.tjooner.models.Video;
 import lhrc.group3.tjooner.storage.Storage;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -36,6 +38,7 @@ public class MediaItemActivity extends Activity {
 	private FragmentManager manager;
 	private FragmentTransaction transaction;
 	private MenuItem actionSave, actionEdit;
+	private boolean isNew;
 
 	private TjoonerApplication application;
 
@@ -50,6 +53,13 @@ public class MediaItemActivity extends Activity {
 		String id = getIntent().getExtras().getString(Storage.ID);
 		media = application.DataSource.getMedia(id);
 
+		// Checks if a media item is a new item
+		if (media.getTitle() == null) {
+			isNew = true;
+		} else {
+			isNew = false;
+		}
+
 		if (media.getGroupId() != null) {
 			Group group = application.getGroup(media.getGroupId());
 			ActionBar bar = getActionBar();
@@ -59,18 +69,21 @@ public class MediaItemActivity extends Activity {
 		ImageView imageViewMediaItem = (ImageView) findViewById(R.id.imageViewMediaItem);
 		ImageView imageViewVideo = (ImageView) findViewById(R.id.imageViewVideo);
 		Intent intent = getIntent();
-		wijzigMedia = intent.getBooleanExtra(FloatingActionButtonFragment.NIEUWE_MEDIA_STRING, false);
+		wijzigMedia = intent.getBooleanExtra(
+				FloatingActionButtonFragment.NIEUWE_MEDIA_STRING, false);
 
 		if (getIntent().hasExtra(Storage.GROUP_ID)) {
 			String groupId = getIntent().getStringExtra(Storage.GROUP_ID);
-			changeInformationfragment = new ChangeInformationFragment(media, groupId);
+			changeInformationfragment = new ChangeInformationFragment(media,
+					groupId);
 		} else {
 			changeInformationfragment = new ChangeInformationFragment(media);
 		}
 
 		InformationFragment fragment = new InformationFragment(media);
 
-		getFragmentManager().beginTransaction().replace(R.id.fragmentPlaceholder, fragment).commit();
+		getFragmentManager().beginTransaction()
+				.replace(R.id.fragmentPlaceholder, fragment).commit();
 		if (wijzigMedia) {
 			change();
 		}
@@ -99,7 +112,8 @@ public class MediaItemActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 
-					Intent intent = new Intent(MediaItemActivity.this, VideoActivity.class);
+					Intent intent = new Intent(MediaItemActivity.this,
+							VideoActivity.class);
 					intent.putExtra(Storage.ID, media.getId().toString());
 					startActivity(intent);
 				}
@@ -119,7 +133,8 @@ public class MediaItemActivity extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(MediaItemActivity.this, VideoActivity.class);
+					Intent intent = new Intent(MediaItemActivity.this,
+							VideoActivity.class);
 					intent.putExtra(Storage.PATH, video.getPath());
 					startActivity(intent);
 				}
@@ -135,12 +150,14 @@ public class MediaItemActivity extends Activity {
 		actionSave = menu.findItem(R.id.action_save);
 		actionEdit = menu.findItem(R.id.action_edit);
 
-		if (getIntent().getBooleanExtra(FloatingActionButtonFragment.NIEUWE_MEDIA_STRING, false)) {
+		if (getIntent().getBooleanExtra(
+				FloatingActionButtonFragment.NIEUWE_MEDIA_STRING, false)) {
 			showSave();
 		} else {
 			showEdit();
 		}
-		getIntent().removeExtra(FloatingActionButtonFragment.NIEUWE_MEDIA_STRING);
+		getIntent().removeExtra(
+				FloatingActionButtonFragment.NIEUWE_MEDIA_STRING);
 		return true;
 	}
 
@@ -150,59 +167,74 @@ public class MediaItemActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()) {
-			case R.id.action_edit :
-				change();
+		case R.id.action_edit:
+			change();
 
-				// if (wijzigMedia) {
-				// if (changeInformationfragment.setNewInformation()) {
-				// application.DataSource.update(media);
-				// transaction = manager.beginTransaction();
-				// InformationFragment fragment = new InformationFragment(
-				// media);
-				// transaction.replace(R.id.fragmentPlaceholder, fragment);
-				// transaction.commit();
-				// item.setTitle("Modify");
-				// wijzigMedia = false;
-				//
-				// }
-				// } else {
-				// changeInformationfragment = new
-				// ChangeInformationFragment(media);
-				// transaction = manager.beginTransaction();
-				// transaction.replace(R.id.fragmentPlaceholder,
-				// changeInformationfragment);
-				// transaction.commit();
-				// item.setTitle("Save!");
-				// wijzigMedia = true;
-				// }
+			// if (wijzigMedia) {
+			// if (changeInformationfragment.setNewInformation()) {
+			// application.DataSource.update(media);
+			// transaction = manager.beginTransaction();
+			// InformationFragment fragment = new InformationFragment(
+			// media);
+			// transaction.replace(R.id.fragmentPlaceholder, fragment);
+			// transaction.commit();
+			// item.setTitle("Modify");
+			// wijzigMedia = false;
+			//
+			// }
+			// } else {
+			// changeInformationfragment = new
+			// ChangeInformationFragment(media);
+			// transaction = manager.beginTransaction();
+			// transaction.replace(R.id.fragmentPlaceholder,
+			// changeInformationfragment);
+			// transaction.commit();
+			// item.setTitle("Save!");
+			// wijzigMedia = true;
+			// }
 
-				return true;
+			return true;
 
-			case R.id.action_save :
-				if (changeInformationfragment.setNewInformation()) {
-					application.DataSource.update(media);
-					getFragmentManager().popBackStack();
-					showEdit();
-				}
-				return true;
+		case R.id.action_save:
 
-			case android.R.id.home :
-				int backstackCount = getFragmentManager().getBackStackEntryCount();
-				if (backstackCount > 0) {
-					getFragmentManager().popBackStack();
-				} else {
+			if (changeInformationfragment.setNewInformation()) {
+
+				application.DataSource.update(media);
+				if (isNew == true) {
+					// getFragmentManager().popBackStack();
 					finish();
+					// showEdit();
+				} else {
+					getFragmentManager().popBackStack();
 				}
-				showEdit();
-				return true;
+			}
+
+			return true;
+
+		case android.R.id.home:
+			int backstackCount = getFragmentManager().getBackStackEntryCount();
+			if (backstackCount > 0) {
+				getFragmentManager().popBackStack();
+			} else {
+				finish();
+			}
+			showEdit();
+			return true;
+			
+		case R.id.action_remove:
+			removeMediaItem();
+			return true;
 		}
+		
 
 		return super.onOptionsItemSelected(item);
 	}
 
 	private void change() {
 		showSave();
-		getFragmentManager().beginTransaction().replace(R.id.fragmentPlaceholder, changeInformationfragment).addToBackStack("edit").commit();
+		getFragmentManager().beginTransaction()
+				.replace(R.id.fragmentPlaceholder, changeInformationfragment)
+				.addToBackStack("edit").commit();
 	}
 
 	private void showSave() {
@@ -217,5 +249,24 @@ public class MediaItemActivity extends Activity {
 			return;
 		actionSave.setVisible(false);
 		actionEdit.setVisible(true);
+	}
+	
+	private void removeMediaItem() {
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Weet u zeker dat u dit bestand wilt verwijderen?")
+               .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+       				application.DataSource.remove(media);
+    				finish();
+                   }
+               })
+               .setNegativeButton("Nee", new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+                       // User cancelled the popup, returning to editscreen
+                   }
+               });
+        // Creates the popup
+         builder.create().show();
 	}
 }

@@ -8,7 +8,10 @@ import lhrc.group3.tjooner.helpers.DateUtils;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
 import lhrc.group3.tjooner.storage.DataSource;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
@@ -86,8 +89,24 @@ public class InformationFragment extends PreferenceFragment {
 
 			@Override
 			public void onClick(View v) {
-				app.DataSource.remove(media);
-				getActivity().onBackPressed();
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		        builder.setMessage("Weet u zeker dat u dit bestand wilt verwijderen?")
+		               .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+		                   public void onClick(DialogInterface dialog, int id) {
+		       				app.DataSource.remove(media);
+		    				getActivity().onBackPressed();
+		                   }
+		               })
+		               .setNegativeButton("Nee", new DialogInterface.OnClickListener() {
+		                   public void onClick(DialogInterface dialog, int id) {
+		                       // User cancelled the popup, returning to editscreen
+		                   }
+		               });
+		        // Creates the popup
+		         builder.create().show();
+				
+
 
 			}
 		});
