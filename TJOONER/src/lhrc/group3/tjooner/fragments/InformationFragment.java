@@ -33,7 +33,7 @@ public class InformationFragment extends PreferenceFragment {
 	LinearLayout layoutFilename, layoutDescription, layoutDateTime, layoutLocation, layoutAuthor, layoutCopyright;
 	private TjoonerApplication app;
 	private Media media;
-	private Button removeButton;
+	
 	
 	private double longitude;
 	private double latitude;
@@ -66,7 +66,7 @@ public class InformationFragment extends PreferenceFragment {
 		layoutLocation = (LinearLayout) view.findViewById(R.id.layoutLocation);
 		layoutDescription = (LinearLayout) view.findViewById(R.id.layoutDescription);
 		layoutCopyright = (LinearLayout) view.findViewById(R.id.layoutCopyright);
-		removeButton = (Button) view.findViewById(R.id.removeButton);
+		
 		
 		if(gps.canGetLocation()) {
 			longitude = gps.getLongtitude();
@@ -105,32 +105,7 @@ public class InformationFragment extends PreferenceFragment {
 
 		tags.setText(media.getTagsString());
 
-		removeButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		        builder.setMessage("Weet u zeker dat u dit bestand wilt verwijderen?")
-		               .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-		                   public void onClick(DialogInterface dialog, int id) {
-		       				app.DataSource.remove(media);
-		    				getActivity().onBackPressed();
-		                   }
-		               })
-		               .setNegativeButton("Nee", new DialogInterface.OnClickListener() {
-		                   public void onClick(DialogInterface dialog, int id) {
-		                       // User cancelled the popup, returning to editscreen
-		                   }
-		               });
-		        // Creates the popup
-		         builder.create().show();
-				
-
-
-			}
-		});
-
+		
 		return view;
 	}
 
