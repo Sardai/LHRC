@@ -277,6 +277,88 @@ public class DataSource {
 		}
 		return group;
 	}
+	/**
+	 * search for media in an group
+	 * @param groupId the group id of the group
+	 * @param searchQuery word you want to search on
+	 * @return a group filled the media correspondending with the searchQuery
+	 */
+	public Group searchInGroup(String groupId, String searchQuery) {
+
+		String groupWhere = String.format("%s = '%s'", Storage.ID, groupId);
+		Cursor cursorGroup = database.query(Storage.GROUP_TABLE_NAME, Storage.GROUP_COLUMNS, groupWhere, null, null, null, null);
+		
+		if (cursorGroup.getCount() == 0) {
+			return null;
+		}
+		cursorGroup.moveToFirst();
+		Group group = new Group(cursorGroup);
+		
+		
+		String mediaM = "m.";
+		String tags = "t.";
+		String selectQuery = "SELECT "+ mediaM+Storage.ID+ " , "+mediaM+ Storage.FILENAME + " , " +mediaM+Storage.TITLE+ " , " +mediaM+ Storage.DESCRIPTION + " , "
+				+mediaM+Storage.GROUP_ID+ " , "+mediaM+Storage.DATETIME +" , "+mediaM+Storage.HAS_COPYRIGHT+" , "+mediaM+ Storage.AUTHOR + " , "+mediaM+Storage.DATA 
+				+ " , "+mediaM+Storage.DATA+" , "+mediaM+Storage.DATA_TYPE +" , " +mediaM+Storage.PATH+ " FROM " + Storage.MEDIA_TABLE_NAME + " m " ;
+		
+
+		String where = "Where "
+				+ mediaM+Storage.GROUP_ID+ " = " + "'"+groupId+"'" + " AND" + " (" +mediaM+ Storage.TITLE +" LIKE " + "'%" + searchQuery + "%'" + ""
+				+ " OR "+ mediaM + Storage.FILENAME+ " LIKE " + "'%" + searchQuery + "%'" + " OR " + mediaM + Storage.DESCRIPTION +" Like " + "'%"+ searchQuery + "%'"
+				+" OR " + mediaM + Storage.AUTHOR + " LIKE " + "'%" + searchQuery+ "%'"+ " OR " + "EXISTS (SELECT " +tags +Storage.WORD + " FROM " + Storage.MEDIA_TAG_TABLE_NAME +" t "+ " WHERE "
+				+ mediaM+Storage.ID + " = " + tags + Storage.MEDIA_ID +" AND "+tags+Storage.WORD+" LIKE "+"'%"+searchQuery+"%'"+ "));"; 
+		Log.d("query", selectQuery+where);
+				
+				
+				
+		Cursor cursor = database.rawQuery(selectQuery+where, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+
+			Media media = getMedia(cursor);
+
+			group.addMedia(media);
+			cursor.moveToNext();
+		}
+		return group;
+	}
+	
+	/**
+	 * search for a query in all the media
+	 * @param searchQuery query you want to search on
+	 * @return group with the media
+	 */
+	public Group search(String searchQuery) {
+		Group group = new Group();
+		
+		
+		String mediaM = "m.";
+		String tags = "t.";
+		String selectQuery = "SELECT "+ mediaM+Storage.ID+ " , "+mediaM+ Storage.FILENAME + " , " +mediaM+Storage.TITLE+ " , " +mediaM+ Storage.DESCRIPTION + " , "
+				+mediaM+Storage.GROUP_ID+ " , "+mediaM+Storage.DATETIME +" , "+mediaM+Storage.HAS_COPYRIGHT+" , "+mediaM+ Storage.AUTHOR + " , "+mediaM+Storage.DATA 
+				+ " , "+mediaM+Storage.DATA+" , "+mediaM+Storage.DATA_TYPE +" , " +mediaM+Storage.PATH+ " FROM " + Storage.MEDIA_TABLE_NAME + " m " ;
+		
+
+		String where = "Where "
+				+ "(" +mediaM+ Storage.TITLE +" LIKE " + "'%" + searchQuery + "%'" + ""
+				+ " OR "+ mediaM + Storage.FILENAME+ " LIKE " + "'%" + searchQuery + "%'" + " OR " + mediaM + Storage.DESCRIPTION +" Like " + "'%"+ searchQuery + "%'"
+				+" OR " + mediaM + Storage.AUTHOR + " LIKE " + "'%" + searchQuery+ "%'"+ " OR " + "EXISTS (SELECT " +tags +Storage.WORD + " FROM " + Storage.MEDIA_TAG_TABLE_NAME +" t "+ " WHERE "
+				+ mediaM+Storage.ID + " = " + tags + Storage.MEDIA_ID +" AND "+tags+Storage.WORD+" LIKE "+"'%"+searchQuery+"%'"+ "));"; 
+		Log.d("query", selectQuery+where);
+				
+				
+				
+		Cursor cursor = database.rawQuery(selectQuery+where, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+
+			Media media = getMedia(cursor);
+
+			group.addMedia(media);
+			cursor.moveToNext();
+		}
+		return group;
+	}
 
 	/**
 	 * get all groups with media object and tags from the database
