@@ -200,11 +200,13 @@ public class MediaItemActivity extends Activity {
 			if (changeInformationfragment.setNewInformation()) {
 
 				application.DataSource.update(media);
+				
 				if (isNew == true) {
 					// getFragmentManager().popBackStack();
 					finish();
-					// showEdit();
+					//showEdit();
 				} else {
+					showEdit();
 					getFragmentManager().popBackStack();
 				}
 			}

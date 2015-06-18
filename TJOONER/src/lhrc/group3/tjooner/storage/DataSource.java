@@ -448,6 +448,8 @@ public class DataSource {
 		}
 		values.put(Storage.HAS_COPYRIGHT, media.hasCopyright() ? 1 : 0);
 		values.put(Storage.AUTHOR, media.getAuthor());
+		values.put(Storage.LONGITUDE, media.getLongitude());
+		values.put(Storage.LATITUDE, media.getLatitude());
 		if (media.getGroupId() != null) {
 			values.put(Storage.GROUP_ID, media.getGroupId().toString());
 		}

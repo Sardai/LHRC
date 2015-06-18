@@ -28,15 +28,14 @@ import android.widget.TextView;
  */
 public class InformationFragment extends PreferenceFragment {
 	
-	GPSTracker gps;
+
 	private TextView title, description, dateTime, location ,filename, author, tjoonerCategory, tags;
-	LinearLayout layoutFilename, layoutDescription, layoutDateTime, layoutLocation, layoutAuthor, layoutCopyright;
+	private LinearLayout layoutFilename, layoutDescription, layoutDateTime, layoutLocation, layoutAuthor, layoutCopyright;
 	private TjoonerApplication app;
 	private Media media;
 	
 	
-	private double longitude;
-	private double latitude;
+	
 
 	public InformationFragment(Media media) {
 		this.media = media;
@@ -49,7 +48,7 @@ public class InformationFragment extends PreferenceFragment {
 
 		app = (TjoonerApplication) getActivity().getApplication();
 		
-		gps = new GPSTracker(getActivity());
+		
 		
 		title = (TextView) view.findViewById(R.id.textViewTitle);
 		description = (TextView) view.findViewById(R.id.textViewDescription);
@@ -68,13 +67,7 @@ public class InformationFragment extends PreferenceFragment {
 		layoutCopyright = (LinearLayout) view.findViewById(R.id.layoutCopyright);
 		
 		
-		if(gps.canGetLocation()) {
-			longitude = gps.getLongtitude();
-			latitude = gps.getLatitude();
-			
-			location.setText("lng: " + longitude + ", ltt: " + latitude);
-
-		}
+		
 		
 		
 
@@ -84,6 +77,7 @@ public class InformationFragment extends PreferenceFragment {
 		setText(media.getDatetime(), dateTime, layoutDateTime);
 		setText(media.getFilename(), filename, layoutFilename);
 		setText(media.getAuthor(), author, layoutAuthor);
+		setText("lat: "+media.getLatitude()+ " long: "+ media.getLongitude(), location, layoutLocation);
 
 		if (media.getFilename() != null) {
 			filename.setText(media.getFilename());

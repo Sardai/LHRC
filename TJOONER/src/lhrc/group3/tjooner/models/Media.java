@@ -24,6 +24,8 @@ public abstract class Media extends DataObject {
 	private boolean hasCopyright;
 	private String author;
 	private byte[] data;
+	private String longitude;
+	private String latitude;
 
 	private UUID groupId;
 
@@ -47,7 +49,9 @@ public abstract class Media extends DataObject {
 		hasCopyright = getBool(Storage.HAS_COPYRIGHT);
 		author = getString(Storage.AUTHOR);
 		data = getData(Storage.DATA);
-
+		latitude = getString(Storage.LATITUDE);
+		longitude = getString(Storage.LONGITUDE);
+		
 		String stringId = getString(Storage.GROUP_ID);
 		if (stringId != null) {
 			groupId = UUID.fromString(stringId);
@@ -226,6 +230,22 @@ public abstract class Media extends DataObject {
 	 */
 	public Bitmap getBitmap(){
 		return BitmapFactory.decodeByteArray(data , 0, data.length);
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
 
 }

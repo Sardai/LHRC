@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import lhrc.group3.tjooner.GPSTracker;
 import lhrc.group3.tjooner.R;
 import lhrc.group3.tjooner.TjoonerApplication;
 import lhrc.group3.tjooner.adapter.GroupSpinnerAdapter;
@@ -55,6 +56,9 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 	private UUID groupId;
 
 	private List<Group> groups;
+	private GPSTracker gps;
+	private String longitude;
+	private String latitude;
 	
 
 	public ChangeInformationFragment(Media media, String groupId) {
@@ -75,7 +79,7 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		setRetainInstance(true);
 
 		application = (TjoonerApplication) getActivity().getApplication();
-
+		gps = new GPSTracker(getActivity());
 		// get all the components
 		fileName = (EditText) view.findViewById(R.id.fileNameEditText);
 		descriptionEditText = (EditText) view.findViewById(R.id.descriptionEditText);
@@ -105,6 +109,15 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		editTextDate.setOnClickListener(this);
 		editTextTime.setOnFocusChangeListener(this);
 		editTextDate.setOnFocusChangeListener(this);
+		if(gps.canGetLocation()) {
+			longitude = gps.getLongtitude()+"";
+			latitude = gps.getLatitude()+"";
+		} else {
+			longitude = "-";
+			latitude = "-";
+		}
+		
+		
 		return view;
 	}
 
@@ -131,6 +144,8 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		media.setDatetime(dateTime);
 		Group selectedGroup = (Group) spinnerGroup.getSelectedItem();
 		media.setGroupId(selectedGroup.getId());
+		media.setLongitude(longitude);
+		media.setLatitude(latitude);
 
 		String[] tags = textViewTags.getText().toString().split(",");
 		media.addTags(tags);
