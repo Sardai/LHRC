@@ -109,14 +109,15 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		editTextDate.setOnClickListener(this);
 		editTextTime.setOnFocusChangeListener(this);
 		editTextDate.setOnFocusChangeListener(this);
-		if(gps.canGetLocation()) {
-			longitude = gps.getLongtitude()+"";
-			latitude = gps.getLatitude()+"";
-		} else {
-			longitude = "-";
-			latitude = "-";
+		if(media.getLongitude() == null || media.getLongitude() == null){
+			if(gps.canGetLocation()) {
+				longitude = gps.getLongtitude()+"";
+				latitude = gps.getLatitude()+"";
+			} else {
+				longitude = "-";
+				latitude = "-";
+			}
 		}
-		
 		
 		return view;
 	}

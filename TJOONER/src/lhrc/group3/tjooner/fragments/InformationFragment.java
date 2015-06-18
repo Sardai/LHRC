@@ -78,6 +78,19 @@ public class InformationFragment extends PreferenceFragment {
 		setText(media.getFilename(), filename, layoutFilename);
 		setText(media.getAuthor(), author, layoutAuthor);
 		setText("lat: "+media.getLatitude()+ " long: "+ media.getLongitude(), location, layoutLocation);
+		location.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String longitude = media.getLongitude();
+				String latitude = media.getLatitude();
+				if(longitude != null && !longitude.equals("-") && latitude != null && !latitude.equals("-") ){
+					GoogleMapFragment fragment = new GoogleMapFragment(media.getLongitude(), media.getLatitude());
+					fragment.show(getActivity().getFragmentManager(), "googleMapsFragment");
+				}
+				
+			}
+		});
 
 		if (media.getFilename() != null) {
 			filename.setText(media.getFilename());
