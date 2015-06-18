@@ -112,6 +112,36 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layoutLocation"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="Location"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+                <TextView
+            android:id="@+id/textViewLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+                <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="2dp"
+            android:background="#888888" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layoutCopyright"
         android:layout_width="match_parent"
         android:layout_height="0dp"
