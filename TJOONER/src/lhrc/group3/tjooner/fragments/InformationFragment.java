@@ -27,45 +27,49 @@ import android.widget.TextView;
  * @author Luuk,Chris
  */
 public class InformationFragment extends PreferenceFragment {
+	
 
-	private TextView title, description, dateTime, location, filename, author,
-			tjoonerCategory, tags;
-	private LinearLayout layoutFilename, layoutDescription, layoutDateTime,
-			layoutLocation, layoutAuthor, layoutCopyright;
+	private TextView title, description, dateTime, location ,filename, author, tjoonerCategory, tags;
+	private LinearLayout layoutFilename, layoutDescription, layoutDateTime, layoutLocation, layoutAuthor, layoutCopyright;
 	private TjoonerApplication app;
 	private Media media;
+	
+	
+	
 
 	public InformationFragment(Media media) {
 		this.media = media;
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.information_fragment, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.information_fragment, container, false);
 		setRetainInstance(true);
 
 		app = (TjoonerApplication) getActivity().getApplication();
-
+		
+		
+		
 		title = (TextView) view.findViewById(R.id.textViewTitle);
 		description = (TextView) view.findViewById(R.id.textViewDescription);
 		dateTime = (TextView) view.findViewById(R.id.textViewDatetime);
 		location = (TextView) view.findViewById(R.id.textViewLocation);
 		filename = (TextView) view.findViewById(R.id.textViewFilename);
 		author = (TextView) view.findViewById(R.id.textViewAuthor);
-		tjoonerCategory = (TextView) view
-				.findViewById(R.id.textViewTjoonerCategory);
+		tjoonerCategory = (TextView) view.findViewById(R.id.textViewTjoonerCategory);
 		tags = (TextView) view.findViewById(R.id.textViewTags);
 
 		layoutFilename = (LinearLayout) view.findViewById(R.id.layoutFilename);
 		layoutAuthor = (LinearLayout) view.findViewById(R.id.layoutAuthor);
 		layoutDateTime = (LinearLayout) view.findViewById(R.id.layoutDateTime);
 		layoutLocation = (LinearLayout) view.findViewById(R.id.layoutLocation);
-		layoutDescription = (LinearLayout) view
-				.findViewById(R.id.layoutDescription);
-		layoutCopyright = (LinearLayout) view
-				.findViewById(R.id.layoutCopyright);
+		layoutDescription = (LinearLayout) view.findViewById(R.id.layoutDescription);
+		layoutCopyright = (LinearLayout) view.findViewById(R.id.layoutCopyright);
+		
+		
+		
+		
+		
 
 		// title is a required field, it always has a value.
 		title.setText(media.getTitle());
@@ -73,8 +77,20 @@ public class InformationFragment extends PreferenceFragment {
 		setText(media.getDatetime(), dateTime, layoutDateTime);
 		setText(media.getFilename(), filename, layoutFilename);
 		setText(media.getAuthor(), author, layoutAuthor);
-		setText("lat: " + media.getLatitude() + " long: "
-				+ media.getLongitude(), location, layoutLocation);
+		setText("lat: "+media.getLatitude()+ " long: "+ media.getLongitude(), location, layoutLocation);
+		location.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String longitude = media.getLongitude();
+				String latitude = media.getLatitude();
+				if(longitude != null && !longitude.equals("-") && latitude != null && !latitude.equals("-") ){
+					GoogleMapFragment fragment = new GoogleMapFragment(media.getLongitude(), media.getLatitude());
+					fragment.show(getActivity().getFragmentManager(), "googleMapsFragment");
+				}
+				
+			}
+		});
 
 		if (media.getFilename() != null) {
 			filename.setText(media.getFilename());
@@ -96,6 +112,7 @@ public class InformationFragment extends PreferenceFragment {
 
 		tags.setText(media.getTagsString());
 
+		
 		return view;
 	}
 
