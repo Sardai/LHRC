@@ -12,6 +12,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 
+/**
+ * @author Luuk
+ * GPSTracker information/code is gathered by using youtube.
+ */
 public class GPSTracker extends Service implements LocationListener {
 
 	private final Context context;
@@ -39,10 +43,11 @@ public class GPSTracker extends Service implements LocationListener {
 		try {
 			locationManager = (LocationManager) context
 					.getSystemService(LOCATION_SERVICE);
-
+			// checks if the GPS is enabled on this device
 			isGPSEnabled = locationManager
 					.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
+			// checks if the device is online
 			isNetworkEnabled = locationManager
 					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
