@@ -19,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -85,8 +87,28 @@ public class InformationFragment extends PreferenceFragment {
 				String longitude = media.getLongitude();
 				String latitude = media.getLatitude();
 				if(longitude != null && !longitude.equals("-") && latitude != null && !latitude.equals("-") ){
-					GoogleMapFragment fragment = new GoogleMapFragment(media.getLongitude(), media.getLatitude());
-					fragment.show(getActivity().getFragmentManager(), "googleMapsFragment");
+					AlertDialog.Builder alert = new AlertDialog.Builder(getActivity()); 
+					alert.setTitle("Title here");
+
+					WebView wv = new WebView(getActivity());
+					wv.loadUrl("http://maps.google.com/maps?&z=10&q="+latitude+"+"+longitude+"&ll="+latitude+"+"+longitude);
+					wv.setWebViewClient(new WebViewClient() {
+					    @Override
+					    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+					        view.loadUrl(url);
+
+					        return true;
+					    }
+					});
+
+					alert.setView(wv);
+					alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+					    @Override
+					    public void onClick(DialogInterface dialog, int id) {
+					        dialog.dismiss();
+					    }
+					});
+					alert.show();
 				}
 				
 			}
