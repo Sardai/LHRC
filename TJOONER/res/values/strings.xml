@@ -12,6 +12,8 @@
     <string name="action_edit">Edit</string>
     <string name="action_save">Save</string>
     <string name="title_activity_video">VideoActivity</string>
-    <string name="search_title">Zoeken</string>
+	<string name="search_title">Zoeken</string>
+	<string name="action_remove">Remove</string>
+
 
 </resources>

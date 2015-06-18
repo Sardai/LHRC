@@ -2,13 +2,17 @@ package lhrc.group3.tjooner.fragments;
 
 import java.util.Date;
 
+import lhrc.group3.tjooner.GPSTracker;
 import lhrc.group3.tjooner.R;
 import lhrc.group3.tjooner.TjoonerApplication;
 import lhrc.group3.tjooner.helpers.DateUtils;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
 import lhrc.group3.tjooner.storage.DataSource;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
@@ -23,11 +27,16 @@ import android.widget.TextView;
  * @author Luuk,Chris
  */
 public class InformationFragment extends PreferenceFragment {
-	private TextView title, description, dateTime, filename, author, tjoonerCategory, tags;
-	LinearLayout layoutFilename, layoutDescription, layoutDateTime, layoutAuthor, layoutCopyright;
+	
+	GPSTracker gps;
+	private TextView title, description, dateTime, location ,filename, author, tjoonerCategory, tags;
+	LinearLayout layoutFilename, layoutDescription, layoutDateTime, layoutLocation, layoutAuthor, layoutCopyright;
 	private TjoonerApplication app;
 	private Media media;
-	private Button removeButton;
+	
+	
+	private double longitude;
+	private double latitude;
 
 	public InformationFragment(Media media) {
 		this.media = media;
@@ -39,10 +48,13 @@ public class InformationFragment extends PreferenceFragment {
 		setRetainInstance(true);
 
 		app = (TjoonerApplication) getActivity().getApplication();
-
+		
+		gps = new GPSTracker(getActivity());
+		
 		title = (TextView) view.findViewById(R.id.textViewTitle);
 		description = (TextView) view.findViewById(R.id.textViewDescription);
 		dateTime = (TextView) view.findViewById(R.id.textViewDatetime);
+		location = (TextView) view.findViewById(R.id.textViewLocation);
 		filename = (TextView) view.findViewById(R.id.textViewFilename);
 		author = (TextView) view.findViewById(R.id.textViewAuthor);
 		tjoonerCategory = (TextView) view.findViewById(R.id.textViewTjoonerCategory);
@@ -51,9 +63,20 @@ public class InformationFragment extends PreferenceFragment {
 		layoutFilename = (LinearLayout) view.findViewById(R.id.layoutFilename);
 		layoutAuthor = (LinearLayout) view.findViewById(R.id.layoutAuthor);
 		layoutDateTime = (LinearLayout) view.findViewById(R.id.layoutDateTime);
+		layoutLocation = (LinearLayout) view.findViewById(R.id.layoutLocation);
 		layoutDescription = (LinearLayout) view.findViewById(R.id.layoutDescription);
 		layoutCopyright = (LinearLayout) view.findViewById(R.id.layoutCopyright);
-		removeButton = (Button) view.findViewById(R.id.removeButton);
+		
+		
+		if(gps.canGetLocation()) {
+			longitude = gps.getLongtitude();
+			latitude = gps.getLatitude();
+			
+			location.setText("lng: " + longitude + ", ltt: " + latitude);
+
+		}
+		
+		
 
 		// title is a required field, it always has a value.
 		title.setText(media.getTitle());
@@ -82,16 +105,7 @@ public class InformationFragment extends PreferenceFragment {
 
 		tags.setText(media.getTagsString());
 
-		removeButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				app.DataSource.remove(media);
-				getActivity().onBackPressed();
-
-			}
-		});
-
+		
 		return view;
 	}
 
