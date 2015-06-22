@@ -19,8 +19,10 @@ import lhrc.group3.tjooner.storage.Storage;
 import lhrc.group3.tjooner.web.UploadTask;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,10 +45,13 @@ public class MediaItemActivity extends Activity {
 	private FragmentManager manager;
 	private FragmentTransaction transaction;
 	private MenuItem actionSave, actionEdit;
+
 	private ImageView imageViewMediaItem;
+	private boolean isNew;
+
 	private TjoonerApplication application;
 	private Group group;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,6 +62,13 @@ public class MediaItemActivity extends Activity {
 
 		String id = getIntent().getExtras().getString(Storage.ID);
 		media = application.DataSource.getMedia(id);
+
+		// Checks if a media item is a new item
+		if (media.getTitle() == null) {
+			isNew = true;
+		} else {
+			isNew = false;
+		}
 
 		if (media.getGroupId() != null) {
 			group = application.getGroup(media.getGroupId());
@@ -123,7 +135,7 @@ public class MediaItemActivity extends Activity {
 			final Video video = (Video) media;
 			imageViewVideo.setImageBitmap(video.getBitmap());
 
-			layoutVideo.setOnClickListener(new View.OnClickListener() {
+			layoutVideo.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -194,11 +206,21 @@ public class MediaItemActivity extends Activity {
 			return true;
 
 		case R.id.action_save:
+
 			if (changeInformationfragment.setNewInformation()) {
+
 				application.DataSource.update(media);
-				getFragmentManager().popBackStack();
-				showEdit();
+
+				if (isNew == true) {
+					// getFragmentManager().popBackStack();
+					finish();
+					// showEdit();
+				} else {
+					showEdit();
+					getFragmentManager().popBackStack();
+				}
 			}
+
 			return true;
 
 		case android.R.id.home:
@@ -212,6 +234,8 @@ public class MediaItemActivity extends Activity {
 			return true;
 		case R.id.action_upload:
 			uploadMedia();
+		case R.id.action_remove:
+			removeMediaItem();
 			return true;
 		}
 
@@ -239,42 +263,60 @@ public class MediaItemActivity extends Activity {
 		actionEdit.setVisible(true);
 	}
 
-	private static final String emptyUUID = "00000000-0000-0000-0000-000000000000";
+	private void uploadMedia() {
+		// File file = new File(FileUtils.getPicturePath(this, media.getUri()));
+		// RandomAccessFile raf = new RandomAccessFile(file, "r");
+		// // length of 8 kb.
+		// int chunkSize = 1024;
+		// long bytesRead = 0;
+		// int totalRead = 0;
+		// StringBuffer fileContent = new StringBuffer("");
+		//
+		// FileInputStream is = new FileInputStream(file);
+		// int n = 0;
+		// String base64String = "";
+		// String id = emptyUUID;
+		//
+		// byte[] buffer = new byte[chunkSize];
+		//
+		// while ((n = is.read(buffer)) != -1) {
+		// if (!base64String.isEmpty()) {
+		// // JSONObject obj = getJsonObject(id, base64String, false);
+		// }
+		//
+		// base64String = Base64.encodeToString(buffer, Base64.NO_CLOSE);
+		// fileContent.append(base64String);
+		// }
+		//
+		// byte[] decodedString = Base64.decode(fileContent.toString(),
+		// Base64.NO_PADDING);
+		// fileContent = null;
+		// Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
+		// decodedString.length);
+		// imageViewMediaItem.setImageBitmap(decodedByte);
 
-	private void uploadMedia()  {
-//		File file = new File(FileUtils.getPicturePath(this, media.getUri()));
-//		RandomAccessFile raf = new RandomAccessFile(file, "r");
-//		// length of 8 kb.
-//		int chunkSize = 1024;
-//		long bytesRead = 0;
-//		int totalRead = 0;
-//		StringBuffer fileContent = new StringBuffer("");
-//
-//		FileInputStream is = new FileInputStream(file);
-//		int n = 0;
-//		String base64String = "";
-//		String id = emptyUUID;
-//
-//		byte[] buffer = new byte[chunkSize];
-//
-//		while ((n = is.read(buffer)) != -1) {
-//			if (!base64String.isEmpty()) {
-//				// JSONObject obj = getJsonObject(id, base64String, false);
-//			}
-//
-//			base64String = Base64.encodeToString(buffer, Base64.NO_CLOSE);
-//			fileContent.append(base64String);
-//		}
-//
-//		byte[] decodedString = Base64.decode(fileContent.toString(),
-//				Base64.NO_PADDING);
-//		fileContent = null;
-//		Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
-//				decodedString.length);
-//		imageViewMediaItem.setImageBitmap(decodedByte);
-		
-			
-		new UploadTask(this,media,group).execute();
+		new UploadTask(this, media, group).execute();
+	}
+
+	private void removeMediaItem() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Weet u zeker dat u dit bestand wilt verwijderen?")
+				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						application.DataSource.remove(media);
+						finish();
+					}
+				})
+				.setNegativeButton("Nee",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								// User cancelled the popup, returning to
+								// editscreen
+							}
+						});
+		// Creates the popup
+		builder.create().show();
 	}
 
 }

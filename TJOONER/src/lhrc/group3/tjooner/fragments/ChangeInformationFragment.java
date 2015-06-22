@@ -1,10 +1,12 @@
 package lhrc.group3.tjooner.fragments;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import lhrc.group3.tjooner.GPSTracker;
 import lhrc.group3.tjooner.R;
 import lhrc.group3.tjooner.TjoonerApplication;
 import lhrc.group3.tjooner.adapter.GroupSpinnerAdapter;
@@ -17,6 +19,8 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompatApi21;
 import android.text.method.DateTimeKeyListener;
@@ -55,6 +59,9 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 	private UUID groupId;
 
 	private List<Group> groups;
+	private GPSTracker gps;
+	private String longitude;
+	private String latitude;
 	
 
 	public ChangeInformationFragment(Media media, String groupId) {
@@ -75,7 +82,7 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		setRetainInstance(true);
 
 		application = (TjoonerApplication) getActivity().getApplication();
-
+		gps = new GPSTracker(getActivity());
 		// get all the components
 		fileName = (EditText) view.findViewById(R.id.fileNameEditText);
 		descriptionEditText = (EditText) view.findViewById(R.id.descriptionEditText);
@@ -105,6 +112,22 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		editTextDate.setOnClickListener(this);
 		editTextTime.setOnFocusChangeListener(this);
 		editTextDate.setOnFocusChangeListener(this);
+		if(media.getLongitude() == null || media.getLatitude() == null){
+			if(gps.canGetLocation()) {
+				longitude = gps.getLongtitude()+"";
+				latitude = gps.getLatitude()+"";
+				
+				
+			} else {
+				longitude = "-";
+				latitude = "-";
+				//latitude = "52.2127";
+				//longitude = "6.94182";
+			}
+			media.setLongitude(longitude);
+			media.setLatitude(latitude);
+		}
+		
 		return view;
 	}
 
@@ -131,6 +154,8 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 		media.setDatetime(dateTime);
 		Group selectedGroup = (Group) spinnerGroup.getSelectedItem();
 		media.setGroupId(selectedGroup.getId());
+		media.setLongitude(longitude);
+		media.setLatitude(latitude);
 
 		String[] tags = textViewTags.getText().toString().split(",");
 		media.addTags(tags);

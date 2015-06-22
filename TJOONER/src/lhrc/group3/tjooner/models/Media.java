@@ -25,6 +25,8 @@ public abstract class Media extends DataObject {
 	private boolean hasCopyright;
 	private String author;
 	private byte[] data;
+	private String longitude;
+	private String latitude;
 
 	private UUID groupId;
 
@@ -49,6 +51,8 @@ public abstract class Media extends DataObject {
 		author = getString(Storage.AUTHOR);
 		data = getData(Storage.DATA);
 		path = getString(Storage.PATH);
+		latitude = getString(Storage.LATITUDE);
+		longitude = getString(Storage.LONGITUDE);
 		
 		String stringId = getString(Storage.GROUP_ID);
 		if (stringId != null) {
@@ -250,6 +254,22 @@ public abstract class Media extends DataObject {
 	 */
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
 
 }

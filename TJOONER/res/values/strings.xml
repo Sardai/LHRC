@@ -10,6 +10,9 @@
     <string name="title_video_add">Video toevoegen</string>
     <string name="title_activity_media_grid">MediaGridActivity</string>
     <string name="title_activity_video">VideoActivity</string>
+	<string name="search_title">Zoeken</string>
+	<string name="action_remove">Remove</string>
+
 
     <string name="action_edit">Edit</string>
     <string name="action_save">Save</string>
