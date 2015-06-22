@@ -44,7 +44,7 @@ public class MediaItemActivity extends Activity {
 	private ChangeInformationFragment changeInformationfragment;
 	private FragmentManager manager;
 	private FragmentTransaction transaction;
-	private MenuItem actionSave, actionEdit;
+	private MenuItem actionSave, actionEdit, actionUpload;
 
 	private ImageView imageViewMediaItem;
 	private boolean isNew;
@@ -159,7 +159,8 @@ public class MediaItemActivity extends Activity {
 
 		actionSave = menu.findItem(R.id.action_save);
 		actionEdit = menu.findItem(R.id.action_edit);
-
+		actionUpload = menu.findItem(R.id.action_upload);
+		
 		if (getIntent().getBooleanExtra(
 				FloatingActionButtonFragment.NIEUWE_MEDIA_STRING, false)) {
 			showSave();
@@ -234,6 +235,7 @@ public class MediaItemActivity extends Activity {
 			return true;
 		case R.id.action_upload:
 			uploadMedia();
+			return true;
 		case R.id.action_remove:
 			removeMediaItem();
 			return true;
@@ -254,6 +256,7 @@ public class MediaItemActivity extends Activity {
 			return;
 		actionSave.setVisible(true);
 		actionEdit.setVisible(false);
+		actionUpload.setVisible(false);
 	}
 
 	private void showEdit() {
@@ -261,6 +264,7 @@ public class MediaItemActivity extends Activity {
 			return;
 		actionSave.setVisible(false);
 		actionEdit.setVisible(true);
+		actionUpload.setVisible(true);
 	}
 
 	private void uploadMedia() {

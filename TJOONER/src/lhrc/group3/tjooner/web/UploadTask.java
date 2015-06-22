@@ -94,7 +94,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				new AlertDialog.Builder(context)
-						.setMessage("Are you sure to cancel the upload?")
+						.setMessage("Are you sure you want to cancel the upload?")
 						.setPositiveButton("yes",
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
@@ -110,10 +110,11 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 									public void onClick(DialogInterface dialog,
 											int which) {
 										dialog.dismiss();
+										progressDialog.show();
 									}
 								}).create().show();
 			}
-		});
+		}); 
 	}
 
 	@Override
