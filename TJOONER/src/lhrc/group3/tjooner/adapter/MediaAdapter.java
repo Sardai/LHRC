@@ -63,10 +63,11 @@ public class MediaAdapter extends BaseAdapter {
 		ImageView imageViewPlay = (ImageView) convertView.findViewById(R.id.imageViewPlay);
 		Media media = mediaList.get(position);
 
-		imageViewMedia.setImageBitmap(media.getBitmap());
 		if (media instanceof Picture) {
 			imageViewPlay.setVisibility(View.GONE);
+			imageViewMedia.setImageURI(media.getUri());
 		} else if (media instanceof Video) {
+			imageViewMedia.setImageBitmap(media.getBitmap());
 			imageViewPlay.setVisibility(View.VISIBLE);
 		}
 

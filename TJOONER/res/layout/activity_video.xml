@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="lhrc.group3.tjooner.VideoActivity"
+    tools:context="lhrc.group3.tjooner.FullscreenActivity"
     android:background="#000"
      >
 <VideoView 

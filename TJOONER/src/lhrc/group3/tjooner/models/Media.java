@@ -11,6 +11,7 @@ import lhrc.group3.tjooner.storage.Storage;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 /**
  * @author Chris Class which stores the values of a media object.
@@ -47,7 +48,8 @@ public abstract class Media extends DataObject {
 		hasCopyright = getBool(Storage.HAS_COPYRIGHT);
 		author = getString(Storage.AUTHOR);
 		data = getData(Storage.DATA);
-
+		path = getString(Storage.PATH);
+		
 		String stringId = getString(Storage.GROUP_ID);
 		if (stringId != null) {
 			groupId = UUID.fromString(stringId);
@@ -226,6 +228,28 @@ public abstract class Media extends DataObject {
 	 */
 	public Bitmap getBitmap(){
 		return BitmapFactory.decodeByteArray(data , 0, data.length);
+	}
+	
+	private String path;
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+	
+	/**
+	 * @return Uri the uri of the video
+	 */
+	public Uri getUri(){
+		return Uri.parse(path);
+	}
+
+	/**
+	 * @param path the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }

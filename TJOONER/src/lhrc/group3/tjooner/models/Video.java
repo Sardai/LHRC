@@ -13,7 +13,7 @@ import android.net.Uri;
  */
 public class Video extends Media {
 
-	private String path;
+	
 	
 	/**
 	 * Initializes a empty video
@@ -27,30 +27,10 @@ public class Video extends Media {
 	 * @param cursor the data from the database
 	 */
 	public Video(Cursor cursor){
-		super(cursor);
-		path = getString(Storage.PATH);
+		super(cursor);		
 	}
 
-	/**
-	 * @return the path
-	 */
-	public String getPath() {
-		return path;
-	}
 	
-	/**
-	 * @return Uri the uri of the video
-	 */
-	public Uri getUri(){
-		return Uri.parse(path);
-	}
-
-	/**
-	 * @param path the path to set
-	 */
-	public void setPath(String path) {
-		this.path = path;
-	}
 		
 	
 	

@@ -62,12 +62,11 @@ public class DataSource {
 		values.put(Storage.ID, media.getId().toString());
 		int datatype = 0;
 		if (media instanceof Video) {
-			Video video = (Video) media;
 			datatype = Storage.DATA_TYPE_VIDEO;
-			values.put(Storage.PATH, video.getPath());
 		} else if (media instanceof Picture) {
 			datatype = Storage.DATA_TYPE_PICTURE;
 		}
+		values.put(Storage.PATH, media.getPath());
 		values.put(Storage.DATA_TYPE, datatype);
 		values.put(Storage.DATA, media.getData());
 		database.insert(Storage.MEDIA_TABLE_NAME, null, values);

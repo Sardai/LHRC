@@ -123,13 +123,13 @@ public class FloatingActionButtonFragment extends Fragment implements
 			UUID id = null;
 			switch (requestCode) {
 			case REQUEST_CODE_SELECT_PICTURE:				
-				id = insertPicture(getBitmapFromPath(intent.getData()));
+				id = insertPicture(intent.getDataString());
 				break;
 			case REQUEST_CODE_SELECT_VIDEO:				
 				id = insertVideo(intent.getData());	
 				break;
 			case REQUEST_CODE_NEW_PICTURE:
-				id = insertPicture((Bitmap) intent.getExtras().get("data"));
+				id = insertPicture(intent.getDataString());
 				break;
 			case REQUEST_CODE_NEW_VIDEO:
 				id = insertVideo(intent.getData());
@@ -190,9 +190,9 @@ public class FloatingActionButtonFragment extends Fragment implements
 		return bitmap;
 	}
 
-	private UUID insertPicture(Bitmap bitmap) {
+	private UUID insertPicture(String path) {
 		Picture pic = new Picture();
-		pic.setData(bitmapToBytes(bitmap));
+		pic.setPath(path);
 		source.insert(pic);
 		return pic.getId();
 	}
@@ -203,17 +203,9 @@ public class FloatingActionButtonFragment extends Fragment implements
 		return stream.toByteArray();
 	}
 	
-	private String getVideoPath(Uri uri){
-		String[] filePathColumn = { MediaStore.Video.Media.DATA };
-
-		Cursor cursor = getActivity().getContentResolver().query(
-				uri, filePathColumn, null, null, null);
-
-		cursor.moveToFirst();
-
-		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-		return cursor.getString(columnIndex);
-	}
+	
+	
+	
 	
 	private UUID insertVideo(Uri videoUri){
 		Video video = new Video();
@@ -225,11 +217,10 @@ public class FloatingActionButtonFragment extends Fragment implements
 //			byte[] inputData = FileUtils.getBytes(iStream);
 
 			video.setPath(videoUri.toString());
-			Bitmap thumb = ThumbnailUtils.createVideoThumbnail(getVideoPath(videoUri),   MediaStore.Images.Thumbnails.MINI_KIND);
+			Bitmap thumb = ThumbnailUtils.createVideoThumbnail(FileUtils.getVideoPath(getActivity(),videoUri),   MediaStore.Images.Thumbnails.MINI_KIND);
 			video.setData(bitmapToBytes(thumb));
 			source.insert(video);
-			
-			
+						
 			return video.getId();
 
 //		} catch (FileNotFoundException e) {

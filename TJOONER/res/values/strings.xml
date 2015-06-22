@@ -9,8 +9,9 @@
     <string name="title_picture_add">Foto toevoegen</string>
     <string name="title_video_add">Video toevoegen</string>
     <string name="title_activity_media_grid">MediaGridActivity</string>
-    <string name="action_edit">Edit</string>
-    <string name="action_save">Save</string>
     <string name="title_activity_video">VideoActivity</string>
 
+    <string name="action_edit">Edit</string>
+    <string name="action_save">Save</string>
+    <string name="action_upload">Upload</string>
 </resources>

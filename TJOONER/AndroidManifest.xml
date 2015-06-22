@@ -53,7 +53,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".VideoActivity"
+            android:name=".FullscreenActivity"
             android:label="@string/title_activity_video"
              android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
             >

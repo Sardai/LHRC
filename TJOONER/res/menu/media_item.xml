@@ -8,6 +8,13 @@
         android:showAsAction="always"
         android:title="@string/action_edit"/>
     
+    <item
+        android:id="@+id/action_upload"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/action_upload"/>
+         
+    
       <item
         android:id="@+id/action_save"
         android:orderInCategory="100"
