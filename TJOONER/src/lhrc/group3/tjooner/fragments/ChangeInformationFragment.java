@@ -1,5 +1,6 @@
 package lhrc.group3.tjooner.fragments;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,8 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompatApi21;
 import android.text.method.DateTimeKeyListener;
@@ -114,9 +117,12 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 				longitude = gps.getLongtitude()+"";
 				latitude = gps.getLatitude()+"";
 				
+				
 			} else {
 				longitude = "-";
 				latitude = "-";
+				//latitude = "52.2127";
+				//longitude = "6.94182";
 			}
 			media.setLongitude(longitude);
 			media.setLatitude(latitude);

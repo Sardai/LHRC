@@ -9,10 +9,13 @@ import lhrc.group3.tjooner.helpers.DateUtils;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
 import lhrc.group3.tjooner.storage.DataSource;
+import lhrc.group3.tjooner.web.SetAddressAsnycTask;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
@@ -79,40 +82,32 @@ public class InformationFragment extends PreferenceFragment {
 		setText(media.getDatetime(), dateTime, layoutDateTime);
 		setText(media.getFilename(), filename, layoutFilename);
 		setText(media.getAuthor(), author, layoutAuthor);
-		setText("lat: "+media.getLatitude()+ " long: "+ media.getLongitude(), location, layoutLocation);
-		location.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String longitude = media.getLongitude();
-				String latitude = media.getLatitude();
-				if(longitude != null && !longitude.equals("-") && latitude != null && !latitude.equals("-") ){
-					AlertDialog.Builder alert = new AlertDialog.Builder(getActivity()); 
-					alert.setTitle("Title here");
-
-					WebView wv = new WebView(getActivity());
-					wv.loadUrl("http://maps.google.com/maps?&z=10&q="+latitude+"+"+longitude+"&ll="+latitude+"+"+longitude);
-					wv.setWebViewClient(new WebViewClient() {
-					    @Override
-					    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-					        view.loadUrl(url);
-
-					        return true;
-					    }
-					});
-
-					alert.setView(wv);
-					alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-					    @Override
-					    public void onClick(DialogInterface dialog, int id) {
-					        dialog.dismiss();
-					    }
-					});
-					alert.show();
-				}
-				
-			}
-		});
+		
+		if(media.getLongitude() != null && !media.getLongitude().equals("-") && media.getLatitude() != null && !media.getLatitude().equals("-")){
+			layoutLocation.setVisibility(View.GONE);
+			setText("Show on google maps", location, layoutLocation);
+			SetAddressAsnycTask task = new SetAddressAsnycTask(location, media.getLongitude(), media.getLatitude(), getActivity(), layoutLocation);
+			task.execute();
+				location.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						String longitude = media.getLongitude();
+						String latitude = media.getLatitude();
+						//String longitude = "7.9";
+						//String latitude = "58.34";
+						//"http://maps.google.com/maps?&z=10&q="+latitude+"+"+longitude+"&ll="+latitude+"+"+longitude
+						if(longitude != null && !longitude.equals("-") && latitude != null && !latitude.equals("-") ){
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							intent.setData(Uri.parse("http://maps.google.com/maps?&z=10&q="+latitude+"+"+longitude+"&ll="+latitude+"+"+longitude));
+							startActivity(intent);
+						}
+						
+					}
+				});
+		} else {
+			layoutLocation.setVisibility(View.GONE);
+		}
 
 		if (media.getFilename() != null) {
 			filename.setText(media.getFilename());
