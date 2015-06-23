@@ -251,8 +251,15 @@ public class DataSource {
 		}
 		return groups;
 	}
+	/**
+	 * get all the media within a group
+	 * @param groupId the group id of the group
+	 * @param orderByColumn the name of the column in the table media you want to order by(i.g Storage.<columnName>), pass null to not sort
+	 * @param AscOrDesc use Storage.ASC to sort Ascending use Storage.DESC to sort descending
+	 * @return a group filled the media corresponding with the groupId
+	 */
 
-	public Group getGroup(String groupId) {
+	public Group getGroup(String groupId, String orderByColumn, String AscOrDesc) {
 
 		String groupWhere = String.format("%s = '%s'", Storage.ID, groupId);
 		Cursor cursorGroup = database.query(Storage.GROUP_TABLE_NAME, Storage.GROUP_COLUMNS, groupWhere, null, null, null, null);
@@ -262,9 +269,17 @@ public class DataSource {
 		}
 		cursorGroup.moveToFirst();
 		Group group = new Group(cursorGroup);
+		
+		String orderBy = null;
+		if(orderByColumn != null){
+			orderBy = orderByColumn;
+			if(AscOrDesc != null){
+				orderBy = orderBy+ " " + AscOrDesc;
+			}
+		}
 
 		String where = String.format("%s = '%s'", Storage.GROUP_ID, groupId);
-		Cursor cursor = database.query(Storage.MEDIA_TABLE_NAME, Storage.MEDIA_COLUMNS, where, null, null, null, null);
+		Cursor cursor = database.query(Storage.MEDIA_TABLE_NAME, Storage.MEDIA_COLUMNS, where, null, null, null, orderBy);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -276,14 +291,18 @@ public class DataSource {
 		}
 		return group;
 	}
+
 	/**
 	 * search for media in an group
 	 * @param groupId the group id of the group
 	 * @param searchQuery word you want to search on
-	 * @return a group filled the media correspondending with the searchQuery
+	 * @param orderByColumn the name of the column in the table media you want to order by(i.g Storage.<columnName>), pass null to not sort
+	 * @param AscOrDesc use Storage.ASC to sort Ascending use Storage.DESC to sort descending
+	 * @return a group filled the media corresponding with the given arguments
 	 */
-	public Group searchInGroup(String groupId, String searchQuery) {
-
+	public Group searchInGroup(String groupId, String searchQuery, String orderByColumn, String AscOrDesc) {
+		
+		
 		String groupWhere = String.format("%s = '%s'", Storage.ID, groupId);
 		Cursor cursorGroup = database.query(Storage.GROUP_TABLE_NAME, Storage.GROUP_COLUMNS, groupWhere, null, null, null, null);
 		
@@ -292,6 +311,16 @@ public class DataSource {
 		}
 		cursorGroup.moveToFirst();
 		Group group = new Group(cursorGroup);
+		
+		
+		String orderBy = "";
+		if(orderByColumn != null){
+			orderBy = " ORDER BY "+ orderByColumn;
+			if(AscOrDesc != null){
+				orderBy = orderBy+ " " + AscOrDesc;
+			}
+		}
+		orderBy = orderBy+ ";";
 		
 		
 		String mediaM = "m.";
@@ -305,12 +334,12 @@ public class DataSource {
 				+ mediaM+Storage.GROUP_ID+ " = " + "'"+groupId+"'" + " AND" + " (" +mediaM+ Storage.TITLE +" LIKE " + "'%" + searchQuery + "%'" + ""
 				+ " OR "+ mediaM + Storage.FILENAME+ " LIKE " + "'%" + searchQuery + "%'" + " OR " + mediaM + Storage.DESCRIPTION +" Like " + "'%"+ searchQuery + "%'"
 				+" OR " + mediaM + Storage.AUTHOR + " LIKE " + "'%" + searchQuery+ "%'"+ " OR " + "EXISTS (SELECT " +tags +Storage.WORD + " FROM " + Storage.MEDIA_TAG_TABLE_NAME +" t "+ " WHERE "
-				+ mediaM+Storage.ID + " = " + tags + Storage.MEDIA_ID +" AND "+tags+Storage.WORD+" LIKE "+"'%"+searchQuery+"%'"+ "));"; 
+				+ mediaM+Storage.ID + " = " + tags + Storage.MEDIA_ID +" AND "+tags+Storage.WORD+" LIKE "+"'%"+searchQuery+"%'"+ "))"; 
 		Log.d("query", selectQuery+where);
 				
 				
 				
-		Cursor cursor = database.rawQuery(selectQuery+where, null);
+		Cursor cursor = database.rawQuery(selectQuery+where+orderBy, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 
@@ -322,12 +351,17 @@ public class DataSource {
 		return group;
 	}
 	
+	
+	
 	/**
 	 * search for a query in all the media
-	 * @param searchQuery query you want to search on
-	 * @return group with the media
+	 * @param groupId the group id of the group
+	 * @param searchQuery word you want to search on
+	 * @param orderByColumn the name of the column in the table media you want to order by(i.g Storage.<columnName>), pass null to not sort
+	 * @param AscOrDesc use Storage.ASC to sort Ascending use Storage.DESC to sort descending
+	 * @return a group filled the media corresponding with the given arguments
 	 */
-	public Group search(String searchQuery) {
+	public Group search(String searchQuery, String orderByColumn, String AscOrDesc) {
 		Group group = new Group();
 		
 		
@@ -342,12 +376,21 @@ public class DataSource {
 				+ "(" +mediaM+ Storage.TITLE +" LIKE " + "'%" + searchQuery + "%'" + ""
 				+ " OR "+ mediaM + Storage.FILENAME+ " LIKE " + "'%" + searchQuery + "%'" + " OR " + mediaM + Storage.DESCRIPTION +" Like " + "'%"+ searchQuery + "%'"
 				+" OR " + mediaM + Storage.AUTHOR + " LIKE " + "'%" + searchQuery+ "%'"+ " OR " + "EXISTS (SELECT " +tags +Storage.WORD + " FROM " + Storage.MEDIA_TAG_TABLE_NAME +" t "+ " WHERE "
-				+ mediaM+Storage.ID + " = " + tags + Storage.MEDIA_ID +" AND "+tags+Storage.WORD+" LIKE "+"'%"+searchQuery+"%'"+ "));"; 
+				+ mediaM+Storage.ID + " = " + tags + Storage.MEDIA_ID +" AND "+tags+Storage.WORD+" LIKE "+"'%"+searchQuery+"%'"+ "))"; 
 		Log.d("query", selectQuery+where);
+		String orderBy = "";
+		if(orderByColumn != null){
+			orderBy = " ORDER BY "+ orderByColumn;
+			if(AscOrDesc != null){
+				orderBy = orderBy+ " " + AscOrDesc;
+			}
+		}
+		orderBy = orderBy+ ";";
+		
 				
 				
 				
-		Cursor cursor = database.rawQuery(selectQuery+where, null);
+		Cursor cursor = database.rawQuery(selectQuery+where+orderBy, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 

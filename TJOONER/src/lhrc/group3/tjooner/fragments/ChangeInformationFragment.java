@@ -121,8 +121,8 @@ public class ChangeInformationFragment extends Fragment implements OnClickListen
 			} else {
 				longitude = "-";
 				latitude = "-";
-				//latitude = "52.2127";
-				//longitude = "6.94182";
+				//latitude = "52.3702160";
+				//longitude = "4.8951680";
 			}
 			media.setLongitude(longitude);
 			media.setLatitude(latitude);

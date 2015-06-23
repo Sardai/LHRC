@@ -21,12 +21,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -48,6 +51,7 @@ public class MainActivity extends Activity {
 	private SearchView search;
 
 	private GridView gridView;
+	private Spinner sortSpinner;
 	private MediaAdapter mediaAdapter;
 	private GroupAdapter groupAdapter;
 
@@ -58,7 +62,13 @@ public class MainActivity extends Activity {
 		application = (TjoonerApplication) getApplication();
 
 		gridView = (GridView) findViewById(R.id.gridViewGroups);
-
+		sortSpinner = (Spinner) findViewById(R.id.sortSpinner);
+	
+		String[] spinnerArray = {"Sorteren", "Title oplopend", "Title aflopend", "Datum oud-nieuw", "Datum nieuw-oud"};
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.sort_spinner_layout, spinnerArray);
+		sortSpinner.setAdapter(spinnerAdapter);
+		sortSpinner.setVisibility(Spinner.GONE);
+		setSpinnerOnItemSelectedListener();
 		setOngroupClickListener();
 
 		gridView.setVerticalSpacing(15);
@@ -103,11 +113,13 @@ public class MainActivity extends Activity {
 					groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
 					gridView.setAdapter(groupAdapter);
 					setOngroupClickListener();
+					sortSpinner.setVisibility(Spinner.GONE);
 					return false;
 				}
-
-				
-				mediaAdapter = new MediaAdapter(application.DataSource.search(searchQuery).getMediaList());
+	
+				sortSpinner.setVisibility(Spinner.VISIBLE);
+				sortSpinner.setSelection(0);
+				mediaAdapter = new MediaAdapter(application.DataSource.search(searchQuery, null, null).getMediaList());
 				gridView.setAdapter(mediaAdapter);
 				setOnMediaClickListener();
 				search.clearFocus();
@@ -117,6 +129,7 @@ public class MainActivity extends Activity {
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				if (newText.isEmpty()) {
+					sortSpinner.setVisibility(Spinner.GONE);
 					groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
 					gridView.setAdapter(groupAdapter);
 					setOngroupClickListener();
@@ -145,6 +158,8 @@ public class MainActivity extends Activity {
 			searchMenuItem.collapseActionView();
 			groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
 			gridView.setAdapter(groupAdapter);
+			sortSpinner.setSelection(0);
+			sortSpinner.setVisibility(Spinner.GONE);
 			setOngroupClickListener();
 
 		}
@@ -181,6 +196,40 @@ public class MainActivity extends Activity {
 
 				intent.putExtra(Storage.ID, media.getId().toString());
 				startActivity(intent);
+			}
+		});
+	}
+	
+	private void setSpinnerOnItemSelectedListener(){
+		sortSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				Group group = application.DataSource.search(search.getQuery().toString(), null, null);
+				switch(position){
+				case 0 : break;
+				case 1 :
+					group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.ASC); break;
+				case 2 :
+					group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.DESC); break;
+				case 3 :
+					group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.ASC); break;
+				case 4 :
+					group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.DESC); break;
+					
+				
+				}
+				mediaAdapter = new MediaAdapter(group.getMediaList());
+				gridView.setAdapter(mediaAdapter);
+				setOnMediaClickListener();
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}
