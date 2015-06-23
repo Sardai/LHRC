@@ -27,7 +27,7 @@ public abstract class Media extends DataObject {
 	private byte[] data;
 	private String longitude;
 	private String latitude;
-
+	
 	private UUID groupId;
 
 	// Treeset because i want the tags to order alphabetically.
@@ -246,6 +246,8 @@ public abstract class Media extends DataObject {
 	 * @return Uri the uri of the video
 	 */
 	public Uri getUri(){
+		if(path == null)
+			return null;
 		return Uri.parse(path);
 	}
 

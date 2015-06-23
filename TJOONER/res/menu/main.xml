@@ -21,5 +21,10 @@
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:showAsAction="always"
         android:visible="false"/>
+    <item android:id="@+id/action_playlist"
+        android:showAsAction="ifRoom"
+        android:title="Create playlist"	
+        />
+    
 
 </menu>

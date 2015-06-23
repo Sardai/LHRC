@@ -11,11 +11,14 @@ import lhrc.group3.tjooner.storage.Storage;
 import lhrc.group3.tjooner.web.WebRequest;
 import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -146,6 +149,11 @@ public class MainActivity extends Activity {
 			groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
 			gridView.setAdapter(groupAdapter);
 			setOngroupClickListener();
+			return true;
+		case R.id.action_playlist:
+			Intent intent = new Intent(this,PlaylistDialogActivity.class);
+			startActivity(intent);
+			return true;
 
 		}
 		return super.onOptionsItemSelected(item);
@@ -203,6 +211,7 @@ public class MainActivity extends Activity {
 	       
 	    }
 	}
-
+	
+ 
 	
 }

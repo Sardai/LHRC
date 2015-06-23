@@ -22,7 +22,6 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v4.media.MediaDescriptionCompatApi21;
 import android.text.method.DateTimeKeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
