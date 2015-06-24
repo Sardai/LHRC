@@ -31,6 +31,7 @@ public abstract class Media extends DataObject {
 	private UUID groupId;
 	private Group group;
 	private Bitmap smallImage;
+	private boolean imageLoading;
 	// Treeset because i want the tags to order alphabetically.
 	private TreeSet<String> tags = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
@@ -297,6 +298,20 @@ public abstract class Media extends DataObject {
 
 	public void setSmallImage(Bitmap smallImage) {
 		this.smallImage = smallImage;
+	}
+
+	/**
+	 * @return the imageLoading
+	 */
+	public boolean isImageLoading() {
+		return imageLoading;
+	}
+
+	/**
+	 * @param imageLoading the imageLoading to set
+	 */
+	public void setImageLoading(boolean imageLoading) {
+		this.imageLoading = imageLoading;
 	}
 	
 	

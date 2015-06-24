@@ -23,6 +23,14 @@
             android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:src="@drawable/play_icon" />
+
+        <ProgressBar
+            style="@android:style/Widget.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_centerInParent="true"
+            android:id="@+id/progressSpinner"
+            />
     </RelativeLayout>
 
 </LinearLayout>

@@ -1,5 +1,8 @@
 package lhrc.group3.tjooner;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import lhrc.group3.tjooner.adapter.MediaAdapter;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
@@ -28,7 +31,7 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Spinner;
 
-public class MediaGridActivity extends Activity {
+public class MediaGridActivity extends Activity{
 
 	private TjoonerApplication application;
 	private MediaAdapter adapter;
@@ -57,6 +60,7 @@ public class MediaGridActivity extends Activity {
 
 		Log.i("MediaGridActivity", group.getMediaList().size() + "");
 		gridViewMedia = (GridView) findViewById(R.id.gridViewMedia);
+					
 		adapter = new MediaAdapter(group.getMediaList());
 		gridViewMedia.setAdapter(adapter);
 		gridViewMedia.setOnItemClickListener(new OnItemClickListener() {
@@ -243,5 +247,6 @@ public class MediaGridActivity extends Activity {
 	       
 	    }
 	}
+ 
 
 }
