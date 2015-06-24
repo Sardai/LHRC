@@ -57,6 +57,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	private static final String PUT_CHUNKED_MEDIA_URL = BASE_URL
 			+ "ChunkedMedia";
 	private static final String PUT_MEDIA_URL = BASE_URL + "Media";
+	private static final String PUT_PLAYLIST_URL = BASE_URL + "Playlist";
 	private static final String emptyUUID = "00000000-0000-0000-0000-000000000000";
 	private static final String UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
 	private static final int CHUNKSIZE = 1024 * 8;
@@ -64,6 +65,10 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 
 	private static final String CANCELLED = "cancelled";
 
+	public static final int UPLOAD_MEDIA = 1;
+	public static final int UPLOAD_PLAYLIST = 2;
+
+	private int uploadType;
 	private Media media;
 	private Group group;
 	private Context context;
@@ -73,55 +78,35 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	private ProgressDialog progressDialog;
 	private File file;
 
+	private String title;
+	private List<Media> mediaList;
+
 	public UploadTask(final Context context, Media media, Group group) {
+
+		uploadType = UPLOAD_MEDIA;
 		this.context = context;
 		this.media = media;
 		this.group = group;
-		progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(PROGRESS_MESSAGE);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setIndeterminate(false);
-		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						progressDialog.cancel();
-					}
-				});
-		progressDialog.setOnCancelListener(new OnCancelListener() {
+		createProgressbar();
+	}
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				new AlertDialog.Builder(context)
-						.setMessage("Are you sure you want to cancel the upload?")
-						.setPositiveButton("yes",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										UploadTask.this.cancel(true);
-										dialog.dismiss();
-										progressDialog.hide();
-									}
+	public UploadTask(final Context context, String title, List<Media> mediaList) {
+		uploadType = UPLOAD_PLAYLIST;
 
-								})
-						.setNegativeButton("No",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.dismiss();
-										progressDialog.show();
-									}
-								}).create().show();
-			}
-		}); 
+		this.title = title;
+		this.mediaList = mediaList;
+
+		createProgressbar();
 	}
 
 	@Override
 	protected void onPreExecute() {
-		file = new File(FileUtils.getPicturePath(context, media.getUri()));
 
-		totalAmount = (int) file.length() / CHUNKSIZE;
+		if (file != null) {
+			file = new File(FileUtils.getPicturePath(context, media.getUri()));
+
+			totalAmount = (int) file.length() / CHUNKSIZE;
+		}
 		progressDialog.setMax(totalAmount + 1);
 
 		progressDialog.show();
@@ -129,7 +114,51 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 
 	@Override
 	protected String doInBackground(Void... params) {
+		switch (uploadType) {
+		case UPLOAD_MEDIA:
+			return uploadMedia();
 
+		case UPLOAD_PLAYLIST:
+			return uploadPlaylist();
+		}
+		return null;
+
+	}
+
+	@Override
+	protected void onPostExecute(String result) {
+		// Toast.makeText(context, "Done: " + result, Toast.LENGTH_LONG).show();
+		if (result == null) {
+			Toast.makeText(context, "Something went wrong.", Toast.LENGTH_LONG)
+					.show();
+		} else if (result.equals(CANCELLED)) {
+			Toast.makeText(context, CANCELLED, Toast.LENGTH_LONG).show();
+		} else {
+			progressDialog.hide();
+			new AlertDialog.Builder(context)
+					.setMessage("Media upload is completed")
+					.setPositiveButton("Ok",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+							}).create().show();
+		}
+	}
+
+	@Override
+	protected void onProgressUpdate(Integer... values) {
+		progressDialog.setProgress(values[0]);
+		// if (toast != null)
+		// toast.cancel();
+		// toast = Toast.makeText(context,
+		// String.format("%d - %d", values[0], values[1]),
+		// Toast.LENGTH_SHORT);
+		// toast.show();
+	}
+
+	private String uploadMedia() {
 		try {
 
 			doneAmount = 0;
@@ -178,6 +207,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 			is.close();
 
 			String endResult = SendMedia(id);
+			media.setRemoteId(endResult);
 			return endResult;
 		} catch (Exception e) {
 			// file not found, handle case
@@ -186,37 +216,80 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		return null;
 	}
 
-	@Override
-	protected void onPostExecute(String result) {
-		// Toast.makeText(context, "Done: " + result, Toast.LENGTH_LONG).show();
-		if (result == null) {
-			Toast.makeText(context, "Something went wrong.", Toast.LENGTH_LONG)
-					.show();
-		} else if (result.equals(CANCELLED)) {
-			Toast.makeText(context, CANCELLED, Toast.LENGTH_LONG).show();
-		} else {
-			progressDialog.hide();
-			new AlertDialog.Builder(context)
-					.setMessage("Media upload is completed")
-					.setPositiveButton("Ok",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							}).create().show();
+	private String uploadPlaylist() {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("Title", title);
+			JSONArray array = new JSONArray();
+			for (Media media : mediaList) {
+				array.put(getMediaObject(media));
+			}
+			obj.put("Media", array);
+			obj.put("Id", UUID.randomUUID().toString());
+
+			HttpClient client = new DefaultHttpClient();
+			ResponseHandler<String> handler = new BasicResponseHandler();
+			HttpPut httpPut = getHttpPut(PUT_PLAYLIST_URL, obj);
+
+			String result = client.execute(httpPut, handler);
+			return result;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+		return "";
 	}
 
-	@Override
-	protected void onProgressUpdate(Integer... values) {
-		progressDialog.setProgress(values[0]);
-		// if (toast != null)
-		// toast.cancel();
-		// toast = Toast.makeText(context,
-		// String.format("%d - %d", values[0], values[1]),
-		// Toast.LENGTH_SHORT);
-		// toast.show();
+	private void createProgressbar() {
+		progressDialog = new ProgressDialog(context);
+		progressDialog.setMessage(PROGRESS_MESSAGE);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setIndeterminate(false);
+		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						progressDialog.cancel();
+					}
+				});
+		progressDialog.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				new AlertDialog.Builder(context)
+						.setMessage(
+								"Are you sure you want to cancel the upload?")
+						.setPositiveButton("yes",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										UploadTask.this.cancel(true);
+										dialog.dismiss();
+										progressDialog.hide();
+									}
+
+								})
+						.setNegativeButton("No",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
+										progressDialog.show();
+									}
+								}).create().show();
+			}
+		});
 	}
 
 	private JSONObject getJsonObject(String id, String chunk,
@@ -244,8 +317,20 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 
 	private String SendMedia(String remoteId) throws JSONException,
 			ClientProtocolException, IOException {
+
+		media.setRemoteId(remoteId);
+		HttpClient client = new DefaultHttpClient();
+		ResponseHandler<String> handler = new BasicResponseHandler();
+		HttpPut httpPut = getHttpPut(PUT_MEDIA_URL, getMediaObject(media));
+
+		String result = client.execute(httpPut, handler);
+		publishProgress(doneAmount, totalAmount);
+		return result;
+	}
+
+	private JSONObject getMediaObject(Media media) throws JSONException {
 		JSONObject obj = new JSONObject();
-		obj.put("Id", remoteId);
+		obj.put("Id", media.getRemoteId());
 		obj.put("Description", media.getTitle());
 
 		JSONArray categories = new JSONArray();
@@ -273,14 +358,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		} else if (media instanceof Video) {
 			obj.put("MediaType", "video");
 		}
-
-		HttpClient client = new DefaultHttpClient();
-		ResponseHandler<String> handler = new BasicResponseHandler();
-		HttpPut httpPut = getHttpPut(PUT_MEDIA_URL, obj);
-
-		String result = client.execute(httpPut, handler);
-		publishProgress(doneAmount, totalAmount);
-		return result;
+		return obj;
 	}
 
 	private HttpPut getHttpPut(String url, JSONObject obj)
@@ -342,7 +420,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 				+ "</mediaId> " + "</MediaChunkUp>";
 	}
 
-	public static String getExtension(File f) {
+	private static String getExtension(File f) {
 		String ext = null;
 		String s = f.getName();
 		int i = s.lastIndexOf('.');

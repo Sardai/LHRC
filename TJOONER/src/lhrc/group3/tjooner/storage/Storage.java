@@ -27,6 +27,8 @@ public class Storage extends SQLiteOpenHelper {
 	public static final String LATITUDE = "latitude";
 	public static final int DATA_TYPE_PICTURE = 1;
 	public static final int DATA_TYPE_VIDEO = 2;
+	public static final String ASC = "ASC";
+	public static final String DESC = "DESC";
 	
 	public static final String[] MEDIA_COLUMNS = {
 		ID,FILENAME,TITLE,DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,AUTHOR,DATA,DATA_TYPE,PATH, LONGITUDE, LATITUDE

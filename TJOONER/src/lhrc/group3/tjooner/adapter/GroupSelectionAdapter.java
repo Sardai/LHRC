@@ -66,10 +66,10 @@ public class GroupSelectionAdapter extends BaseAdapter {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
-					groups.add(group);
+					selectedGroups.add(group);
 				}
 				else{
-					groups.remove(groups.indexOf(group));
+					selectedGroups.remove(groups.indexOf(group));
 				}
 				
 			}

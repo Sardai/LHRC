@@ -27,7 +27,7 @@ public abstract class Media extends DataObject {
 	private byte[] data;
 	private String longitude;
 	private String latitude;
-	
+	private String remoteId;
 	private UUID groupId;
 
 	// Treeset because i want the tags to order alphabetically.
@@ -272,6 +272,14 @@ public abstract class Media extends DataObject {
 
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
+	}
+
+	public String getRemoteId() {
+		return remoteId;
+	}
+
+	public void setRemoteId(String remoteId) {
+		this.remoteId = remoteId;
 	}
 
 }

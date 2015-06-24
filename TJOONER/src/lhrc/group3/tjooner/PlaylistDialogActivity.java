@@ -19,7 +19,7 @@ import android.widget.ListView;
 public class PlaylistDialogActivity extends Activity {
 
 	public static final String GROUPS = "groups";
-	
+	public static final String TITLE = "title";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,7 +27,7 @@ public class PlaylistDialogActivity extends Activity {
 		
 		TjoonerApplication application = (TjoonerApplication)getApplication();
 		
-		EditText editTextTitle = (EditText) findViewById(R.id.editTextTitle);
+		final EditText editTextTitle = (EditText) findViewById(R.id.editTextTitle);
 		ListView listViewGroups = (ListView) findViewById(R.id.listViewGroups);
 		
 		final GroupSelectionAdapter adapter = new GroupSelectionAdapter(application.getGroups());
@@ -58,7 +58,9 @@ public class PlaylistDialogActivity extends Activity {
 				}
 				Intent intent = new Intent(PlaylistDialogActivity.this,PlaylistActivity.class);
 				intent.putExtra(GROUPS,groupIds);
-				
+				intent.putExtra(TITLE, editTextTitle.getText().toString());
+				startActivity(intent);
+				finish();
 			}
 		});
 	}

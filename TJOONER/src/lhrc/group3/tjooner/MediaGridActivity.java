@@ -19,9 +19,14 @@ import android.view.View;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Spinner;
 
 public class MediaGridActivity extends Activity {
 
@@ -33,6 +38,7 @@ public class MediaGridActivity extends Activity {
 	private MenuItem cancelSearch;
 	private MenuItem searchMenuItem;
 	private SearchView search;
+	private Spinner sortSpinner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,7 @@ public class MediaGridActivity extends Activity {
 		
 		groupId = getIntent().getExtras().getString(Storage.GROUP_ID);
 		Log.d("groupid", groupId+"");
-		group = application.DataSource.getGroup(groupId);
+		group = application.DataSource.getGroup(groupId, null, null);
 		ActionBar bar = getActionBar();
 		bar.setBackgroundDrawable(new ColorDrawable(group.getColor()));
 
@@ -52,6 +58,10 @@ public class MediaGridActivity extends Activity {
 
 		Log.i("MediaGridActivity", group.getMediaList().size() + "");
 		gridViewMedia = (GridView) findViewById(R.id.gridViewMedia);
+		sortSpinner = (Spinner) findViewById(R.id.sortSpinnerInGroup);
+		String[] spinnerArray = {"Sorteren", "Title oplopend", "Title aflopend", "Datum oud-nieuw", "Datum nieuw-oud"};
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.sort_spinner_layout, spinnerArray);
+		sortSpinner.setAdapter(spinnerAdapter);
 		adapter = new MediaAdapter(group.getMediaList());
 		gridViewMedia.setAdapter(adapter);
 		gridViewMedia.setOnItemClickListener(new OnItemClickListener() {
@@ -69,6 +79,69 @@ public class MediaGridActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		sortSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				setMediaForListView(position);
+				
+				
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+	}
+	/**
+	 * sets the media
+	 * @param currentSortPosition the position the sortSpinner is in.
+	 */
+	private void setMediaForListView(int currentSortPosition){
+		if(searchMenuItem ==null){
+			return;
+		}
+		Group group = application.DataSource.getGroup(groupId, null, null);
+		switch(currentSortPosition){
+		case 0 :
+			if(searchMenuItem.isActionViewExpanded()){
+				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), null, null);
+			}
+			break;
+		case 1 :
+			if(searchMenuItem.isActionViewExpanded()){
+				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), Storage.TITLE, Storage.ASC);
+				break;
+			}
+			group = application.DataSource.getGroup(groupId, Storage.TITLE, Storage.ASC); break;
+		case 2 :
+			if(searchMenuItem.isActionViewExpanded()){
+				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), Storage.TITLE, Storage.DESC);
+				break;
+			}
+			group = application.DataSource.getGroup(groupId, Storage.TITLE, Storage.DESC); break;
+		case 3 : 
+			if(searchMenuItem.isActionViewExpanded()){
+				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), Storage.DATETIME, Storage.ASC);
+				break;
+			}
+			group = application.DataSource.getGroup(groupId, Storage.DATETIME, Storage.ASC); break;
+		case 4 :
+			if(searchMenuItem.isActionViewExpanded()){
+				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), Storage.DATETIME, Storage.DESC);
+				break;
+			}
+			
+			group = application.DataSource.getGroup(groupId, Storage.DATETIME, Storage.DESC); break;
+		
+		}
+		adapter = new MediaAdapter(group.getMediaList());
+		gridViewMedia.setAdapter(adapter); 
 	}
 
 	@Override
@@ -86,14 +159,14 @@ public class MediaGridActivity extends Activity {
 			public boolean onQueryTextSubmit(String query) {
 				String searchQuery = query.trim();
 				if (searchQuery.isEmpty()) {
-					Group group = application.DataSource.getGroup(groupId);
+					Group group = application.DataSource.getGroup(groupId, null, null);
 					adapter = new MediaAdapter(group.getMediaList());
 					gridViewMedia.setAdapter(adapter);
 					return false;
 				}
 
 				Group searchGroup = application.DataSource.searchInGroup(groupId,
-						searchQuery);
+						searchQuery, null, null);
 				Log.d("size van de searchquery", searchGroup.getMediaList()
 						.size() + "");
 				adapter = new MediaAdapter(searchGroup.getMediaList());
@@ -105,7 +178,7 @@ public class MediaGridActivity extends Activity {
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				if (newText.isEmpty()) {
-					Group group = application.DataSource.getGroup(groupId);
+					Group group = application.DataSource.getGroup(groupId, null, null);
 					adapter = new MediaAdapter(group.getMediaList());
 					gridViewMedia.setAdapter(adapter);
 				}
@@ -128,13 +201,16 @@ public class MediaGridActivity extends Activity {
 			return true;
 		case R.id.searchInGroup:
 			cancelSearch.setVisible(true);
+			sortSpinner.setSelection(0);
 			return true;
 		case R.id.inGroupcancelSearch:
 			cancelSearch.setVisible(false);
-			Group group = application.DataSource.getGroup(groupId);
+			sortSpinner.setSelection(0);
+			Group group = application.DataSource.getGroup(groupId, null, null);
 			adapter = new MediaAdapter(group.getMediaList());
 			gridViewMedia.setAdapter(adapter);
 			searchMenuItem.collapseActionView();
+			
 
 		}
 		return super.onOptionsItemSelected(item);
@@ -144,17 +220,16 @@ public class MediaGridActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		if(search != null && search.getQuery().toString().isEmpty()){
+			
 			Log.d("resume aangeroepen", "resume");
-			Group group = application.DataSource.getGroup(groupId);
-			adapter = new MediaAdapter(group.getMediaList());
-			gridViewMedia.setAdapter(adapter);
+			setMediaForListView(sortSpinner.getSelectedItemPosition());
 		}
 
 	}
 	
 	@Override
 	public void onBackPressed() {
-		Group group = application.DataSource.getGroup(groupId);
+		Group group = application.DataSource.getGroup(groupId, null, null);
 		adapter = new MediaAdapter(group.getMediaList());
 		gridViewMedia.setAdapter(adapter);
 		super.onBackPressed();

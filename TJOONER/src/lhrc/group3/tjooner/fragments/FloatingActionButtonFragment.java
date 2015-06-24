@@ -291,7 +291,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 
 	private void makePicture() {
 		Intent intentPicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
+		 
 		// start camera activity
 		startActivityForResult(intentPicture, REQUEST_CODE_NEW_PICTURE);
 	}

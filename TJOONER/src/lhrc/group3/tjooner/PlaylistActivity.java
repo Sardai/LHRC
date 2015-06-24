@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import lhrc.group3.tjooner.adapter.PlaylistAdapter;
 import lhrc.group3.tjooner.models.Media;
+import lhrc.group3.tjooner.web.UploadTask;
 
 import com.terlici.dragndroplist.DragNDropListView;
 
@@ -16,7 +17,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class PlaylistActivity extends Activity {
-
+	private ArrayList<Media> media;
+	private String title;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,7 +28,8 @@ public class PlaylistActivity extends Activity {
 		
 		TjoonerApplication application = (TjoonerApplication)getApplication();
 		
-		ArrayList<Media> media = new ArrayList<Media>();
+		  media = new ArrayList<Media>();
+		  title = getIntent().getExtras().getString(PlaylistDialogActivity.TITLE);
 		for (String groupId :(String[]) getIntent().getExtras().get(PlaylistDialogActivity.GROUPS)) {
 			media.addAll(application.DataSource.getGroup(groupId).getMediaList());
 		}
@@ -48,7 +51,8 @@ public class PlaylistActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_save) {
+			new UploadTask(this,title,media );
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
