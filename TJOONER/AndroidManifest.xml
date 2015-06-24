@@ -52,7 +52,6 @@
         </activity>
         <activity
             android:name=".MediaGridActivity"
-            android:exported="true"
             android:label="@string/title_activity_media_grid"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"

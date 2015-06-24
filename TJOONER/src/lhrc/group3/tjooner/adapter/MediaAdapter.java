@@ -13,18 +13,11 @@ import lhrc.group3.tjooner.models.Video;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.VideoView;
 
 /**
  * @author Chris
@@ -83,7 +76,7 @@ public class MediaAdapter extends BaseAdapter {
 			options.inSampleSize = 4;
 
 			AssetFileDescriptor fileDescriptor = null;
-			try {
+			try {			
 				fileDescriptor = parent.getContext().getContentResolver()
 						.openAssetFileDescriptor(media.getUri(), "r");
 
