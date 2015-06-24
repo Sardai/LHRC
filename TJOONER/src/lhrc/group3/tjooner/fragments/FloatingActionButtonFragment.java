@@ -45,7 +45,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 	private static final int REQUEST_CODE_NEW_PICTURE = 122;
 	private static final int REQUEST_CODE_NEW_VIDEO = 123;
 	public static final String NIEUWE_MEDIA_STRING = "HetIsNieweMedia";
-	
+
 	private ImageView expandImageView, selectPicture, selectVideo,
 			makeNewVideo, makeNewPicture;
 	private TjoonerApplication app;
@@ -56,10 +56,10 @@ public class FloatingActionButtonFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.floating_action_button_fragment,
 				container, false);
-		
+
 		app = (TjoonerApplication) getActivity().getApplication();
 		source = app.DataSource;
-			
+
 		expandImageView = (ImageView) view
 				.findViewById(R.id.expandMenuImageView);
 		selectPicture = (ImageView) view.findViewById(R.id.selectImageView);
@@ -67,7 +67,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 		makeNewVideo = (ImageView) view.findViewById(R.id.newVideoImageView);
 		makeNewPicture = (ImageView) view
 				.findViewById(R.id.newPictureImageView);
-		
+
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
@@ -77,27 +77,26 @@ public class FloatingActionButtonFragment extends Fragment implements
 		double widthPercentageLandscape = 0.15;
 		int imagesDimensions = 0;
 		Configuration config = getActivity().getResources().getConfiguration();
-		if(config.orientation == Configuration.ORIENTATION_PORTRAIT){
+		if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
 			imagesDimensions = (int) (width * widthPercentagePortrait);
-		}
-		else {
+		} else {
 			imagesDimensions = (int) (height * widthPercentageLandscape);
 		}
 
-		// set all the images arcordingly to the screen size		
+		// set all the images arcordingly to the screen size
 		expandImageView.getLayoutParams().width = imagesDimensions;
-		expandImageView.getLayoutParams().height =  imagesDimensions;
+		expandImageView.getLayoutParams().height = imagesDimensions;
 
 		selectPicture.getLayoutParams().width = imagesDimensions;
-		selectPicture.getLayoutParams().height =  imagesDimensions;
+		selectPicture.getLayoutParams().height = imagesDimensions;
 
-		makeNewPicture.getLayoutParams().width =  imagesDimensions;
+		makeNewPicture.getLayoutParams().width = imagesDimensions;
 		makeNewPicture.getLayoutParams().height = imagesDimensions;
 
-		selectVideo.getLayoutParams().height =  imagesDimensions;
+		selectVideo.getLayoutParams().height = imagesDimensions;
 		selectVideo.getLayoutParams().width = imagesDimensions;
 
-		makeNewVideo.getLayoutParams().height =  imagesDimensions;
+		makeNewVideo.getLayoutParams().height = imagesDimensions;
 		makeNewVideo.getLayoutParams().width = imagesDimensions;
 
 		selectPicture.setVisibility(ImageView.GONE);
@@ -110,7 +109,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 		selectVideo.setOnClickListener(this);
 		makeNewPicture.setOnClickListener(this);
 		makeNewVideo.setOnClickListener(this);
-		
+
 		return view;
 	}
 
@@ -122,11 +121,12 @@ public class FloatingActionButtonFragment extends Fragment implements
 			// result ok
 			UUID id = null;
 			switch (requestCode) {
-			case REQUEST_CODE_SELECT_PICTURE:				
-				id = insertPicture(intent.getDataString());
+			case REQUEST_CODE_SELECT_PICTURE:
+				String uri = intent.getDataString();			
+				id = insertPicture(uri);
 				break;
-			case REQUEST_CODE_SELECT_VIDEO:				
-				id = insertVideo(intent.getData());	
+			case REQUEST_CODE_SELECT_VIDEO:
+				id = insertVideo(intent.getData());
 				break;
 			case REQUEST_CODE_NEW_PICTURE:
 				id = insertPicture(intent.getDataString());
@@ -135,23 +135,25 @@ public class FloatingActionButtonFragment extends Fragment implements
 				id = insertVideo(intent.getData());
 				break;
 			}
-			
-			if(id == null){
-				//TODO foutafhandeling verbeteren
-			}
-			else{
-				Intent newIntent = new Intent(getActivity(),MediaItemActivity.class);
+
+			if (id == null) {
+				// TODO foutafhandeling verbeteren
+			} else {
+				Intent newIntent = new Intent(getActivity(),
+						MediaItemActivity.class);
 				newIntent.putExtra(Storage.ID, id.toString());
 				newIntent.putExtra(NIEUWE_MEDIA_STRING, true);
-		 
-				if(getActivity().getIntent().hasExtra(Storage.GROUP_ID)){
-					String groupId =  getActivity().getIntent().getExtras().getString(Storage.GROUP_ID);;
-					newIntent.putExtra(Storage.GROUP_ID,groupId);
+
+				if (getActivity().getIntent().hasExtra(Storage.GROUP_ID)) {
+					String groupId = getActivity().getIntent().getExtras()
+							.getString(Storage.GROUP_ID);
+					;
+					newIntent.putExtra(Storage.GROUP_ID, groupId);
 				}
 				changeVisibility();
 				startActivity(newIntent);
 			}
-			
+
 		} else {
 			// result not ok
 			// TODO foutafhandeling verbeteren
@@ -174,12 +176,12 @@ public class FloatingActionButtonFragment extends Fragment implements
 			}
 		}
 	}
-	
-	private Bitmap getBitmapFromPath(Uri uri){
+
+	private Bitmap getBitmapFromPath(Uri uri) {
 		String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-		Cursor cursor = getActivity().getContentResolver().query(
-				uri, filePathColumn, null, null, null);
+		Cursor cursor = getActivity().getContentResolver().query(uri,
+				filePathColumn, null, null, null);
 
 		cursor.moveToFirst();
 
@@ -196,43 +198,41 @@ public class FloatingActionButtonFragment extends Fragment implements
 		source.insert(pic);
 		return pic.getId();
 	}
-	
-	private byte[] bitmapToBytes(Bitmap bitmap){
+
+	private byte[] bitmapToBytes(Bitmap bitmap) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		return stream.toByteArray();
 	}
-	
-	
-	
-	
-	
-	private UUID insertVideo(Uri videoUri){
+
+	private UUID insertVideo(Uri videoUri) {
 		Video video = new Video();
 		InputStream iStream;
-//		try {
+		// try {
 
-//			iStream = getActivity().getContentResolver()
-//					.openInputStream(videoUri);
-//			byte[] inputData = FileUtils.getBytes(iStream);
+		// iStream = getActivity().getContentResolver()
+		// .openInputStream(videoUri);
+		// byte[] inputData = FileUtils.getBytes(iStream);
 
-			video.setPath(videoUri.toString());
-			Bitmap thumb = ThumbnailUtils.createVideoThumbnail(FileUtils.getVideoPath(getActivity(),videoUri),   MediaStore.Images.Thumbnails.MINI_KIND);
-			video.setData(bitmapToBytes(thumb));
-			source.insert(video);
-						
-			return video.getId();
+		video.setPath(videoUri.toString());
+		Bitmap thumb = ThumbnailUtils.createVideoThumbnail(
+				FileUtils.getVideoPath(getActivity(), videoUri),
+				MediaStore.Images.Thumbnails.MINI_KIND);
+		video.setData(bitmapToBytes(thumb));
+		source.insert(video);
 
-//		} catch (FileNotFoundException e) {
-//			Log.e("MainActivity", e.getMessage());
-//			e.printStackTrace();
-//			//TODO foutafhandeling verbeteren
-//		} catch (IOException e) {
-//			Log.e("MainActivity", e.getMessage());
-//			e.printStackTrace();
-//			//TODO foutafhandeling verbeteren
-//		}
-//		return null;
+		return video.getId();
+
+		// } catch (FileNotFoundException e) {
+		// Log.e("MainActivity", e.getMessage());
+		// e.printStackTrace();
+		// //TODO foutafhandeling verbeteren
+		// } catch (IOException e) {
+		// Log.e("MainActivity", e.getMessage());
+		// e.printStackTrace();
+		// //TODO foutafhandeling verbeteren
+		// }
+		// return null;
 	}
 
 	@Override
@@ -267,7 +267,8 @@ public class FloatingActionButtonFragment extends Fragment implements
 			makeNewPicture.setVisibility(ImageView.GONE);
 			makeNewVideo.setVisibility(ImageView.GONE);
 		} else {
-			expandImageView.setImageResource(R.drawable.floatingactionbuttonrotate);
+			expandImageView
+					.setImageResource(R.drawable.floatingactionbuttonrotate);
 			selectPicture.setVisibility(ImageView.VISIBLE);
 			selectVideo.setVisibility(ImageView.VISIBLE);
 			makeNewPicture.setVisibility(ImageView.VISIBLE);
@@ -291,7 +292,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 
 	private void makePicture() {
 		Intent intentPicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		 
+
 		// start camera activity
 		startActivityForResult(intentPicture, REQUEST_CODE_NEW_PICTURE);
 	}

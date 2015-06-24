@@ -16,6 +16,7 @@ import java.util.UUID;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import lhrc.group3.tjooner.TjoonerApplication;
 import lhrc.group3.tjooner.helpers.DateUtils;
 import lhrc.group3.tjooner.helpers.FileUtils;
 import lhrc.group3.tjooner.models.Group;
@@ -91,8 +92,9 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	}
 
 	public UploadTask(final Context context, String title, List<Media> mediaList) {
-		uploadType = UPLOAD_PLAYLIST;
+		uploadType = UPLOAD_PLAYLIST;	
 
+		this.context = context;
 		this.title = title;
 		this.mediaList = mediaList;
 
@@ -102,7 +104,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	@Override
 	protected void onPreExecute() {
 
-		if (media.getUri() != null) {
+		if (media != null && media.getPath() != null) {
 			file = new File(FileUtils.getPicturePath(context, media.getUri()));
 
 			totalAmount = (int) file.length() / CHUNKSIZE;
@@ -222,6 +224,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 			obj.put("Title", title);
 			JSONArray array = new JSONArray();
 			for (Media media : mediaList) {
+				group = media.getGroup();
 				array.put(getMediaObject(media));
 			}
 			obj.put("Media", array);
@@ -332,7 +335,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		JSONObject obj = new JSONObject();
 		obj.put("Id", media.getRemoteId());
 		obj.put("Description", media.getTitle());
-
+		
 		JSONArray categories = new JSONArray();
 		JSONObject category = new JSONObject();
 		category.put("Id", group.getId());

@@ -29,7 +29,8 @@ public abstract class Media extends DataObject {
 	private String latitude;
 	private String remoteId;
 	private UUID groupId;
-
+	private Group group;
+	private Bitmap smallImage;
 	// Treeset because i want the tags to order alphabetically.
 	private TreeSet<String> tags = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
@@ -281,5 +282,23 @@ public abstract class Media extends DataObject {
 	public void setRemoteId(String remoteId) {
 		this.remoteId = remoteId;
 	}
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public Bitmap getSmallImage() {
+		return smallImage;
+	}
+
+	public void setSmallImage(Bitmap smallImage) {
+		this.smallImage = smallImage;
+	}
+	
+	
 
 }

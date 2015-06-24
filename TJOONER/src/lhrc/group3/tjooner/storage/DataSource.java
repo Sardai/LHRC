@@ -289,7 +289,7 @@ public class DataSource {
 		while (!cursor.isAfterLast()) {
 
 			Media media = getMedia(cursor);
-
+			media.setGroup(group);
 			group.addMedia(media);
 			cursor.moveToNext();
 		}

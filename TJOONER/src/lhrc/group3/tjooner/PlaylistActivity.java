@@ -52,7 +52,7 @@ public class PlaylistActivity extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_save) {
-			new UploadTask(this,title,media );
+			new UploadTask(this,title,media ).execute();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

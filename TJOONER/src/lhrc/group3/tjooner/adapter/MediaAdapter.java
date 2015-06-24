@@ -3,14 +3,19 @@
  */
 package lhrc.group3.tjooner.adapter;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import lhrc.group3.tjooner.R;
 import lhrc.group3.tjooner.models.Media;
 import lhrc.group3.tjooner.models.Picture;
 import lhrc.group3.tjooner.models.Video;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +31,8 @@ import android.widget.VideoView;
  *
  */
 public class MediaAdapter extends BaseAdapter {
+
+	private static int SCALE_SIZE = 8;
 
 	private List<Media> mediaList;
 	private LayoutInflater inflater;
@@ -56,21 +63,56 @@ public class MediaAdapter extends BaseAdapter {
 			if (inflater == null) {
 				inflater = LayoutInflater.from(parent.getContext());
 			}
-			convertView = inflater.inflate(R.layout.grid_item_media, null, false);
+			convertView = inflater.inflate(R.layout.grid_item_media, null,
+					false);
 		}
 
-		ImageView imageViewMedia = (ImageView) convertView.findViewById(R.id.imageViewMediaItem);
-		ImageView imageViewPlay = (ImageView) convertView.findViewById(R.id.imageViewPlay);
+		ImageView imageViewMedia = (ImageView) convertView
+				.findViewById(R.id.imageViewMediaItem);
+		ImageView imageViewPlay = (ImageView) convertView
+				.findViewById(R.id.imageViewPlay);
 		Media media = mediaList.get(position);
 
 		if (media instanceof Picture) {
 			imageViewPlay.setVisibility(View.GONE);
-			imageViewMedia.setImageURI(media.getUri());
+			// imageViewMedia.setImageURI(media.getUri());
+
+			// Bitmap bitmapOriginal =
+			// BitmapFactory.decodeFile(media.getPath());
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inSampleSize = 4;
+
+			AssetFileDescriptor fileDescriptor = null;
+			try {
+				fileDescriptor = parent.getContext().getContentResolver()
+						.openAssetFileDescriptor(media.getUri(), "r");
+
+				Bitmap bitmapOriginal = BitmapFactory.decodeFileDescriptor(
+						fileDescriptor.getFileDescriptor(), null, options);
+			//	scaleImage(media, bitmapOriginal);
+				imageViewMedia.setImageBitmap(bitmapOriginal);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		} else if (media instanceof Video) {
-			imageViewMedia.setImageBitmap(media.getBitmap());
+			scaleImage(media, media.getBitmap());
+			imageViewMedia.setImageBitmap(media.getSmallImage());
 			imageViewPlay.setVisibility(View.VISIBLE);
 		}
 
 		return convertView;
+	}
+
+	private void scaleImage(Media media, Bitmap bitmapOriginal) {
+		if (media.getSmallImage() != null || bitmapOriginal == null)
+			return;
+		Bitmap bitmapsimplesize = Bitmap.createScaledBitmap(bitmapOriginal,
+				bitmapOriginal.getWidth() / SCALE_SIZE,
+				bitmapOriginal.getHeight() / SCALE_SIZE, true);
+		bitmapOriginal.recycle();
+		media.setSmallImage(bitmapsimplesize);
+
 	}
 }
