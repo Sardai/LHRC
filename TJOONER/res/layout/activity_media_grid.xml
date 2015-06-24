@@ -22,11 +22,5 @@
         android:layout_alignParentRight="true"
         tools:layout="@layout/floating_action_button_fragment" />
 
-    <Spinner
-        android:id="@+id/sortSpinnerInGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

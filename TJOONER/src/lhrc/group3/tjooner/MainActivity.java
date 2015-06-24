@@ -51,12 +51,13 @@ public class MainActivity extends Activity {
 	private MediaController mediaControls;
 	private MenuItem cancelSearch;
 	private MenuItem searchMenuItem;
+	private MenuItem sortMenuItem;
 	private SearchView search;
 
 	private GridView gridView;
-	private Spinner sortSpinner;
 	private MediaAdapter mediaAdapter;
 	private GroupAdapter groupAdapter;
+	private int selectedSortOption = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +66,6 @@ public class MainActivity extends Activity {
 		application = (TjoonerApplication) getApplication();
 
 		gridView = (GridView) findViewById(R.id.gridViewGroups);
-		sortSpinner = (Spinner) findViewById(R.id.sortSpinner);
-	
-		String[] spinnerArray = {"Sorteren", "Title oplopend", "Title aflopend", "Datum oud-nieuw", "Datum nieuw-oud"};
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.sort_spinner_layout, spinnerArray);
-		sortSpinner.setAdapter(spinnerAdapter);
-		sortSpinner.setVisibility(Spinner.GONE);
-		setSpinnerOnItemSelectedListener();
 		setOngroupClickListener();
 
 		gridView.setVerticalSpacing(15);
@@ -105,6 +99,7 @@ public class MainActivity extends Activity {
 		cancelSearch = menu.findItem(R.id.cancelSearch);
 		searchMenuItem = menu.findItem(R.id.searchInAllMedia);
 		search = (SearchView) searchMenuItem.getActionView();
+		sortMenuItem = menu.findItem(R.id.menuSortIem);
 		   SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		    search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		search.setOnQueryTextListener(new OnQueryTextListener() {
@@ -116,12 +111,12 @@ public class MainActivity extends Activity {
 					groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
 					gridView.setAdapter(groupAdapter);
 					setOngroupClickListener();
-					sortSpinner.setVisibility(Spinner.GONE);
+					sortMenuItem.setVisible(false);
 					return false;
 				}
 	
-				sortSpinner.setVisibility(Spinner.VISIBLE);
-				sortSpinner.setSelection(0);
+				sortMenuItem.setVisible(true);
+				selectedSortOption = 0;
 				mediaAdapter = new MediaAdapter(application.DataSource.search(searchQuery, null, null).getMediaList());
 				gridView.setAdapter(mediaAdapter);
 				setOnMediaClickListener();
@@ -132,7 +127,7 @@ public class MainActivity extends Activity {
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				if (newText.isEmpty()) {
-					sortSpinner.setVisibility(Spinner.GONE);
+					sortMenuItem.setVisible(false);
 					groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
 					gridView.setAdapter(groupAdapter);
 					setOngroupClickListener();
@@ -155,20 +150,42 @@ public class MainActivity extends Activity {
 			return true;*/
 		case R.id.searchInAllMedia:
 			cancelSearch.setVisible(true);
+			sortMenuItem.setVisible(true);
 			return true;
 		case R.id.cancelSearch:
 			cancelSearch.setVisible(false);
 			searchMenuItem.collapseActionView();
 			groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
 			gridView.setAdapter(groupAdapter);
-			sortSpinner.setSelection(0);
-			sortSpinner.setVisibility(Spinner.GONE);
+			selectedSortOption = 0;
+			sortMenuItem.setVisible(false);
 			setOngroupClickListener();
 			return true;
 		case R.id.action_playlist:
 			Intent intent = new Intent(this,PlaylistDialogActivity.class);
 			startActivity(intent);
 			return true;
+			
+		case R.id.menuItemUnsorted:
+			selectedSortOption = 0;
+			setMediaForListView(selectedSortOption);
+			break;
+		case R.id.menuItemSortByNameAscending:
+			selectedSortOption = 1;
+			setMediaForListView(selectedSortOption);
+			break;
+		case R.id.menuItemSortByNameDescending:
+			selectedSortOption = 2;
+			setMediaForListView(selectedSortOption);
+			break;
+		case R.id.menuItemSortByDateOldToNew:
+			selectedSortOption = 3;
+			setMediaForListView(selectedSortOption);
+			break;
+		case R.id.menuItemSortByDateNewToOld:
+			selectedSortOption = 4;
+			setMediaForListView(selectedSortOption);
+			break;
 
 		}
 		return super.onOptionsItemSelected(item);
@@ -207,40 +224,40 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-	
-	private void setSpinnerOnItemSelectedListener(){
-		sortSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				Group group = application.DataSource.search(search.getQuery().toString(), null, null);
-				switch(position){
-				case 0 : break;
-				case 1 :
-					group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.ASC); break;
-				case 2 :
-					group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.DESC); break;
-				case 3 :
-					group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.ASC); break;
-				case 4 :
-					group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.DESC); break;
-					
-				
-				}
-				mediaAdapter = new MediaAdapter(group.getMediaList());
-				gridView.setAdapter(mediaAdapter);
-				setOnMediaClickListener();
-				
+	private void setMediaForListView(int position){
+		Group group = application.DataSource.search(search.getQuery().toString(), null, null);
+		switch(position){
+		case 0 : break;
+		case 1 :
+			if(!search.getQuery().toString().isEmpty()){
+				group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.ASC);
 			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				// TODO Auto-generated method stub
-				
+			break;
+		case 2 :
+			if(!search.getQuery().toString().isEmpty()){
+				group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.DESC);
 			}
-		});
+			break;
+		case 3 :
+			if(!search.getQuery().toString().isEmpty()){
+				group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.ASC); 
+			}
+			break;
+		case 4 :
+			if(!search.getQuery().toString().isEmpty()){
+				group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.DESC); 
+			}
+			break;
+			
+		
+		}
+		mediaAdapter = new MediaAdapter(group.getMediaList());
+		gridView.setAdapter(mediaAdapter);
+		setOnMediaClickListener();
+		
+		
 	}
+	
 	
 	@Override
 	public void onBackPressed() {
