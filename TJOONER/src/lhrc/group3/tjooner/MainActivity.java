@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
 		cancelSearch = menu.findItem(R.id.cancelSearch);
 		searchMenuItem = menu.findItem(R.id.searchInAllMedia);
 		search = (SearchView) searchMenuItem.getActionView();
-		sortMenuItem = menu.findItem(R.id.menuSortIem);
+		sortMenuItem = menu.findItem(R.id.menuSorItem);
 		   SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		    search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		search.setOnQueryTextListener(new OnQueryTextListener() {
@@ -154,6 +154,7 @@ public class MainActivity extends Activity {
 			return true;
 		case R.id.cancelSearch:
 			cancelSearch.setVisible(false);
+			sortMenuItem.setVisible(false);
 			searchMenuItem.collapseActionView();
 			groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
 			gridView.setAdapter(groupAdapter);
@@ -225,7 +226,12 @@ public class MainActivity extends Activity {
 		});
 	}
 	private void setMediaForListView(int position){
-		Group group = application.DataSource.search(search.getQuery().toString(), null, null);
+		Group group = null;
+		if(!search.getQuery().toString().isEmpty()){
+			group = application.DataSource.search(search.getQuery().toString(), null, null);
+		} else {
+			return;
+		}
 		switch(position){
 		case 0 : break;
 		case 1 :

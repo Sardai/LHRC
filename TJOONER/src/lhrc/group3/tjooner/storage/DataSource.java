@@ -331,7 +331,7 @@ public class DataSource {
 		String tags = "t.";
 		String selectQuery = "SELECT "+ mediaM+Storage.ID+ " , "+mediaM+ Storage.FILENAME + " , " +mediaM+Storage.TITLE+ " , " +mediaM+ Storage.DESCRIPTION + " , "
 				+mediaM+Storage.GROUP_ID+ " , "+mediaM+Storage.DATETIME +" , "+mediaM+Storage.HAS_COPYRIGHT+" , "+mediaM+ Storage.AUTHOR + " , "+mediaM+Storage.DATA 
-				+ " , "+mediaM+Storage.DATA+" , "+mediaM+Storage.DATA_TYPE +" , " +mediaM+Storage.PATH+" , "+Storage.LONGITUDE+" , "+Storage.LATITUDE+ " FROM " + Storage.MEDIA_TABLE_NAME + " m " ;
+				+ " , "+mediaM+Storage.DATA+" , "+mediaM+Storage.DATA_TYPE +" , " +mediaM+Storage.PATH+" , "+Storage.LONGITUDE+" , "+Storage.LATITUDE+" , "+Storage.REMOTE_ID+ " FROM " + Storage.MEDIA_TABLE_NAME + " m " ;
 		
 
 		String where = "Where "
@@ -373,7 +373,7 @@ public class DataSource {
 		String tags = "t.";
 		String selectQuery = "SELECT "+ mediaM+Storage.ID+ " , "+mediaM+ Storage.FILENAME + " , " +mediaM+Storage.TITLE+ " , " +mediaM+ Storage.DESCRIPTION + " , "
 				+mediaM+Storage.GROUP_ID+ " , "+mediaM+Storage.DATETIME +" , "+mediaM+Storage.HAS_COPYRIGHT+" , "+mediaM+ Storage.AUTHOR + " , "+mediaM+Storage.DATA 
-				+ " , "+mediaM+Storage.DATA+" , "+mediaM+Storage.DATA_TYPE +" , " +mediaM+Storage.PATH+" , "+Storage.LONGITUDE+" , "+Storage.LATITUDE+ " FROM " + Storage.MEDIA_TABLE_NAME + " m " ;
+				+ " , "+mediaM+Storage.DATA+" , "+mediaM+Storage.DATA_TYPE +" , " +mediaM+Storage.PATH+" , "+Storage.LONGITUDE+" , "+Storage.LATITUDE+" , "+Storage.REMOTE_ID+ " FROM " + Storage.MEDIA_TABLE_NAME + " m " ;
 		
 
 		String where = "Where "

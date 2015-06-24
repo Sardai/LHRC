@@ -2,6 +2,7 @@ package lhrc.group3.tjooner;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -24,6 +25,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
@@ -111,7 +113,23 @@ public class MediaItemActivity extends Activity {
 			}
 
 			Picture picture = (Picture) media;
-			imageViewMediaItem.setImageURI(picture.getUri());
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inSampleSize = 4;
+
+			AssetFileDescriptor fileDescriptor = null;
+			try {
+				fileDescriptor = getBaseContext().getContentResolver()
+						.openAssetFileDescriptor(media.getUri(), "r");
+
+				Bitmap bitmapOriginal = BitmapFactory.decodeFileDescriptor(
+						fileDescriptor.getFileDescriptor(), null, options);
+			//	scaleImage(media, bitmapOriginal);
+				imageViewMediaItem.setImageBitmap(bitmapOriginal);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//imageViewMediaItem.setImageURI(picture.getUri());
 
 			Log.d("title", picture.getTitle() + "");
 			Log.d("description", picture.getDescription() + "");

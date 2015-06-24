@@ -283,9 +283,9 @@ public class FloatingActionButtonFragment extends Fragment implements
 	}
 
 	private void selectPicture() {
-		Intent intent = new Intent();
-		intent.setType("image/*");
-		intent.setAction(Intent.ACTION_GET_CONTENT);
+		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		//intent.setType("image/*");
+		//intent.setAction(Intent.ACTION_GET_CONTENT);
 		//setUri(intent);
 
 		startActivityForResult(intent, REQUEST_CODE_SELECT_PICTURE);
@@ -300,7 +300,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 	}
 
 	private void makePicture() {
-		Intent intentPicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		Intent intentPicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 		setUri(intentPicture);
 		// start camera activity
 		startActivityForResult(intentPicture, REQUEST_CODE_NEW_PICTURE);

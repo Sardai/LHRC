@@ -28,7 +28,7 @@
     
     <item
     android:title="Sort"
-    android:id="@+id/menuSortIem"
+    android:id="@+id/menuSorItem"
     android:icon="@android:drawable/ic_menu_sort_by_size"
     android:showAsAction="always"
     android:visible="false">
