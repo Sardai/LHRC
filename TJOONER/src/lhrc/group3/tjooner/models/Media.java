@@ -54,7 +54,7 @@ public abstract class Media extends DataObject {
 		path = getString(Storage.PATH);
 		latitude = getString(Storage.LATITUDE);
 		longitude = getString(Storage.LONGITUDE);
-		
+		remoteId = getString(Storage.REMOTE_ID);
 		String stringId = getString(Storage.GROUP_ID);
 		if (stringId != null) {
 			groupId = UUID.fromString(stringId);

@@ -23,6 +23,7 @@ import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
 import lhrc.group3.tjooner.models.Picture;
 import lhrc.group3.tjooner.models.Video;
+import lhrc.group3.tjooner.storage.DataSource;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -78,16 +79,18 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	private Toast toast;
 	private ProgressDialog progressDialog;
 	private File file;
-
+	private DataSource dataSource;
+	
 	private String title;
 	private List<Media> mediaList;
 
-	public UploadTask(final Context context, Media media, Group group) {
+	public UploadTask(final Context context, Media media, Group group,DataSource dataSource) {
 
 		uploadType = UPLOAD_MEDIA;
 		this.context = context;
 		this.media = media;
 		this.group = group;
+		this.dataSource = dataSource;
 		createProgressbar();
 	}
 
@@ -136,6 +139,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		} else if (result.equals(CANCELLED)) {
 			Toast.makeText(context, CANCELLED, Toast.LENGTH_LONG).show();
 		} else {
+			dataSource.update(media);
 			progressDialog.hide();
 			new AlertDialog.Builder(context)
 					.setMessage("Media upload is completed")
@@ -206,9 +210,10 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 			// JSONObject last = getJsonObject(id, base64String, true);
 			String last = getXmlString(id, base64String, true);
 			String result = sendChunk(last);
+			media.setRemoteId(id);
 			is.close();
 
-			String endResult = SendMedia(id);
+			String endResult = SendMedia();
 			media.setRemoteId(endResult);
 			return endResult;
 		} catch (Exception e) {
@@ -227,8 +232,8 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 				group = media.getGroup();
 				array.put(getMediaObject(media));
 			}
+			obj.put("Id", emptyUUID);
 			obj.put("Media", array);
-			obj.put("Id", UUID.randomUUID().toString());
 
 			HttpClient client = new DefaultHttpClient();
 			ResponseHandler<String> handler = new BasicResponseHandler();
@@ -318,10 +323,9 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		return id;
 	}
 
-	private String SendMedia(String remoteId) throws JSONException,
+	private String SendMedia() throws JSONException,
 			ClientProtocolException, IOException {
 
-		media.setRemoteId(remoteId);
 		HttpClient client = new DefaultHttpClient();
 		ResponseHandler<String> handler = new BasicResponseHandler();
 		HttpPut httpPut = getHttpPut(PUT_MEDIA_URL, getMediaObject(media));
