@@ -102,7 +102,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	@Override
 	protected void onPreExecute() {
 
-		if (file != null) {
+		if (media.getUri() != null) {
 			file = new File(FileUtils.getPicturePath(context, media.getUri()));
 
 			totalAmount = (int) file.length() / CHUNKSIZE;
