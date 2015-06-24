@@ -6,6 +6,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK/DragNDropList"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="D:/Users/Chris/workspace/LHRC/TJOONER/libs/dragndroplist.jar"/>
+	<classpathentry kind="lib" path="libs/dragndroplist.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
