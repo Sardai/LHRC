@@ -87,30 +87,30 @@ public class MediaGridActivity extends Activity {
 		Group group = application.DataSource.getGroup(groupId, null, null);
 		switch(currentSortPosition){
 		case 0 :
-			if(searchMenuItem.isActionViewExpanded()){
+			if(searchMenuItem.isActionViewExpanded() && !search.getQuery().toString().isEmpty()){
 				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), null, null);
 			}
 			break;
 		case 1 :
-			if(searchMenuItem.isActionViewExpanded()){
+			if(searchMenuItem.isActionViewExpanded() && !search.getQuery().toString().isEmpty() ){
 				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), Storage.TITLE, Storage.ASC);
 				break;
 			}
 			group = application.DataSource.getGroup(groupId, Storage.TITLE, Storage.ASC); break;
 		case 2 :
-			if(searchMenuItem.isActionViewExpanded()){
+			if(searchMenuItem.isActionViewExpanded() && !search.getQuery().toString().isEmpty()){
 				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), Storage.TITLE, Storage.DESC);
 				break;
 			}
 			group = application.DataSource.getGroup(groupId, Storage.TITLE, Storage.DESC); break;
 		case 3 : 
-			if(searchMenuItem.isActionViewExpanded()){
+			if(searchMenuItem.isActionViewExpanded() && !search.getQuery().toString().isEmpty()){
 				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), Storage.DATETIME, Storage.ASC);
 				break;
 			}
 			group = application.DataSource.getGroup(groupId, Storage.DATETIME, Storage.ASC); break;
 		case 4 :
-			if(searchMenuItem.isActionViewExpanded()){
+			if(searchMenuItem.isActionViewExpanded() && !search.getQuery().toString().isEmpty()){
 				group = application.DataSource.searchInGroup(groupId, search.getQuery().toString(), Storage.DATETIME, Storage.DESC);
 				break;
 			}

@@ -30,7 +30,6 @@ public class FullscreenActivity extends Activity {
 
 		if (getIntent().hasExtra(Storage.ID)) {
 			TjoonerApplication app = (TjoonerApplication) getApplication();
-			videoViewMedia.setVisibility(View.GONE);
 			Media media = app.DataSource.getMedia(getIntent().getExtras()
 					.getString(Storage.ID));
 

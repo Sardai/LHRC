@@ -229,13 +229,25 @@ public class MainActivity extends Activity {
 		switch(position){
 		case 0 : break;
 		case 1 :
-			group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.ASC); break;
+			if(!search.getQuery().toString().isEmpty()){
+				group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.ASC);
+			}
+			break;
 		case 2 :
-			group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.DESC); break;
+			if(!search.getQuery().toString().isEmpty()){
+				group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.DESC);
+			}
+			break;
 		case 3 :
-			group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.ASC); break;
+			if(!search.getQuery().toString().isEmpty()){
+				group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.ASC); 
+			}
+			break;
 		case 4 :
-			group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.DESC); break;
+			if(!search.getQuery().toString().isEmpty()){
+				group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.DESC); 
+			}
+			break;
 			
 		
 		}
