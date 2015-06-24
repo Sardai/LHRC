@@ -285,7 +285,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
-		setUri(intent);
+		//setUri(intent);
 
 		startActivityForResult(intent, REQUEST_CODE_SELECT_PICTURE);
 	}
