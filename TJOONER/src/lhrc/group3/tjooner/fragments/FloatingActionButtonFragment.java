@@ -1,10 +1,14 @@
 package lhrc.group3.tjooner.fragments;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 import lhrc.group3.tjooner.MainActivity;
@@ -26,6 +30,7 @@ import android.graphics.Point;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -50,6 +55,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 			makeNewVideo, makeNewPicture;
 	private TjoonerApplication app;
 	private DataSource source;
+	private String uri;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,19 +123,18 @@ public class FloatingActionButtonFragment extends Fragment implements
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		// pick picture from gallery
 
-		if (resultCode == getActivity().RESULT_OK && null != intent) {
+		if (resultCode == getActivity().RESULT_OK) {
 			// result ok
 			UUID id = null;
 			switch (requestCode) {
 			case REQUEST_CODE_SELECT_PICTURE:
-				String uri = intent.getDataString();			
-				id = insertPicture(uri);
+				id = insertPicture(this.uri);
 				break;
 			case REQUEST_CODE_SELECT_VIDEO:
 				id = insertVideo(intent.getData());
 				break;
 			case REQUEST_CODE_NEW_PICTURE:
-				id = insertPicture(intent.getDataString());
+				id = insertPicture(this.uri);
 				break;
 			case REQUEST_CODE_NEW_VIDEO:
 				id = insertVideo(intent.getData());
@@ -280,8 +285,11 @@ public class FloatingActionButtonFragment extends Fragment implements
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
+		setUri(intent);
+
 		startActivityForResult(intent, REQUEST_CODE_SELECT_PICTURE);
 	}
+
 
 	private void selectVideo() {
 		// Use MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -292,7 +300,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 
 	private void makePicture() {
 		Intent intentPicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
+		setUri(intentPicture);
 		// start camera activity
 		startActivityForResult(intentPicture, REQUEST_CODE_NEW_PICTURE);
 	}
@@ -302,5 +310,34 @@ public class FloatingActionButtonFragment extends Fragment implements
 
 		startActivityForResult(intentVideo, REQUEST_CODE_NEW_VIDEO);
 	}
+	
+	private void setUri(Intent intent){
+		Uri uri = getOutputUri();  // create a file to save the video in specific folder
+	    if (uri != null) {
+	        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+	    }
+	}
 
+	private Uri getOutputUri() {
+		if (Environment.getExternalStorageState() == null) {
+			return null;
+		}
+		
+		File mediaStorage = new File(
+				Environment
+				.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+				"Tjooner");
+		if (!mediaStorage.exists() && !mediaStorage.mkdirs()) {
+			
+			return null;
+		}
+		
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
+		.format(new Date());
+		File mediaFile = new File(mediaStorage, "VID_" + timeStamp + ".mp4");
+		Uri uri = Uri.fromFile(mediaFile);
+		this.uri = uri.toString();
+		return uri;
+	}
 }
