@@ -128,7 +128,8 @@ public class FloatingActionButtonFragment extends Fragment implements
 			UUID id = null;
 			switch (requestCode) {
 			case REQUEST_CODE_SELECT_PICTURE:
-				id = insertPicture(this.uri);
+				String uri = intent.getDataString();
+				id = insertPicture(uri);
 				break;
 			case REQUEST_CODE_SELECT_VIDEO:
 				id = insertVideo(intent.getData());
