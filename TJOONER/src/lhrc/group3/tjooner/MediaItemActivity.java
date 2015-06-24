@@ -299,7 +299,7 @@ public class MediaItemActivity extends Activity {
 		// decodedString.length);
 		// imageViewMediaItem.setImageBitmap(decodedByte);
 
-		new UploadTask(this, media, group).execute();
+		new UploadTask(this, media, group,application.DataSource).execute();
 	}
 
 	private void removeMediaItem() {

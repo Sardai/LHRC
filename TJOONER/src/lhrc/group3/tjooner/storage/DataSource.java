@@ -499,6 +499,7 @@ public class DataSource {
 		if (media.getGroupId() != null) {
 			values.put(Storage.GROUP_ID, media.getGroupId().toString());
 		}
+		values.put(Storage.REMOTE_ID, media.getRemoteId());
 		return values;
 	}
 

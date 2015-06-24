@@ -25,13 +25,14 @@ public class Storage extends SQLiteOpenHelper {
 	public static final String PATH = "path";
 	public static final String LONGITUDE = "longitude";
 	public static final String LATITUDE = "latitude";
+	public static final String REMOTE_ID = "remoteId";
 	public static final int DATA_TYPE_PICTURE = 1;
 	public static final int DATA_TYPE_VIDEO = 2;
 	public static final String ASC = "ASC";
 	public static final String DESC = "DESC";
 	
 	public static final String[] MEDIA_COLUMNS = {
-		ID,FILENAME,TITLE,DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,AUTHOR,DATA,DATA_TYPE,PATH, LONGITUDE, LATITUDE
+		ID,FILENAME,TITLE,DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,AUTHOR,DATA,DATA_TYPE,PATH, LONGITUDE, LATITUDE,REMOTE_ID
 	};
 		
 	public static final String GROUP_TABLE_NAME = "groups";
@@ -49,8 +50,8 @@ public class Storage extends SQLiteOpenHelper {
 	public static final String MEDIA_ID = "mediaId";
 		
 	private static final String MEDIA_TABLE_CREATE = String.format(
-			"create table %s (%s string primary key, %s text, %s text, %s text, %s text, %s text,%s integer,%s text, %s blob, %s integer, %s text, %s text, %s text)",
-			MEDIA_TABLE_NAME,ID,FILENAME,TITLE, DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,AUTHOR,DATA,DATA_TYPE,PATH, LONGITUDE, LATITUDE );
+			"create table %s (%s string primary key, %s text, %s text, %s text, %s text, %s text,%s integer,%s text, %s blob, %s integer, %s text, %s text, %s text,%s text)",
+			MEDIA_TABLE_NAME,ID,FILENAME,TITLE, DESCRIPTION,GROUP_ID,DATETIME,HAS_COPYRIGHT,AUTHOR,DATA,DATA_TYPE,PATH, LONGITUDE, LATITUDE ,REMOTE_ID);
 	
 	private static final String GROUP_TABLE_CREATE = String.format(
 			"create table %s (%s text primary key, %s text,%s text, %s integer)",
@@ -68,7 +69,7 @@ public class Storage extends SQLiteOpenHelper {
 			);
 	
 	private static final String DATABASE_NAME = "tjooner.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 	
 	public Storage(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
