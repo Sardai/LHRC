@@ -38,7 +38,7 @@ public class MediaGridActivity extends Activity {
 	private MenuItem cancelSearch;
 	private MenuItem searchMenuItem;
 	private SearchView search;
-	private Spinner sortSpinner;
+	private int selectedSortOption = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,6 @@ public class MediaGridActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		application = (TjoonerApplication) getApplication();
-		
 		groupId = getIntent().getExtras().getString(Storage.GROUP_ID);
 		Log.d("groupid", groupId+"");
 		group = application.DataSource.getGroup(groupId, null, null);
@@ -58,10 +57,6 @@ public class MediaGridActivity extends Activity {
 
 		Log.i("MediaGridActivity", group.getMediaList().size() + "");
 		gridViewMedia = (GridView) findViewById(R.id.gridViewMedia);
-		sortSpinner = (Spinner) findViewById(R.id.sortSpinnerInGroup);
-		String[] spinnerArray = {"Sorteren", "Title oplopend", "Title aflopend", "Datum oud-nieuw", "Datum nieuw-oud"};
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.sort_spinner_layout, spinnerArray);
-		sortSpinner.setAdapter(spinnerAdapter);
 		adapter = new MediaAdapter(group.getMediaList());
 		gridViewMedia.setAdapter(adapter);
 		gridViewMedia.setOnItemClickListener(new OnItemClickListener() {
@@ -77,23 +72,6 @@ public class MediaGridActivity extends Activity {
 
 				intent.putExtra(Storage.ID, media.getId().toString());
 				startActivity(intent);
-			}
-		});
-		sortSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				setMediaForListView(position);
-				
-				
-				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
@@ -201,15 +179,35 @@ public class MediaGridActivity extends Activity {
 			return true;
 		case R.id.searchInGroup:
 			cancelSearch.setVisible(true);
-			sortSpinner.setSelection(0);
+			selectedSortOption = 0;
 			return true;
 		case R.id.inGroupcancelSearch:
 			cancelSearch.setVisible(false);
-			sortSpinner.setSelection(0);
+			selectedSortOption = 0;
 			Group group = application.DataSource.getGroup(groupId, null, null);
 			adapter = new MediaAdapter(group.getMediaList());
 			gridViewMedia.setAdapter(adapter);
 			searchMenuItem.collapseActionView();
+		case R.id.menuItemUnsorted:
+			selectedSortOption = 0;
+			setMediaForListView(selectedSortOption);
+			break;
+		case R.id.menuItemSortByNameAscending:
+			selectedSortOption = 1;
+			setMediaForListView(selectedSortOption);
+			break;
+		case R.id.menuItemSortByNameDescending:
+			selectedSortOption = 2;
+			setMediaForListView(selectedSortOption);
+			break;
+		case R.id.menuItemSortByDateOldToNew:
+			selectedSortOption = 3;
+			setMediaForListView(selectedSortOption);
+			break;
+		case R.id.menuItemSortByDateNewToOld:
+			selectedSortOption = 4;
+			setMediaForListView(selectedSortOption);
+			break;
 			
 
 		}
@@ -222,7 +220,7 @@ public class MediaGridActivity extends Activity {
 		if(search != null && search.getQuery().toString().isEmpty()){
 			
 			Log.d("resume aangeroepen", "resume");
-			setMediaForListView(sortSpinner.getSelectedItemPosition());
+			setMediaForListView(selectedSortOption);
 		}
 
 	}

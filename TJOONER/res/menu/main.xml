@@ -26,5 +26,32 @@
         android:title="Create playlist"	
         />
     
+    <item
+    android:title="Sort"
+    android:id="@+id/menuSortIem"
+    android:icon="@android:drawable/ic_menu_sort_by_size"
+    android:showAsAction="always"
+    android:visible="false">
+    <menu>
+        <item
+            android:id="@+id/menuItemUnsorted"
+            android:title="Unsorted" />
+        <item
+            android:id="@+id/menuItemSortByNameAscending"
+            android:title="Name Ascending" />
+        <item
+            android:id="@+id/menuItemSortByNameDescending"
+            android:title="Name Descending" />
+        <item
+            android:id="@+id/menuItemSortByDateOldToNew"
+            android:title="Date old-new" />
+        <item
+            android:id="@+id/menuItemSortByDateNewToOld"
+            android:title="Date new-old" />
+        
+        
+    </menu>
+</item>
+    
 
 </menu>
