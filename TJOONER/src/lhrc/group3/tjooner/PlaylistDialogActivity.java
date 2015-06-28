@@ -1,8 +1,5 @@
 package lhrc.group3.tjooner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lhrc.group3.tjooner.adapter.GroupSelectionAdapter;
 import lhrc.group3.tjooner.models.Group;
 import android.app.Activity;

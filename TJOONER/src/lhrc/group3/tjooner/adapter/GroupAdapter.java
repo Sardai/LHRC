@@ -1,25 +1,15 @@
 package lhrc.group3.tjooner.adapter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import lhrc.group3.tjooner.MainActivity;
+import java.util.List;
 import lhrc.group3.tjooner.R;
 import lhrc.group3.tjooner.models.Group;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Adapter for TJOONER groups.
@@ -29,10 +19,10 @@ import android.widget.Toast;
 public class GroupAdapter extends BaseAdapter {
 
 	
-	private ArrayList<Group> groups;	
+	private List<Group> groups;	
 	private static LayoutInflater inflater = null;
 	
-	public GroupAdapter(ArrayList<Group> groups) {
+	public GroupAdapter(List<Group> groups) {
 		this.groups = groups;
 	}
 

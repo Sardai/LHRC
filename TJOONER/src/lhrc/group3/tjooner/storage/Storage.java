@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 /**
  * SqliteOpenHelper for storage of media, groups and tags.
- * @author Chris
+ * @author Chris, Hugo, Luuk
  *
  */
 public class Storage extends SQLiteOpenHelper {

@@ -32,7 +32,8 @@ public abstract class Media extends DataObject {
 	private Group group;
 	private Bitmap smallImage;
 	private boolean imageLoading;
-	// Treeset because i want the tags to order alphabetically.
+	private String path;
+	
 	private TreeSet<String> tags = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
 	/**
@@ -216,6 +217,10 @@ public abstract class Media extends DataObject {
 		}
 	}
 
+	/**
+	 * Get tags in a string seperated by a comma.
+	 * @return the tags in a string
+	 */
 	public String getTagsString() {
 		String allTags = "";
 		if (getTags().size() > 0) {
@@ -235,8 +240,7 @@ public abstract class Media extends DataObject {
 	public Bitmap getBitmap(){
 		return BitmapFactory.decodeByteArray(data , 0, data.length);
 	}
-	
-	private String path;
+		
 	/**
 	 * @return the path
 	 */
@@ -260,42 +264,72 @@ public abstract class Media extends DataObject {
 		this.path = path;
 	}
 
+	/**
+	 * @return the longitude
+	 */
 	public String getLongitude() {
 		return longitude;
 	}
 
+	/**
+	 * @param longitude the longitude to set
+	 */
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
 
+	/**
+	 * @return the latitude
+	 */
 	public String getLatitude() {
 		return latitude;
 	}
 
+	/**
+	 * @param latitude the latitude to set
+	 */
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
 
+	/**
+	 * @return the remoteId
+	 */
 	public String getRemoteId() {
 		return remoteId;
 	}
 
+	/**
+	 * @param remoteId the remoteId to set
+	 */
 	public void setRemoteId(String remoteId) {
 		this.remoteId = remoteId;
 	}
 
+	/**
+	 * @return the group
+	 */
 	public Group getGroup() {
 		return group;
 	}
 
+	/**
+	 * @param group the group to set
+	 */
 	public void setGroup(Group group) {
 		this.group = group;
 	}
-
+	
+	/**
+	 * @return the smallImage
+	 */
 	public Bitmap getSmallImage() {
 		return smallImage;
 	}
 
+	/**
+	 * @param smallImage the smallImage to set
+	 */
 	public void setSmallImage(Bitmap smallImage) {
 		this.smallImage = smallImage;
 	}

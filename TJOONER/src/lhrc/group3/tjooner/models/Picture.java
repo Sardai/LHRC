@@ -4,8 +4,6 @@
 package lhrc.group3.tjooner.models;
 
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 /**
  * @author Chris

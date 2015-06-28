@@ -9,8 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import lhrc.group3.tjooner.storage.Storage;
-
 /**
  * @author Chris
  *	Helper class for date object with a few handy methods.

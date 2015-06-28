@@ -14,14 +14,10 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -131,10 +127,7 @@ public class MediaAdapter extends BaseAdapter {
 	 */
 	public class ImageLoader extends AsyncTask<Object, Double, Media> {
 		private Media media;
-		private ImageView imageViewMedia;
 		private Context context;
-		private View view;
-		private Bitmap bitmap = null;
 		private MediaAdapter adapter;
 
 		/**
@@ -153,7 +146,6 @@ public class MediaAdapter extends BaseAdapter {
 
 		@Override
 		protected Media doInBackground(Object... params) {
-			this.view = (View) params[0];
 			if (media instanceof Picture) {
 				 
 				BitmapFactory.Options options = new BitmapFactory.Options();

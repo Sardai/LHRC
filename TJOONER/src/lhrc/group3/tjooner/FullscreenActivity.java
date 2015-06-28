@@ -1,9 +1,7 @@
 package lhrc.group3.tjooner;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
-import lhrc.group3.tjooner.helpers.FileUtils;
 import lhrc.group3.tjooner.models.Media;
 import lhrc.group3.tjooner.models.Picture;
 import lhrc.group3.tjooner.models.Video;
@@ -15,8 +13,6 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -71,7 +67,7 @@ public class FullscreenActivity extends Activity {
 						
 					}
 				});
-				File file = new File(FileUtils.getVideoPath(this, media.getUri()));
+//				File file = new File(FileUtils.getVideoPath(this, media.getUri()));
 				videoViewMedia.setMediaController(new MediaController(this));
 				videoViewMedia.setVideoURI(media.getUri());
 				videoViewMedia.start();

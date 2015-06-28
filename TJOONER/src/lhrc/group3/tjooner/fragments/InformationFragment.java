@@ -2,18 +2,12 @@ package lhrc.group3.tjooner.fragments;
 
 import java.util.Date;
 
-import lhrc.group3.tjooner.GPSTracker;
 import lhrc.group3.tjooner.R;
 import lhrc.group3.tjooner.TjoonerApplication;
 import lhrc.group3.tjooner.helpers.DateUtils;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
-import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.web.SetAddressAsnycTask;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,9 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -106,9 +97,9 @@ public class InformationFragment extends PreferenceFragment {
 
 		if (media.getFilename() != null) {
 			filename.setText(media.getFilename());
-			layoutFilename.setVisibility(view.VISIBLE);
+			layoutFilename.setVisibility(View.VISIBLE);
 		} else {
-			layoutFilename.setVisibility(view.GONE);
+			layoutFilename.setVisibility(View.GONE);
 		}
 
 		if (media.hasCopyright()) {
@@ -128,6 +119,12 @@ public class InformationFragment extends PreferenceFragment {
 		return view;
 	}
 
+	/**
+	 * set date in textview or hide the layout when date is null.
+	 * @param date the date 
+	 * @param textView the textview
+	 * @param layout the layout with the textview.
+	 */
 	private void setText(Date date, TextView textView, LinearLayout layout) {
 		String dateString = null;
 		if (date != null) {
@@ -136,6 +133,12 @@ public class InformationFragment extends PreferenceFragment {
 		setText(dateString, textView, layout);
 	}
 
+	/**
+	 * Set text in textview or hide the layout when the text is null or empty.
+	 * @param text the text
+	 * @param textView the textview
+	 * @param layout the layout with the textview.
+	 */
 	private void setText(String text, TextView textView, LinearLayout layout) {
 		if (text == null || text.isEmpty()) {
 			layout.setVisibility(View.GONE);

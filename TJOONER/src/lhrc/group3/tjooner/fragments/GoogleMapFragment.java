@@ -1,11 +1,7 @@
 package lhrc.group3.tjooner.fragments;
 
-import java.util.Calendar;
-
 import lhrc.group3.tjooner.R;
-import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

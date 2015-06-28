@@ -9,8 +9,8 @@ import lhrc.group3.tjooner.helpers.DateUtils;
 import android.database.Cursor;
 
 /**
- * @author Chris Super class with a few helper methods to retrieve data from
- *         database
+ * @author Chris 
+ * abstract class with a few helper methods to retrieve data from database
  */
 public abstract class DataObject {
 

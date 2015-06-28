@@ -5,18 +5,9 @@ package lhrc.group3.tjooner.web;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import lhrc.group3.tjooner.TjoonerApplication;
 import lhrc.group3.tjooner.helpers.DateUtils;
 import lhrc.group3.tjooner.helpers.FileUtils;
 import lhrc.group3.tjooner.models.Group;
@@ -28,7 +19,6 @@ import lhrc.group3.tjooner.storage.DataSource;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -36,23 +26,19 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.Toast;
 
 /**
  * @author Chris
- *
+ * AsyncTask to upload a media item or a play list to the online TJOONER environment.
  */
 public class UploadTask extends AsyncTask<Void, Integer, String> {
 	private static final String BASE_URL = "http://setup.tjooner.tv/JCC/Saxion/TJOONER/REST/api/";
@@ -61,7 +47,6 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	private static final String PUT_MEDIA_URL = BASE_URL + "Media";
 	private static final String PUT_PLAYLIST_URL = BASE_URL + "Playlist";
 	private static final String emptyUUID = "00000000-0000-0000-0000-000000000000";
-	private static final String UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
 	private static final int CHUNKSIZE = 1024 * 8;
 	private static final String PROGRESS_MESSAGE = "uploading media";
 
@@ -76,15 +61,22 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	private Context context;
 	private int totalAmount;
 	private int doneAmount;
-	private Toast toast;
 	private ProgressDialog progressDialog;
 	private File file;
 	private DataSource dataSource;
-	
+
 	private String title;
 	private List<Media> mediaList;
 
-	public UploadTask(final Context context, Media media, Group group,DataSource dataSource) {
+	/**
+	 * Create a new upload task to upload a media item.
+	 * @param context    the context
+	 * @param media	     the media item to upload
+	 * @param group   	 the group of the media item
+	 * @param dataSource the data source
+	 */
+	public UploadTask(final Context context, Media media, Group group,
+			DataSource dataSource) {
 
 		uploadType = UPLOAD_MEDIA;
 		this.context = context;
@@ -94,8 +86,14 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		createProgressbar();
 	}
 
+	/**
+	 * Create a new upload task to upload a play list.
+	 * @param context
+	 * @param title
+	 * @param mediaList
+	 */
 	public UploadTask(final Context context, String title, List<Media> mediaList) {
-		uploadType = UPLOAD_PLAYLIST;	
+		uploadType = UPLOAD_PLAYLIST;
 
 		this.context = context;
 		this.title = title;
@@ -108,7 +106,12 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	protected void onPreExecute() {
 
 		if (media != null && media.getPath() != null) {
-			file = new File(FileUtils.getPicturePath(context, media.getUri()));
+			//Get the media file and calculate the amount of packages to send.			
+			Uri uri = media.getUri();
+			if (media.getPath().toLowerCase().contains("file")) {
+				uri = FileUtils.getImageContentUri(context, media.getPath());
+			}
+			file = new File(FileUtils.getPicturePath(context, uri));
 
 			totalAmount = (int) file.length() / CHUNKSIZE;
 		}
@@ -132,7 +135,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		// Toast.makeText(context, "Done: " + result, Toast.LENGTH_LONG).show();
+		// if no result then show error, if cancelled then show cancelled else update media item and hide progressbar.
 		if (result == null) {
 			Toast.makeText(context, "Something went wrong.", Toast.LENGTH_LONG)
 					.show();
@@ -155,6 +158,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 
 	@Override
 	protected void onProgressUpdate(Integer... values) {
+		//updates progressdialog with progress.
 		progressDialog.setProgress(values[0]);
 		// if (toast != null)
 		// toast.cancel();
@@ -171,58 +175,51 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 
 			byte[] buffer = new byte[CHUNKSIZE];
 			FileInputStream is = new FileInputStream(file);
-			int n = 0;
 			String base64String = "";
 			String id = emptyUUID;
-
-			while ((n = is.read(buffer)) != -1) {
+			//reads a chunck of media item until all chunks are uploaded.
+			while ((is.read(buffer)) != -1) {
+				//if user cancelled upload stop the upload.
 				if (isCancelled()) {
 					is.close();
 					return CANCELLED;
 				}
+				//if base64String is not empty a base64 string has been created and can be uploaded to the online enviroment.
 				if (!base64String.isEmpty()) {
-					// JSONObject obj = getJsonObject(id, base64String, false);
-
+					// the xml to upload.
 					String xml = getXmlString(id, base64String, false);
 					String result = sendChunk(xml);
-					// if(!result.matches(UUID_REGEX)){
-					// if(!result.contains("-")){
-					// //Toast.makeText(context, id, Toast.LENGTH_LONG).show();
-					// Log.e("media-upload", result);
-					// return null;
-					// }
-
+					// extracts the id from the result.
 					id = result
 							.replace(
 									"<guid xmlns=\"http://schemas.microsoft.com/2003/10/Serialization/\">",
 									"").replace("</guid>", "");
-
-					if (id.equals(emptyUUID)) {
-						id = result;
-					}
-
 				}
-
+				//encode the chunk to a base64 string.
 				base64String = Base64.encodeToString(buffer, 0);
 
 			}
-
-			// JSONObject last = getJsonObject(id, base64String, true);
+			//sends last chunk to online environment.
 			String last = getXmlString(id, base64String, true);
-			String result = sendChunk(last);
+			sendChunk(last);
 			media.setRemoteId(id);
 			is.close();
-
+			
+			//Sends the details of the media item to the online environment.
 			String endResult = SendMedia();
 			media.setRemoteId(endResult);
 			return endResult;
 		} catch (Exception e) {
-			// file not found, handle case
+			// file not found, handle case.
 			e.printStackTrace();
 		}
 		return null;
 	}
 
+	/**
+	 * Upload playlist to online environment.
+	 * @return the result of the upload.
+	 */
 	private String uploadPlaylist() {
 		JSONObject obj = new JSONObject();
 		try {
@@ -242,27 +239,26 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 			String result = client.execute(httpPut, handler);
 			return result;
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return "";
 	}
 
+	/**
+	 * Creates a progressbar to show the progression of the upload.
+	 */
 	private void createProgressbar() {
 		progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage(PROGRESS_MESSAGE);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setIndeterminate(true);
+
 		progressDialog.setIndeterminate(false);
 		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
 				new DialogInterface.OnClickListener() {
@@ -300,17 +296,24 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		});
 	}
 
-	private JSONObject getJsonObject(String id, String chunk,
-			boolean isLastChunk) throws JSONException {
-		JSONObject obj = new JSONObject();
-		obj.put("FileExtension", "PNG");
-		obj.put("MediaType", "image");
-		obj.put("Chunk", chunk);
-		obj.put("IsLastChunk", isLastChunk);
-		obj.put("mediaId", id);
-		return obj;
-	}
+//	private JSONObject getJsonObject(String id, String chunk,
+//			boolean isLastChunk) throws JSONException {
+//		JSONObject obj = new JSONObject();
+//		obj.put("FileExtension", "PNG");
+//		obj.put("MediaType", "image");
+//		obj.put("Chunk", chunk);
+//		obj.put("IsLastChunk", isLastChunk);
+//		obj.put("mediaId", id);
+//		return obj;
+//	}
 
+	/**
+	 * Send chunk to the online environment.
+	 * @param content the chunk to upload
+	 * @return the id of the chunk
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	private String sendChunk(String content) throws ClientProtocolException,
 			IOException {
 
@@ -323,8 +326,15 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		return id;
 	}
 
-	private String SendMedia() throws JSONException,
-			ClientProtocolException, IOException {
+	/**
+	 * Send media item to the online environment.
+	 * @return the result of the upload
+	 * @throws JSONException
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	private String SendMedia() throws JSONException, ClientProtocolException,
+			IOException {
 
 		HttpClient client = new DefaultHttpClient();
 		ResponseHandler<String> handler = new BasicResponseHandler();
@@ -335,11 +345,17 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		return result;
 	}
 
+	/**
+	 * Converts a media item to a json object.
+	 * @param media the media item
+	 * @return the jsonobject of the media item
+	 * @throws JSONException
+	 */
 	private JSONObject getMediaObject(Media media) throws JSONException {
 		JSONObject obj = new JSONObject();
 		obj.put("Id", media.getRemoteId());
 		obj.put("Description", media.getTitle());
-		
+
 		JSONArray categories = new JSONArray();
 		JSONObject category = new JSONObject();
 		category.put("Id", group.getId());
@@ -368,6 +384,13 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		return obj;
 	}
 
+	/**
+	 * Get a httpPut object with json object.
+	 * @param url the url of the http call
+	 * @param obj the jsonobject
+	 * @return the httpput object
+	 * @throws UnsupportedEncodingException
+	 */
 	private HttpPut getHttpPut(String url, JSONObject obj)
 			throws UnsupportedEncodingException {
 		HttpPut httpPut = new HttpPut(url);
@@ -384,6 +407,13 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		return httpPut;
 	}
 
+	/**
+	 * Get a httpPut object with xml.
+	 * @param url the url of the http call
+	 * @param content the xml
+	 * @return the httpPut object
+	 * @throws UnsupportedEncodingException
+	 */
 	private HttpPut getHttpPutXml(String url, String content)
 			throws UnsupportedEncodingException {
 		HttpPut httpPut = new HttpPut(url);
@@ -399,6 +429,13 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		return httpPut;
 	}
 
+	/**
+	 * Get a xml string for a chunk.
+	 * @param mediaId the id of the media
+	 * @param chunk the base64String of the chunk
+	 * @param isLastChunk if this is the last chunk to upload
+	 * @return the xml of the chunk
+	 */
 	private String getXmlString(String mediaId, String chunk,
 			boolean isLastChunk) {
 
@@ -427,6 +464,11 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 				+ "</mediaId> " + "</MediaChunkUp>";
 	}
 
+	/**
+	 * Gets the extension of the media item.
+	 * @param f the file of the media item
+	 * @return the extension
+	 */
 	private static String getExtension(File f) {
 		String ext = null;
 		String s = f.getName();

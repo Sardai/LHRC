@@ -3,9 +3,7 @@
  */
 package lhrc.group3.tjooner.models;
 
-import lhrc.group3.tjooner.storage.Storage;
 import android.database.Cursor;
-import android.net.Uri;
 
 /**
  * @author Chris

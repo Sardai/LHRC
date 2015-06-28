@@ -7,7 +7,6 @@ import java.util.List;
 
 import lhrc.group3.tjooner.R;
 import lhrc.group3.tjooner.models.Group;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;

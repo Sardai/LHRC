@@ -3,18 +3,15 @@
  */
 package lhrc.group3.tjooner;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.storage.DataSource;
-import lhrc.group3.tjooner.web.WebRequest;
-import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
 import android.app.Application;
-import android.util.Log;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 /**
  * Application class to store TJOONER groups and the datasource.
@@ -60,6 +57,15 @@ public class TjoonerApplication extends Application {
 		return null;
 	}
 	
- 
+	/**
+	 * Checks if a network is available.
+	 * @return if a network is available.
+	 */
+	public boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
 
 }

@@ -2,16 +2,11 @@ package lhrc.group3.tjooner.fragments;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
-import lhrc.group3.tjooner.MainActivity;
 import lhrc.group3.tjooner.MediaItemActivity;
 import lhrc.group3.tjooner.R;
 import lhrc.group3.tjooner.TjoonerApplication;
@@ -20,29 +15,30 @@ import lhrc.group3.tjooner.models.Picture;
 import lhrc.group3.tjooner.models.Video;
 import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.storage.Storage;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.webkit.WebView.FindListener;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
+/**
+ * Fragment for the floating action buttons to add photo's and video's.
+ * @author Hugo,Luuk, Chris
+ *
+ */
 public class FloatingActionButtonFragment extends Fragment implements
 		OnClickListener {
 	private static final int REQUEST_CODE_SELECT_PICTURE = 120;
@@ -123,7 +119,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		// pick picture from gallery
 
-		if (resultCode == getActivity().RESULT_OK) {
+		if (resultCode == Activity.RESULT_OK) {
 			// result ok
 			UUID id = null;
 			switch (requestCode) {
@@ -142,9 +138,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 				break;
 			}
 
-			if (id == null) {
-				// TODO foutafhandeling verbeteren
-			} else {
+			if (id != null){
 				Intent newIntent = new Intent(getActivity(),
 						MediaItemActivity.class);
 				newIntent.putExtra(Storage.ID, id.toString());
@@ -162,7 +156,6 @@ public class FloatingActionButtonFragment extends Fragment implements
 
 		} else {
 			// result not ok
-			// TODO foutafhandeling verbeteren
 			switch (requestCode) {
 			case REQUEST_CODE_SELECT_PICTURE:
 				Toast.makeText(getActivity(), "You haven't picked an Image",
@@ -182,65 +175,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 			}
 		}
 	}
-
-	private Bitmap getBitmapFromPath(Uri uri) {
-		String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-		Cursor cursor = getActivity().getContentResolver().query(uri,
-				filePathColumn, null, null, null);
-
-		cursor.moveToFirst();
-
-		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-		String img = cursor.getString(columnIndex);
-		Bitmap bitmap = BitmapFactory.decodeFile(img);
-		cursor.close();
-		return bitmap;
-	}
-
-	private UUID insertPicture(String path) {
-		Picture pic = new Picture();
-		pic.setPath(path);
-		source.insert(pic);
-		return pic.getId();
-	}
-
-	private byte[] bitmapToBytes(Bitmap bitmap) {
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-		return stream.toByteArray();
-	}
-
-	private UUID insertVideo(Uri videoUri) {
-		Video video = new Video();
-		InputStream iStream;
-		// try {
-
-		// iStream = getActivity().getContentResolver()
-		// .openInputStream(videoUri);
-		// byte[] inputData = FileUtils.getBytes(iStream);
-
-		video.setPath(videoUri.toString());
-		Bitmap thumb = ThumbnailUtils.createVideoThumbnail(
-				FileUtils.getVideoPath(getActivity(), videoUri),
-				MediaStore.Images.Thumbnails.MINI_KIND);
-		video.setData(bitmapToBytes(thumb));
-		source.insert(video);
-
-		return video.getId();
-
-		// } catch (FileNotFoundException e) {
-		// Log.e("MainActivity", e.getMessage());
-		// e.printStackTrace();
-		// //TODO foutafhandeling verbeteren
-		// } catch (IOException e) {
-		// Log.e("MainActivity", e.getMessage());
-		// e.printStackTrace();
-		// //TODO foutafhandeling verbeteren
-		// }
-		// return null;
-	}
-
+	
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -264,6 +199,65 @@ public class FloatingActionButtonFragment extends Fragment implements
 		}
 	}
 
+//	private Bitmap getBitmapFromPath(Uri uri) {
+//		String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//
+//		Cursor cursor = getActivity().getContentResolver().query(uri,
+//				filePathColumn, null, null, null);
+//
+//		cursor.moveToFirst();
+//
+//		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//		String img = cursor.getString(columnIndex);
+//		Bitmap bitmap = BitmapFactory.decodeFile(img);
+//		cursor.close();
+//		return bitmap;
+//	}
+
+	/**
+	 * insert picture item in the database.
+	 * @param path the path of the picture
+	 * @return the id of the newly added picture item
+	 */
+	private UUID insertPicture(String path) {
+		Picture pic = new Picture();
+		pic.setPath(path);
+		source.insert(pic);
+		return pic.getId();
+	}
+
+	/**
+	 * Convert a bitmap to bytes.
+	 * @param bitmap the bitmap
+	 * @return the byte array
+	 */
+	private byte[] bitmapToBytes(Bitmap bitmap) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		return stream.toByteArray();
+	}
+
+	/**
+	 * Insert a video item in the database.
+	 * @param videoUri the uri of the video 
+	 * @return the id of the newly added video item
+	 */
+	private UUID insertVideo(Uri videoUri) {
+		Video video = new Video();
+		 
+		video.setPath(videoUri.toString());
+		Bitmap thumb = ThumbnailUtils.createVideoThumbnail(
+				FileUtils.getVideoPath(getActivity(), videoUri),
+				MediaStore.Images.Thumbnails.MINI_KIND);
+		video.setData(bitmapToBytes(thumb));
+		source.insert(video);
+
+		return video.getId();
+	}
+
+	/**
+	 * Opens or closes the floating action button menu.
+	 */
 	private void changeVisibility() {
 		int visibility = makeNewPicture.getVisibility();
 		if (visibility == ImageView.VISIBLE) {
@@ -282,6 +276,9 @@ public class FloatingActionButtonFragment extends Fragment implements
 		}
 	}
 
+	/**
+	 * Select a picture.
+	 */
 	private void selectPicture() {
 		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		//intent.setType("image/*");
@@ -291,7 +288,9 @@ public class FloatingActionButtonFragment extends Fragment implements
 		startActivityForResult(intent, REQUEST_CODE_SELECT_PICTURE);
 	}
 
-
+	/**
+	 * Select a video.
+	 */
 	private void selectVideo() {
 		// Use MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 		Intent intent = new Intent(Intent.ACTION_PICK,
@@ -299,6 +298,9 @@ public class FloatingActionButtonFragment extends Fragment implements
 		startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
 	}
 
+	/**
+	 * Make a picture.
+	 */
 	private void makePicture() {
 		Intent intentPicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 		setUri(intentPicture);
@@ -306,12 +308,19 @@ public class FloatingActionButtonFragment extends Fragment implements
 		startActivityForResult(intentPicture, REQUEST_CODE_NEW_PICTURE);
 	}
 
+	/**
+	 * Make a video.
+	 */
 	private void makeVideo() {
 		Intent intentVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
 		startActivityForResult(intentVideo, REQUEST_CODE_NEW_VIDEO);
 	}
 	
+	/**
+	 * Set uri to the intent.
+	 * @param intent the intent
+	 */
 	private void setUri(Intent intent){
 		Uri uri = getOutputUri();  // create a file to save the video in specific folder
 	    if (uri != null) {
@@ -319,6 +328,10 @@ public class FloatingActionButtonFragment extends Fragment implements
 	    }
 	}
 
+	/**
+	 * Get output uri
+	 * @return the uri.
+	 */
 	private Uri getOutputUri() {
 		if (Environment.getExternalStorageState() == null) {
 			return null;

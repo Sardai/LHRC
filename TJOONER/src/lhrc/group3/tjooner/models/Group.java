@@ -5,7 +5,6 @@ package lhrc.group3.tjooner.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.UUID;
 
 import org.json.JSONException;
@@ -101,6 +100,10 @@ public class Group extends DataObject {
 		return mediaList;
 	}
 
+	/**
+	 * Add media item to the list.
+	 * @param media the media item.
+	 */
 	public void addMedia(Media media) {
 		mediaList.add(media);
 	}

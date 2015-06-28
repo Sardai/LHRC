@@ -32,10 +32,8 @@ public class SetAddressAsnycTask extends AsyncTask<String, Double, List<Address>
 		try {
 			return coder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 1);
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

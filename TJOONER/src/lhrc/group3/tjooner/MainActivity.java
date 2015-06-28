@@ -1,40 +1,29 @@
 package lhrc.group3.tjooner;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lhrc.group3.tjooner.adapter.GroupAdapter;
 import lhrc.group3.tjooner.adapter.MediaAdapter;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
-import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.storage.Storage;
-import lhrc.group3.tjooner.web.WebRequest;
-import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
+import lhrc.group3.tjooner.web.GetGroupsTask;
+import lhrc.group3.tjooner.web.GetGroupsTask.OnGroupRequestListener;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.SearchView;
-import android.widget.Spinner;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 /**
  * @author Chris Rötter, Luuk Wellink
@@ -43,12 +32,7 @@ import android.widget.VideoView;
  * 
  */
 public class MainActivity extends Activity {
-	private Button ButtonCameraPhoto;
-	private Button ButtonCameraVideo;
 	private TjoonerApplication application;
-	private ImageView newImage;
-	private VideoView newVideo;
-	private MediaController mediaControls;
 	private MenuItem cancelSearch;
 	private MenuItem searchMenuItem;
 	private MenuItem sortMenuItem;
@@ -71,18 +55,26 @@ public class MainActivity extends Activity {
 		gridView.setVerticalSpacing(15);
 		gridView.setHorizontalSpacing(15);
 
-		WebRequest webRequest = new WebRequest(application.DataSource);
-		webRequest.setOnGroupRequestListener(new OnGroupRequestListener() {
+		if (application.isNetworkAvailable()) {
+			GetGroupsTask getGroupsTask = new GetGroupsTask(application.DataSource);
+			getGroupsTask.setOnGroupRequestListener(new OnGroupRequestListener() {
 
-			@Override
-			public void Completed(ArrayList<Group> groups) {
-				Log.i("WebRequest", "success");
-				application.setGroups(groups);
-				gridView.setAdapter(new GroupAdapter(groups));
-			}
-		});
-		webRequest.getGroups();
+				@Override
+				public void Completed(ArrayList<Group> groups) {
+					Log.i("WebRequest", "success");
+					application.setGroups(groups);
+					gridView.setAdapter(new GroupAdapter(groups));
+				}
+			});
+			getGroupsTask.execute();
+		}
+		else{
+			List<Group> groups = application.DataSource.getGroups();
+			application.setGroups(groups);
+			gridView.setAdapter(new GroupAdapter(groups));
+		}
 	}
+	
 
 	/**
 	 * OnActivityResult used for taking new pictures.
@@ -102,6 +94,7 @@ public class MainActivity extends Activity {
 		search = (SearchView) searchMenuItem.getActionView();
 		sortMenuItem = menu.findItem(R.id.menuSorItem);
 
+		//initiate searchbar
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		search.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));

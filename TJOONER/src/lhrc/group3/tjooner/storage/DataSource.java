@@ -1,7 +1,6 @@
 package lhrc.group3.tjooner.storage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -406,54 +405,7 @@ public class DataSource {
 		return group;
 	}
 
-	/**
-	 * get all groups with media object and tags from the database
-	 * 
-	 * @return an map with all groups and media object and tags
-	 */
-	public HashMap<UUID, Group> getAll() {
-		Cursor cursor = database.query(Storage.GROUP_TABLE_NAME, Storage.GROUP_COLUMNS, null, null, null, null, null);
-
-		HashMap<UUID, Group> groups = new HashMap<UUID, Group>();
-
-		if (cursor.getCount() == 0) {
-			return groups;
-		}
-
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			Group group = new Group(cursor);
-			groups.put(group.getId(), group);
-		}
-
-		cursor = database.query(Storage.MEDIA_TABLE_NAME, Storage.MEDIA_COLUMNS, null, null, null, null, null);
-
-		if (cursor.getCount() == 0) {
-			return groups;
-		}
-
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-
-			Media media = getMedia(cursor);
-
-			String[] columns = {Storage.WORD};
-			String where = String.format("%s = %s", Storage.MEDIA_ID, media.getId().toString());
-			Cursor cursorTag = database.query(Storage.MEDIA_TAG_TABLE_NAME, columns, where, null, null, null, null);
-
-			if (cursorTag.getCount() > 0) {
-				cursorTag.moveToFirst();
-				while (!cursorTag.isAfterLast()) {
-					media.addTag(cursor.getString(0));
-				}
-			}
-
-			groups.get(media.getGroupId()).addMedia(media);
-
-		}
-
-		return groups;
-	}
+	
 
 	/**
 	 * get all tags from the database.
@@ -540,6 +492,10 @@ public class DataSource {
 		return media;
 	}
 	
+	/**
+	 * Add tags to media item.
+	 * @param media the media item
+	 */
 	private void getTags(Media media){
 		String[] columns = {Storage.WORD};
 		String where = String.format("%s = '%s'", Storage.MEDIA_ID, media.getId().toString());

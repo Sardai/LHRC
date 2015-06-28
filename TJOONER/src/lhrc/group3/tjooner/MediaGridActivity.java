@@ -1,8 +1,5 @@
 package lhrc.group3.tjooner;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import lhrc.group3.tjooner.adapter.MediaAdapter;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
@@ -15,21 +12,14 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.Spinner;
 
 /**
  * Activity to show media items in a gridview.

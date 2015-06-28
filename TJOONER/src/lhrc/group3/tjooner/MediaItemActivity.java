@@ -1,17 +1,9 @@
 package lhrc.group3.tjooner;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
-import org.json.JSONObject;
-
 import lhrc.group3.tjooner.fragments.ChangeInformationFragment;
 import lhrc.group3.tjooner.fragments.FloatingActionButtonFragment;
 import lhrc.group3.tjooner.fragments.InformationFragment;
-import lhrc.group3.tjooner.helpers.FileUtils;
 import lhrc.group3.tjooner.models.Group;
 import lhrc.group3.tjooner.models.Media;
 import lhrc.group3.tjooner.models.Picture;
@@ -21,8 +13,6 @@ import lhrc.group3.tjooner.web.UploadTask;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -30,7 +20,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /**
  * Activity to show and edit details of a media item.
@@ -50,8 +40,6 @@ public class MediaItemActivity extends Activity {
 	private Media media;
 	private boolean editMedia;
 	private ChangeInformationFragment changeInformationfragment;
-	private FragmentManager manager;
-	private FragmentTransaction transaction;
 	private MenuItem actionSave, actionEdit, actionUpload;
 
 	private ImageView imageViewMediaItem;
@@ -132,6 +120,7 @@ public class MediaItemActivity extends Activity {
 			try {
 				fileDescriptor = getBaseContext().getContentResolver()
 						.openAssetFileDescriptor(media.getUri(), "r");
+				
 
 				Bitmap bitmapOriginal = BitmapFactory.decodeFileDescriptor(
 						fileDescriptor.getFileDescriptor(), null, options);
@@ -288,8 +277,12 @@ public class MediaItemActivity extends Activity {
 	/**
 	 * Starts a new upload task.
 	 */
-	private void uploadMedia() {		
-		new UploadTask(this, media, group, application.DataSource).execute();
+	private void uploadMedia() {			
+		if(application.isNetworkAvailable()){
+			new UploadTask(this, media, group,application.DataSource).execute();
+		}else{
+			Toast.makeText(this, "There is no internet available", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	/**
@@ -298,14 +291,14 @@ public class MediaItemActivity extends Activity {
 	private void removeMediaItem() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Weet u zeker dat u dit bestand wilt verwijderen?")
-				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+		builder.setMessage("Are u sure you want to remove this file?")
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						application.DataSource.remove(media);
 						finish();
 					}
 				})
-				.setNegativeButton("Nee",
+				.setNegativeButton("No",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 							}
