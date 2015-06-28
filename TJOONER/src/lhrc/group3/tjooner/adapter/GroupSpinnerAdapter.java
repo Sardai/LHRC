@@ -23,7 +23,10 @@ public class GroupSpinnerAdapter extends BaseAdapter {
 
 	private List<Group> groups;
 	private LayoutInflater inflater;
-	
+	/**
+	 * Instantiate a new group spinner.
+	 * @param groups the TJOONER groups
+	 */
 	public GroupSpinnerAdapter(List<Group> groups) {
 		this.groups = groups;
 	}

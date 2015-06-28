@@ -39,10 +39,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+/**
+ * Activity to show and edit details of a media item.
+ * 
+ * @author Chris
+ *
+ */
 public class MediaItemActivity extends Activity {
 
 	private Media media;
-	private boolean wijzigMedia;
+	private boolean editMedia;
 	private ChangeInformationFragment changeInformationfragment;
 	private FragmentManager manager;
 	private FragmentTransaction transaction;
@@ -65,7 +71,7 @@ public class MediaItemActivity extends Activity {
 		String id = getIntent().getExtras().getString(Storage.ID);
 		media = application.DataSource.getMedia(id);
 
-		// Checks if a media item is a new item
+		// Checks if a media item is a new item.
 		if (media.getTitle() == null) {
 			isNew = true;
 		} else {
@@ -75,15 +81,18 @@ public class MediaItemActivity extends Activity {
 		if (media.getGroupId() != null) {
 			group = application.getGroup(media.getGroupId());
 			ActionBar bar = getActionBar();
+			// sets the actionbar to the color of the group.
 			bar.setBackgroundDrawable(new ColorDrawable(group.getColor()));
 		}
 
 		imageViewMediaItem = (ImageView) findViewById(R.id.imageViewMediaItem);
 		ImageView imageViewVideo = (ImageView) findViewById(R.id.imageViewVideo);
-		Intent intent = getIntent();
-		wijzigMedia = intent.getBooleanExtra(
-				FloatingActionButtonFragment.NIEUWE_MEDIA_STRING, false);
 
+		Intent intent = getIntent();
+		editMedia = intent.getBooleanExtra(
+				FloatingActionButtonFragment.NEW_MEDIA_STRING, false);
+
+		// initializes intents to show details or edit details of a media item.
 		if (getIntent().hasExtra(Storage.GROUP_ID)) {
 			String groupId = getIntent().getStringExtra(Storage.GROUP_ID);
 			changeInformationfragment = new ChangeInformationFragment(media,
@@ -93,10 +102,12 @@ public class MediaItemActivity extends Activity {
 		}
 
 		InformationFragment fragment = new InformationFragment(media);
-
+		// replaces fragmentPlaceholder with the information fragment.
 		getFragmentManager().beginTransaction()
 				.replace(R.id.fragmentPlaceholder, fragment).commit();
-		if (wijzigMedia) {
+		// if media is in edit mode, add changeInformationfragment to the
+		// fragment stack.
+		if (editMedia) {
 			change();
 		}
 
@@ -106,6 +117,7 @@ public class MediaItemActivity extends Activity {
 
 		RelativeLayout layoutVideo = (RelativeLayout) findViewById(R.id.layoutVideo);
 		if (media instanceof Picture) {
+			// hide video play icon.
 			layoutVideo.setVisibility(View.GONE);
 			imageViewMediaItem.setVisibility(View.VISIBLE);
 			if (media.getTitle() == null) {
@@ -123,13 +135,13 @@ public class MediaItemActivity extends Activity {
 
 				Bitmap bitmapOriginal = BitmapFactory.decodeFileDescriptor(
 						fileDescriptor.getFileDescriptor(), null, options);
-			//	scaleImage(media, bitmapOriginal);
+				// scaleImage(media, bitmapOriginal);
 				imageViewMediaItem.setImageBitmap(bitmapOriginal);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//imageViewMediaItem.setImageURI(picture.getUri());
+			// imageViewMediaItem.setImageURI(picture.getUri());
 
 			Log.d("title", picture.getTitle() + "");
 			Log.d("description", picture.getDescription() + "");
@@ -145,6 +157,7 @@ public class MediaItemActivity extends Activity {
 
 		} else if (media instanceof Video) {
 			imageViewMediaItem.setVisibility(View.GONE);
+			// show video play icon.
 			layoutVideo.setVisibility(View.VISIBLE);
 			if (media.getTitle() == null) {
 				setTitle(R.string.title_video_add);
@@ -178,52 +191,26 @@ public class MediaItemActivity extends Activity {
 		actionSave = menu.findItem(R.id.action_save);
 		actionEdit = menu.findItem(R.id.action_edit);
 		actionUpload = menu.findItem(R.id.action_upload);
-		
+
+		// if media item is in edit mode show save button, else show edit
+		// button.
 		if (getIntent().getBooleanExtra(
-				FloatingActionButtonFragment.NIEUWE_MEDIA_STRING, false)) {
+				FloatingActionButtonFragment.NEW_MEDIA_STRING, false)) {
 			showSave();
 		} else {
 			showEdit();
 		}
-		getIntent().removeExtra(
-				FloatingActionButtonFragment.NIEUWE_MEDIA_STRING);
+		getIntent().removeExtra(FloatingActionButtonFragment.NEW_MEDIA_STRING);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
+	
 		switch (item.getItemId()) {
 		case R.id.action_edit:
 			change();
-
-			// if (wijzigMedia) {
-			// if (changeInformationfragment.setNewInformation()) {
-			// application.DataSource.update(media);
-			// transaction = manager.beginTransaction();
-			// InformationFragment fragment = new InformationFragment(
-			// media);
-			// transaction.replace(R.id.fragmentPlaceholder, fragment);
-			// transaction.commit();
-			// item.setTitle("Modify");
-			// wijzigMedia = false;
-			//
-			// }
-			// } else {
-			// changeInformationfragment = new
-			// ChangeInformationFragment(media);
-			// transaction = manager.beginTransaction();
-			// transaction.replace(R.id.fragmentPlaceholder,
-			// changeInformationfragment);
-			// transaction.commit();
-			// item.setTitle("Save!");
-			// wijzigMedia = true;
-			// }
-
 			return true;
-
 		case R.id.action_save:
 
 			if (changeInformationfragment.setNewInformation()) {
@@ -232,10 +219,12 @@ public class MediaItemActivity extends Activity {
 
 				if (isNew == true) {
 					// getFragmentManager().popBackStack();
+					//goes back to previous activity.
 					finish();
 					// showEdit();
 				} else {
 					showEdit();
+					//remove fragment from stack.
 					getFragmentManager().popBackStack();
 				}
 			}
@@ -243,7 +232,9 @@ public class MediaItemActivity extends Activity {
 			return true;
 
 		case android.R.id.home:
+			//amount of fragments on a stack
 			int backstackCount = getFragmentManager().getBackStackEntryCount();
+			//if stack is bigger than 0 remove fragment from stack else finish activity
 			if (backstackCount > 0) {
 				getFragmentManager().popBackStack();
 			} else {
@@ -262,6 +253,9 @@ public class MediaItemActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * shows save button and opens changeInformationfragment.
+	 */
 	private void change() {
 		showSave();
 		getFragmentManager().beginTransaction()
@@ -269,6 +263,9 @@ public class MediaItemActivity extends Activity {
 				.addToBackStack("edit").commit();
 	}
 
+	/**
+	 * Shows save button and upload button, hides edit button.
+	 */
 	private void showSave() {
 		if (actionSave == null || actionEdit == null)
 			return;
@@ -277,6 +274,9 @@ public class MediaItemActivity extends Activity {
 		actionUpload.setVisible(false);
 	}
 
+	/**
+	 * Shows edit button and hides save and upload button.
+	 */
 	private void showEdit() {
 		if (actionSave == null || actionEdit == null)
 			return;
@@ -285,41 +285,16 @@ public class MediaItemActivity extends Activity {
 		actionUpload.setVisible(true);
 	}
 
-	private void uploadMedia() {
-		// File file = new File(FileUtils.getPicturePath(this, media.getUri()));
-		// RandomAccessFile raf = new RandomAccessFile(file, "r");
-		// // length of 8 kb.
-		// int chunkSize = 1024;
-		// long bytesRead = 0;
-		// int totalRead = 0;
-		// StringBuffer fileContent = new StringBuffer("");
-		//
-		// FileInputStream is = new FileInputStream(file);
-		// int n = 0;
-		// String base64String = "";
-		// String id = emptyUUID;
-		//
-		// byte[] buffer = new byte[chunkSize];
-		//
-		// while ((n = is.read(buffer)) != -1) {
-		// if (!base64String.isEmpty()) {
-		// // JSONObject obj = getJsonObject(id, base64String, false);
-		// }
-		//
-		// base64String = Base64.encodeToString(buffer, Base64.NO_CLOSE);
-		// fileContent.append(base64String);
-		// }
-		//
-		// byte[] decodedString = Base64.decode(fileContent.toString(),
-		// Base64.NO_PADDING);
-		// fileContent = null;
-		// Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
-		// decodedString.length);
-		// imageViewMediaItem.setImageBitmap(decodedByte);
-
-		new UploadTask(this, media, group,application.DataSource).execute();
+	/**
+	 * Starts a new upload task.
+	 */
+	private void uploadMedia() {		
+		new UploadTask(this, media, group, application.DataSource).execute();
 	}
 
+	/**
+	 * Remove media item.
+	 */
 	private void removeMediaItem() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -333,8 +308,6 @@ public class MediaItemActivity extends Activity {
 				.setNegativeButton("Nee",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								// User cancelled the popup, returning to
-								// editscreen
 							}
 						});
 		// Creates the popup

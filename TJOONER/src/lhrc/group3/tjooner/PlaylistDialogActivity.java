@@ -15,7 +15,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-
+/**
+ * Dialog activity to add a title and select groups for the creation of a playlist.
+ * @author Chris
+ *
+ */
 public class PlaylistDialogActivity extends Activity {
 
 	public static final String GROUPS = "groups";
@@ -50,6 +54,7 @@ public class PlaylistDialogActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				//put all ids from the selected grops in an array and put them in an intent for PlaylistActivity.
 				String[] groupIds = new String[adapter.getSelectedGroups().size()];
 				int count = 0;
 				for (Group group : adapter.getSelectedGroups()) {

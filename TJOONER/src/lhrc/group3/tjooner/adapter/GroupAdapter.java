@@ -21,6 +21,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Adapter for TJOONER groups.
+ * @author Chris
+ *
+ */
 public class GroupAdapter extends BaseAdapter {
 
 	

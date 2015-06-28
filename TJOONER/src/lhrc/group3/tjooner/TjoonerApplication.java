@@ -17,12 +17,12 @@ import android.app.Application;
 import android.util.Log;
 
 /**
+ * Application class to store TJOONER groups and the datasource.
  * @author Chris
  *
  */
 public class TjoonerApplication extends Application {
 
-	 private WebRequest webRequest;
 	 private List<Group> groups;
 	 public DataSource DataSource;
 	 
@@ -46,6 +46,11 @@ public class TjoonerApplication extends Application {
 		this.groups = groups;
 	}
 	
+	/**
+	 * Get group from list.
+	 * @param groupId the id of the group
+	 * @return the group
+	 */
 	public Group getGroup(UUID groupId){
 		for (int i = 0; i < groups.size(); i++) {
 			if(groups.get(i).getId().equals(groupId)){

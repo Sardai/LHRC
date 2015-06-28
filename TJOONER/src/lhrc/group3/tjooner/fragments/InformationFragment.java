@@ -39,9 +39,10 @@ public class InformationFragment extends PreferenceFragment {
 	private TjoonerApplication app;
 	private Media media;
 	
-	
-	
-
+	/**
+	 * Create a new instance of information fragment.
+	 * @param media the media item to show the information.
+	 */
 	public InformationFragment(Media media) {
 		this.media = media;
 	}
@@ -52,9 +53,7 @@ public class InformationFragment extends PreferenceFragment {
 		setRetainInstance(true);
 
 		app = (TjoonerApplication) getActivity().getApplication();
-		
-		
-		
+				
 		title = (TextView) view.findViewById(R.id.textViewTitle);
 		description = (TextView) view.findViewById(R.id.textViewDescription);
 		dateTime = (TextView) view.findViewById(R.id.textViewDatetime);
@@ -72,11 +71,7 @@ public class InformationFragment extends PreferenceFragment {
 		layoutCopyright = (LinearLayout) view.findViewById(R.id.layoutCopyright);
 		
 		
-		
-		
-		
-
-		// title is a required field, it always has a value.
+		// title is a required field.
 		title.setText(media.getTitle());
 		setText(media.getDescription(), description, layoutDescription);
 		setText(media.getDatetime(), dateTime, layoutDateTime);

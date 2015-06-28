@@ -96,28 +96,34 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+
 		cancelSearch = menu.findItem(R.id.cancelSearch);
 		searchMenuItem = menu.findItem(R.id.searchInAllMedia);
 		search = (SearchView) searchMenuItem.getActionView();
 		sortMenuItem = menu.findItem(R.id.menuSorItem);
-		   SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		    search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		search.setSearchableInfo(searchManager
+				.getSearchableInfo(getComponentName()));
 		search.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				String searchQuery = query.trim();
 				if (searchQuery.isEmpty()) {
-					groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
+					groupAdapter = new GroupAdapter(
+							(ArrayList<Group>) application.DataSource
+									.getGroups());
 					gridView.setAdapter(groupAdapter);
 					setOngroupClickListener();
 					sortMenuItem.setVisible(false);
 					return false;
 				}
-	
+
 				sortMenuItem.setVisible(true);
 				selectedSortOption = 0;
-				mediaAdapter = new MediaAdapter(application.DataSource.search(searchQuery, null, null).getMediaList());
+				mediaAdapter = new MediaAdapter(application.DataSource.search(
+						searchQuery, null, null).getMediaList());
 				gridView.setAdapter(mediaAdapter);
 				setOnMediaClickListener();
 				search.clearFocus();
@@ -128,7 +134,9 @@ public class MainActivity extends Activity {
 			public boolean onQueryTextChange(String newText) {
 				if (newText.isEmpty()) {
 					sortMenuItem.setVisible(false);
-					groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
+					groupAdapter = new GroupAdapter(
+							(ArrayList<Group>) application.DataSource
+									.getGroups());
 					gridView.setAdapter(groupAdapter);
 					setOngroupClickListener();
 				}
@@ -145,9 +153,9 @@ public class MainActivity extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()) {
 		// Respond to the action bar's Up/Home button
-		/*case android.R.id.home:
-			finish();
-			return true;*/
+		/*
+		 * case android.R.id.home: finish(); return true;
+		 */
 		case R.id.searchInAllMedia:
 			cancelSearch.setVisible(true);
 			sortMenuItem.setVisible(true);
@@ -156,17 +164,18 @@ public class MainActivity extends Activity {
 			cancelSearch.setVisible(false);
 			sortMenuItem.setVisible(false);
 			searchMenuItem.collapseActionView();
-			groupAdapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
+			groupAdapter = new GroupAdapter(
+					(ArrayList<Group>) application.DataSource.getGroups());
 			gridView.setAdapter(groupAdapter);
 			selectedSortOption = 0;
 			sortMenuItem.setVisible(false);
 			setOngroupClickListener();
 			return true;
 		case R.id.action_playlist:
-			Intent intent = new Intent(this,PlaylistDialogActivity.class);
+			Intent intent = new Intent(this, PlaylistDialogActivity.class);
 			startActivity(intent);
 			return true;
-			
+
 		case R.id.menuItemUnsorted:
 			selectedSortOption = 0;
 			setMediaForListView(selectedSortOption);
@@ -191,8 +200,8 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void setOngroupClickListener(){
+
+	private void setOngroupClickListener() {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -208,14 +217,14 @@ public class MainActivity extends Activity {
 
 		});
 	}
-	private void setOnMediaClickListener(){
+
+	private void setOnMediaClickListener() {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Media media = (Media) gridView.getAdapter().getItem(
-						position);
+				Media media = (Media) gridView.getAdapter().getItem(position);
 
 				Intent intent = new Intent(MainActivity.this,
 						MediaItemActivity.class);
@@ -225,65 +234,68 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-	private void setMediaForListView(int position){
+
+	private void setMediaForListView(int position) {
 		Group group = null;
-		if(!search.getQuery().toString().isEmpty()){
-			group = application.DataSource.search(search.getQuery().toString(), null, null);
+		if (!search.getQuery().toString().isEmpty()) {
+			group = application.DataSource.search(search.getQuery().toString(),
+					null, null);
 		} else {
 			return;
 		}
-		switch(position){
-		case 0 : break;
-		case 1 :
-			if(!search.getQuery().toString().isEmpty()){
-				group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.ASC);
+		switch (position) {
+		case 0:
+			break;
+		case 1:
+			if (!search.getQuery().toString().isEmpty()) {
+				group = application.DataSource.search(search.getQuery()
+						.toString(), Storage.TITLE, Storage.ASC);
 			}
 			break;
-		case 2 :
-			if(!search.getQuery().toString().isEmpty()){
-				group = application.DataSource.search(search.getQuery().toString(), Storage.TITLE, Storage.DESC);
+		case 2:
+			if (!search.getQuery().toString().isEmpty()) {
+				group = application.DataSource.search(search.getQuery()
+						.toString(), Storage.TITLE, Storage.DESC);
 			}
 			break;
-		case 3 :
-			if(!search.getQuery().toString().isEmpty()){
-				group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.ASC); 
+		case 3:
+			if (!search.getQuery().toString().isEmpty()) {
+				group = application.DataSource.search(search.getQuery()
+						.toString(), Storage.DATETIME, Storage.ASC);
 			}
 			break;
-		case 4 :
-			if(!search.getQuery().toString().isEmpty()){
-				group = application.DataSource.search(search.getQuery().toString(), Storage.DATETIME, Storage.DESC); 
+		case 4:
+			if (!search.getQuery().toString().isEmpty()) {
+				group = application.DataSource.search(search.getQuery()
+						.toString(), Storage.DATETIME, Storage.DESC);
 			}
 			break;
-			
-		
+
 		}
 		mediaAdapter = new MediaAdapter(group.getMediaList());
 		gridView.setAdapter(mediaAdapter);
 		setOnMediaClickListener();
-		
-		
+
 	}
-	
-	
+
 	@Override
 	public void onBackPressed() {
-		GroupAdapter adapter = new GroupAdapter((ArrayList<Group>) application.DataSource.getGroups());
+		GroupAdapter adapter = new GroupAdapter(
+				(ArrayList<Group>) application.DataSource.getGroups());
 		gridView.setAdapter(adapter);
 		setOngroupClickListener();
 		super.onBackPressed();
 	}
-	
+
 	@Override
 	protected void onNewIntent(Intent intent) {
-	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	    	Log.d("zoeken", "ik zoek");
-	        String query = intent.getStringExtra(SearchManager.QUERY);
-	        
-	        search.setQuery(query+"", false);
-	       
-	    }
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			Log.d("zoeken", "ik zoek");
+			String query = intent.getStringExtra(SearchManager.QUERY);
+
+			search.setQuery(query + "", false);
+
+		}
 	}
-	
- 
-	
+
 }

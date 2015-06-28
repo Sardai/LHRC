@@ -46,12 +46,18 @@ public class TimePickerFragment extends DialogFragment implements
 				DateFormat.is24HourFormat(getActivity()));
 	}
 
+	@Override
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 		if(timeSetListener != null){
+			//Notify listener that the time has been set.
 			timeSetListener.onTimeSet(view, hourOfDay, minute);
 		}
 	}
 	
+	/**
+	 * Set a listener for when the time is set.
+	 * @param timeSetListener the listener.
+	 */
 	public void setOnTimeSetListener(OnTimeSetListener timeSetListener){
 		this.timeSetListener = timeSetListener;
 	}

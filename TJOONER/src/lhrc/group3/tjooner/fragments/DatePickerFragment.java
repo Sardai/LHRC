@@ -42,12 +42,18 @@ public class DatePickerFragment extends DialogFragment implements
 		return new DatePickerDialog(getActivity(), this, year, month, day);
 	}
 
+	@Override
 	public void onDateSet(DatePicker view, int year, int month, int day) {
 		if(dateSetListener != null){
+			//Notify listener that the date has been set.
 			dateSetListener.onDateSet(view, year, month, day);
 		}
 	}
 	
+	/**
+	 * Set a listener for when the date is set.
+	 * @param dateSetListener the listener.
+	 */
 	public void setOnDateSetListener(OnDateSetListener dateSetListener){
 		this.dateSetListener = dateSetListener;
 	}

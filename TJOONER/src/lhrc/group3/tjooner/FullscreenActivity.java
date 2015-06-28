@@ -22,6 +22,11 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+/**
+ * Activity to show media fullscreen.
+ * @author Chris
+ *
+ */
 public class FullscreenActivity extends Activity {
 
 	@Override

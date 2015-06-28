@@ -16,6 +16,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * Activity to create a playlist from media items (not finished).
+ * Activity uses for the Drag and drop list view a library from github: https://github.com/terlici/DragNDropList
+ * @author Chris
+ *
+ */
 public class PlaylistActivity extends Activity {
 	private ArrayList<Media> media;
 	private String title;
@@ -23,13 +29,14 @@ public class PlaylistActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playlist);
-		
+		//DragNDropListView is a library from github https://github.com/terlici/DragNDropList.
 		DragNDropListView list = (DragNDropListView)findViewById(R.id.DragNDropListView);	
 		
 		TjoonerApplication application = (TjoonerApplication)getApplication();
 		
 		  media = new ArrayList<Media>();
 		  title = getIntent().getExtras().getString(PlaylistDialogActivity.TITLE);
+		  //from all selected groups get the media items and add them to a list for the adapter.
 		for (String groupId :(String[]) getIntent().getExtras().get(PlaylistDialogActivity.GROUPS)) {
 			media.addAll(application.DataSource.getGroup(groupId).getMediaList());
 		}

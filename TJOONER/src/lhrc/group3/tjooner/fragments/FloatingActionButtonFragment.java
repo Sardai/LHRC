@@ -49,7 +49,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 	private static final int REQUEST_CODE_SELECT_VIDEO = 121;
 	private static final int REQUEST_CODE_NEW_PICTURE = 122;
 	private static final int REQUEST_CODE_NEW_VIDEO = 123;
-	public static final String NIEUWE_MEDIA_STRING = "HetIsNieweMedia";
+	public static final String NEW_MEDIA_STRING = "HetIsNieweMedia";
 
 	private ImageView expandImageView, selectPicture, selectVideo,
 			makeNewVideo, makeNewPicture;
@@ -148,7 +148,7 @@ public class FloatingActionButtonFragment extends Fragment implements
 				Intent newIntent = new Intent(getActivity(),
 						MediaItemActivity.class);
 				newIntent.putExtra(Storage.ID, id.toString());
-				newIntent.putExtra(NIEUWE_MEDIA_STRING, true);
+				newIntent.putExtra(NEW_MEDIA_STRING, true);
 
 				if (getActivity().getIntent().hasExtra(Storage.GROUP_ID)) {
 					String groupId = getActivity().getIntent().getExtras()

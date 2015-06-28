@@ -18,6 +18,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 /**
+ * Adapter for group selection.
  * @author Chris
  *
  */
@@ -25,10 +26,18 @@ public class GroupSelectionAdapter extends BaseAdapter {
 
 	private List<Group> groups;
 	private List<Group> selectedGroups = new ArrayList<Group>();
+	/**
+	 * instantiate a new group adapter.
+	 * @param groups the TJOONER groups
+	 */
 	public GroupSelectionAdapter(List<Group> groups) {
 		this.groups = groups;
 	}
 	
+	/**
+	 * get the selected groups.
+	 * @return the selected groups
+	 */
 	public List<Group> getSelectedGroups(){
 		return selectedGroups;
 	}
@@ -60,11 +69,13 @@ public class GroupSelectionAdapter extends BaseAdapter {
 		final Group group = groups.get(position);
 		
 		textView.setText(group.getDescription());
+		//if selectedGroups contains the specified group than the checkbox gets selected.
 		checkBox.setSelected(selectedGroups.contains(group));
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				//if checkbox is selected add group to the selectedGroups list else remove it from the list.
 				if(isChecked){
 					selectedGroups.add(group);
 				}

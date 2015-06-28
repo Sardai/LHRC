@@ -28,7 +28,7 @@ import android.widget.ProgressBar;
 
 /**
  * @author Chris
- *
+ * Adapter to show media items in a gridview.
  */
 public class MediaAdapter extends BaseAdapter {
 
@@ -37,6 +37,10 @@ public class MediaAdapter extends BaseAdapter {
 	private List<Media> mediaList;
 	private LayoutInflater inflater;
 
+	/**
+	 * Creates a new media adapter.
+	 * @param mediaList the list of media to show
+	 */
 	public MediaAdapter(List<Media> mediaList) {
 		this.mediaList = mediaList;
 	}
@@ -74,16 +78,21 @@ public class MediaAdapter extends BaseAdapter {
 				.findViewById(R.id.imageViewPlay);
 		imageViewMedia.setImageResource(R.drawable.ic_launcher);
 		imageViewPlay.setVisibility(View.GONE);
+		//Round infinite progressbar to show progress of image loading.
 		ProgressBar progressSpinner = (ProgressBar) convertView.findViewById(R.id.progressSpinner);
 		
 		
-		Media media = mediaList.get(position);
+		Media media = mediaList.get(position);		
 		if (media instanceof Picture || media.getSmallImage() == null) {
+			//hides video play icon.
 			imageViewPlay.setVisibility(View.GONE);
 
 		} else {
+			//shows video play icon.
 			imageViewPlay.setVisibility(View.VISIBLE);
 		}
+		
+		// if media doesnt have a small image or the image is not loading then load the image with an asynctask image loader.
 		if (media.getSmallImage() == null && !media.isImageLoading()) {
 			imageViewMedia.setImageBitmap(null);
 			progressSpinner.setVisibility(View.VISIBLE);
@@ -91,6 +100,7 @@ public class MediaAdapter extends BaseAdapter {
 					parent.getContext());
 			loader.execute(convertView);
 		}else{			
+			//image is already loaded, hide progress spinner.
 			progressSpinner.setVisibility(View.GONE);
 		}
 		imageViewMedia.setImageBitmap(media.getSmallImage());
@@ -98,6 +108,11 @@ public class MediaAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	/**
+	 * Scale a image to a smaller size.
+	 * @param media the media item to put the scaled image in.
+	 * @param bitmapOriginal the original sized bitmap to scale down.
+	 */
 	private void scaleImage(Media media, Bitmap bitmapOriginal) {
 		if (media.getSmallImage() != null || bitmapOriginal == null)
 			return;
@@ -109,6 +124,11 @@ public class MediaAdapter extends BaseAdapter {
 
 	}
 
+	/**
+	 * AsyncTask to loadimage from device.
+	 * @author Hugo, Chris
+	 *
+	 */
 	public class ImageLoader extends AsyncTask<Object, Double, Media> {
 		private Media media;
 		private ImageView imageViewMedia;
@@ -117,6 +137,12 @@ public class MediaAdapter extends BaseAdapter {
 		private Bitmap bitmap = null;
 		private MediaAdapter adapter;
 
+		/**
+		 * Creates a new ImageLoader
+		 * @param media the media item for the image.
+		 * @param adapter the mediaAdapter.
+		 * @param context the context.
+		 */
 		public ImageLoader(Media media, MediaAdapter adapter, Context context) {
 			this.media = media;
 			media.setImageLoading(true);
@@ -129,15 +155,11 @@ public class MediaAdapter extends BaseAdapter {
 		protected Media doInBackground(Object... params) {
 			this.view = (View) params[0];
 			if (media instanceof Picture) {
-
-				// imageViewPlay.setVisibility(View.GONE);
-				// imageViewMedia.setImageURI(media.getUri());
-
-				// Bitmap bitmapOriginal =
-				// BitmapFactory.decodeFile(media.getPath());
+				 
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inSampleSize = 15;
 
+				//load image from device and put it in media item. 
 				AssetFileDescriptor fileDescriptor = null;
 				try {
 					fileDescriptor = context.getContentResolver()
@@ -145,38 +167,21 @@ public class MediaAdapter extends BaseAdapter {
 
 					Bitmap bitmapOriginal = BitmapFactory.decodeFileDescriptor(
 							fileDescriptor.getFileDescriptor(), null, options);
-					// this.bitmap = bitmapOriginal;
-					media.setSmallImage(bitmapOriginal);
-					;
-					// scaleImage(media, bitmapOriginal);
-					// imageViewMedia.setImageBitmap(bitmapOriginal);
+					media.setSmallImage(bitmapOriginal);					
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 			} else if (media instanceof Video) {
 				scaleImage(media, media.getBitmap());
-				// imageViewMedia.setImageBitmap(media.getSmallImage());
-				// imageViewPlay.setVisibility(View.VISIBLE);
 			}
 			return media;
 		}
 
 		@Override
 		protected void onPostExecute(Media result) {
-			
+			//Media image is loaded, notify adapter of the change.
 			result.setImageLoading(false);
-			// if(result instanceof Video){
-			// if(view != null && result.getSmallImage() != null){
-			// imageViewMedia.setImageBitmap(media.getSmallImage());
-			// }
-			// } else {
-			// if(view != null && bitmap != null){
-			// imageViewMedia.setImageBitmap(bitmap);
-			// }
-			//
-			// }
 			adapter.notifyDataSetChanged();
 			super.onPostExecute(result);
 		}

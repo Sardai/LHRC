@@ -31,6 +31,11 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Spinner;
 
+/**
+ * Activity to show media items in a gridview.
+ * @author Chris
+ *
+ */
 public class MediaGridActivity extends Activity{
 
 	private TjoonerApplication application;
@@ -54,8 +59,9 @@ public class MediaGridActivity extends Activity{
 		Log.d("groupid", groupId+"");
 		group = application.DataSource.getGroup(groupId, null, null);
 		ActionBar bar = getActionBar();
+		//change the color to the color of the selected group.
 		bar.setBackgroundDrawable(new ColorDrawable(group.getColor()));
-
+		//sets the title of the actionbar to the description of the group.
 		setTitle(group.getDescription());
 
 		Log.i("MediaGridActivity", group.getMediaList().size() + "");
@@ -133,6 +139,7 @@ public class MediaGridActivity extends Activity{
 		cancelSearch = menu.findItem(R.id.inGroupcancelSearch);
 		searchMenuItem = menu.findItem(R.id.searchInGroup);
 		search = (SearchView) searchMenuItem.getActionView();
+		//initiate search bar.
 		 SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		    search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		search.setOnQueryTextListener(new OnQueryTextListener() {

@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 /**
  * @author Chris
- *
+ *	Adapter to show media in a listview for the creation of a playlist.
  */
 public class PlaylistAdapter extends BaseAdapter implements DragNDropAdapter {
 
@@ -31,6 +31,10 @@ public class PlaylistAdapter extends BaseAdapter implements DragNDropAdapter {
 	private List<Media> list;
 	private List<Media> selectedItems = new ArrayList<Media>();
 
+	/**
+	 * Creates a new playlist adapter with a medialist
+	 * @param list the list with media items.
+	 */
 	public PlaylistAdapter(List<Media> list) {
 		this.list = list;
 	}
@@ -70,6 +74,7 @@ public class PlaylistAdapter extends BaseAdapter implements DragNDropAdapter {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
+						//if checkbox is checked add media item to the selected items list, else remove from selected items list.
 						if (isChecked) {
 							selectedItems.add(item);
 						} else {
@@ -78,6 +83,7 @@ public class PlaylistAdapter extends BaseAdapter implements DragNDropAdapter {
 					}
 				});
 
+		//if selected items list contains media item check the checkbox.
 		checkBoxSelectedItem.setChecked(selectedItems.contains(item));
 
 		return convertView;
@@ -94,7 +100,7 @@ public class PlaylistAdapter extends BaseAdapter implements DragNDropAdapter {
 	@Override
 	public void onItemDrop(DragNDropListView parent, View view,
 			int startPosition, int endPosition, long id) {
-
+		//if media item is moved, change position in the list.
 		Media temp = list.get(startPosition);
 		list.remove(startPosition);
 		list.add(endPosition, temp);
@@ -103,6 +109,7 @@ public class PlaylistAdapter extends BaseAdapter implements DragNDropAdapter {
 
 	@Override
 	public int getDragHandler() {
+		//the id of the view which should begin the dragging.
 		return HANDLER_ID;
 	}
 
