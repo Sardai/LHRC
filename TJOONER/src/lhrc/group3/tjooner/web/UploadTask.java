@@ -45,6 +45,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
@@ -80,11 +81,12 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	private ProgressDialog progressDialog;
 	private File file;
 	private DataSource dataSource;
-	
+
 	private String title;
 	private List<Media> mediaList;
 
-	public UploadTask(final Context context, Media media, Group group,DataSource dataSource) {
+	public UploadTask(final Context context, Media media, Group group,
+			DataSource dataSource) {
 
 		uploadType = UPLOAD_MEDIA;
 		this.context = context;
@@ -95,7 +97,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	}
 
 	public UploadTask(final Context context, String title, List<Media> mediaList) {
-		uploadType = UPLOAD_PLAYLIST;	
+		uploadType = UPLOAD_PLAYLIST;
 
 		this.context = context;
 		this.title = title;
@@ -108,7 +110,11 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 	protected void onPreExecute() {
 
 		if (media != null && media.getPath() != null) {
-			file = new File(FileUtils.getPicturePath(context, media.getUri()));
+			Uri uri = media.getUri();
+			if (media.getPath().toLowerCase().contains("file")) {
+				uri = FileUtils.getImageContentUri(context, media.getPath());
+			}
+			file = new File(FileUtils.getPicturePath(context, uri));
 
 			totalAmount = (int) file.length() / CHUNKSIZE;
 		}
@@ -323,8 +329,8 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		return id;
 	}
 
-	private String SendMedia() throws JSONException,
-			ClientProtocolException, IOException {
+	private String SendMedia() throws JSONException, ClientProtocolException,
+			IOException {
 
 		HttpClient client = new DefaultHttpClient();
 		ResponseHandler<String> handler = new BasicResponseHandler();
@@ -339,7 +345,7 @@ public class UploadTask extends AsyncTask<Void, Integer, String> {
 		JSONObject obj = new JSONObject();
 		obj.put("Id", media.getRemoteId());
 		obj.put("Description", media.getTitle());
-		
+
 		JSONArray categories = new JSONArray();
 		JSONObject category = new JSONObject();
 		category.put("Id", group.getId());

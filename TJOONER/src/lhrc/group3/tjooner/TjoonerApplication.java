@@ -14,6 +14,9 @@ import lhrc.group3.tjooner.storage.DataSource;
 import lhrc.group3.tjooner.web.WebRequest;
 import lhrc.group3.tjooner.web.WebRequest.OnGroupRequestListener;
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 /**
@@ -55,6 +58,11 @@ public class TjoonerApplication extends Application {
 		return null;
 	}
 	
- 
+	public boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
 
 }

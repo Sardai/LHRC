@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class MediaItemActivity extends Activity {
 
@@ -120,6 +121,7 @@ public class MediaItemActivity extends Activity {
 			try {
 				fileDescriptor = getBaseContext().getContentResolver()
 						.openAssetFileDescriptor(media.getUri(), "r");
+				
 
 				Bitmap bitmapOriginal = BitmapFactory.decodeFileDescriptor(
 						fileDescriptor.getFileDescriptor(), null, options);
@@ -316,21 +318,24 @@ public class MediaItemActivity extends Activity {
 		// Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
 		// decodedString.length);
 		// imageViewMediaItem.setImageBitmap(decodedByte);
-
-		new UploadTask(this, media, group,application.DataSource).execute();
+		if(application.isNetworkAvailable()){
+			new UploadTask(this, media, group,application.DataSource).execute();
+		}else{
+			Toast.makeText(this, "There is no internet available", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	private void removeMediaItem() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Weet u zeker dat u dit bestand wilt verwijderen?")
-				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+		builder.setMessage("Are u sure you want to remove this file?")
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						application.DataSource.remove(media);
 						finish();
 					}
 				})
-				.setNegativeButton("Nee",
+				.setNegativeButton("No",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								// User cancelled the popup, returning to

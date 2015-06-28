@@ -32,10 +32,10 @@
             android:title="Unsorted" />
         <item
             android:id="@+id/menuItemSortByNameAscending"
-            android:title="Name Ascending" />
+            android:title="Title Ascending" />
         <item
             android:id="@+id/menuItemSortByNameDescending"
-            android:title="Name Descending" />
+            android:title="Title Descending" />
         <item
             android:id="@+id/menuItemSortByDateOldToNew"
             android:title="Date old-new" />

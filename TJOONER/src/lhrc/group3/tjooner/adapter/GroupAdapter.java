@@ -2,6 +2,7 @@ package lhrc.group3.tjooner.adapter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,10 +25,10 @@ import android.widget.Toast;
 public class GroupAdapter extends BaseAdapter {
 
 	
-	private ArrayList<Group> groups;	
+	private List<Group> groups;	
 	private static LayoutInflater inflater = null;
 	
-	public GroupAdapter(ArrayList<Group> groups) {
+	public GroupAdapter(List<Group> groups) {
 		this.groups = groups;
 	}
 
